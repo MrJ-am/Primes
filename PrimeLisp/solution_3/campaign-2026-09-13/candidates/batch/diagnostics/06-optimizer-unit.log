@@ -1,0 +1,11 @@
+; disassembly for OR-TEST
+; Size: 23 bytes. Origin: #xB800BA4366                        ; OR-TEST
+; 66:       488B4F01         MOV RCX, [RDI+1]
+; 6A:       4883C912         OR RCX, 18
+; 6E:       490B4C24E9       OR RCX, [R12-23]                 ; [#x5200000FFF80] = #x8000000000000000
+; 73:       48894F01         MOV [RDI+1], RCX
+; 77:       498BFC           MOV RDI, R12                     ; NIL
+; 7A:       C9               LEAVE
+; 7B:       F8               CLC
+; 7C:       C3               RET
+Generic optimizer test passed.

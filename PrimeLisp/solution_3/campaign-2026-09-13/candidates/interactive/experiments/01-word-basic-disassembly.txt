@@ -1,0 +1,82 @@
+; disassembly for PRIME-CANDIDATE:RUN-SIEVE
+; Size: 284 bytes. Origin: #xB800BA6E0B                       ; PRIME-CANDIDATE:RUN-SIEVE
+; E0B:       4883EC10         SUB RSP, 16
+; E0F:       488B7DF8         MOV RDI, [RBP-8]
+; E13:       B902000000       MOV ECX, 2
+; E18:       48892C24         MOV [RSP], RBP
+; E1C:       488BEC           MOV RBP, RSP
+; E1F:       FF159398F5FE     CALL [RIP-17459053]             ; PRIME-CANDIDATE::SIEVE-BITS
+; E25:       480F42E3         CMOVB RSP, RBX
+; E29:       4C8BC7           MOV R8, RDI
+; E2C:       4C8945F0         MOV [RBP-16], R8
+; E30:       4883EC10         SUB RSP, 16
+; E34:       488B7DF8         MOV RDI, [RBP-8]
+; E38:       B902000000       MOV ECX, 2
+; E3D:       48892C24         MOV [RSP], RBP
+; E41:       488BEC           MOV RBP, RSP
+; E44:       FF15C696F5FE     CALL [RIP-17459514]             ; PRIME-CANDIDATE::SIEVE-LIMIT
+; E4A:       480F42E3         CMOVB RSP, RBX
+; E4E:       488BC7           MOV RAX, RDI
+; E51:       488BC7           MOV RAX, RDI
+; E54:       48D1F8           SAR RAX, 1
+; E57:       4C8D5801         LEA R11, [RAX+1]
+; E5B:       49D1FB           SAR R11, 1
+; E5E:       49D1E3           SHL R11, 1
+; E61:       4C895DE8         MOV [RBP-24], R11
+; E65:       4883EC10         SUB RSP, 16
+; E69:       B902000000       MOV ECX, 2
+; E6E:       48892C24         MOV [RSP], RBP
+; E72:       488BEC           MOV RBP, RSP
+; E75:       FF157DFAF5FE     CALL [RIP-17433987]             ; ISQRT
+; E7B:       4C8B5DE8         MOV R11, [RBP-24]
+; E7F:       4C8B45F0         MOV R8, [RBP-16]
+; E83:       4C8BF7           MOV R14, RDI
+; E86:       BE06000000       MOV ESI, 6
+; E8B:       EB32             JMP L2
+; E8D:       0F1F00           NOP
+; E90: L0:   488BDE           MOV RBX, RSI
+; E93:       48D1FB           SAR RBX, 1
+; E96:       4883E3FE         AND RBX, -2
+; E9A:       8BCB             MOV ECX, EBX
+; E9C:       83E17E           AND ECX, 126
+; E9F:       488BC3           MOV RAX, RBX
+; EA2:       48C1F806         SAR RAX, 6
+; EA6:       4883E0FE         AND RAX, -2
+; EAA:       498B448001       MOV RAX, [R8+RAX*4+1]
+; EAF:       488BD9           MOV RBX, RCX
+; EB2:       48D1FB           SAR RBX, 1
+; EB5:       480FA3D8         BT RAX, RBX
+; EB9:       7310             JAE L3
+; EBB: L1:   4883C604         ADD RSI, 4
+; EBF: L2:   4C39F6           CMP RSI, R14
+; EC2:       7ECC             JLE L0
+; EC4:       488B7DF8         MOV RDI, [RBP-8]
+; EC8:       C9               LEAVE
+; EC9:       F8               CLC
+; ECA:       C3               RET
+; ECB: L3:   488BC6           MOV RAX, RSI
+; ECE:       48D1F8           SAR RAX, 1
+; ED1:       480FAFC6         IMUL RAX, RSI
+; ED5:       48D1F8           SAR RAX, 1
+; ED8:       4883E0FE         AND RAX, -2
+; EDC:       4C8BD6           MOV R10, RSI
+; EDF:       488BD8           MOV RBX, RAX
+; EE2:       EB3C             JMP L5
+; EE4:       660F1F440000     NOP
+; EEA:       660F1F440000     NOP
+; EF0: L4:   488BFB           MOV RDI, RBX
+; EF3:       48C1FF06         SAR RDI, 6
+; EF7:       4883E7FE         AND RDI, -2
+; EFB:       8BCB             MOV ECX, EBX
+; EFD:       83E17E           AND ECX, 126
+; F00:       48D1F9           SAR RCX, 1
+; F03:       41B901000000     MOV R9D, 1
+; F09:       49D3E1           SHL R9, CL
+; F0C:       498B44B801       MOV RAX, [R8+RDI*4+1]
+; F11:       4C09C8           OR RAX, R9
+; F14:       498944B801       MOV [R8+RDI*4+1], RAX
+; F19:       4A8D0413         LEA RAX, [RBX+R10]
+; F1D:       488BD8           MOV RBX, RAX
+; F20: L5:   4C39DB           CMP RBX, R11
+; F23:       7CCB             JL L4
+; F25:       EB94             JMP L1

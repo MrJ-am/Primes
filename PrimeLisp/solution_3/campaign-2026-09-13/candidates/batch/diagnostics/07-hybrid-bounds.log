@@ -1,0 +1,6 @@
+Candidate validated (including 78,498 primes through 1,000,000).
+echologie-cl-batch-hybrid-bounds;20159;5.003990;1;algorithm=base,faithful=yes,bits=1
+echologie-cl-batch-hybrid-bounds;20285;5.003989;1;algorithm=base,faithful=yes,bits=1
+echologie-cl-batch-hybrid-bounds;20529;5.003965;1;algorithm=base,faithful=yes,bits=1
+Median: 246.684 us/sieve (4053.8 sieves/s).
+Saved: /workspace/scratch/73f29dd8a4f8/primes-experiments/batch/PrimeLisp/solution_3/results/3998279477-277986140.sexp

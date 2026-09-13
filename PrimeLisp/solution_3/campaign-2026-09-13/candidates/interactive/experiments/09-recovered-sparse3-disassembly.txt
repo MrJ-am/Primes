@@ -1,0 +1,328 @@
+; disassembly for PRIME-CANDIDATE::SPARSE-3
+; Size: 1087 bytes. Origin: #xB800BDB614                      ; PRIME-CANDIDATE::SPARSE-3
+; 614:       498BC0           MOV RAX, R8
+; 617:       48D1F8           SAR RAX, 1
+; 61A:       490FAFC0         IMUL RAX, R8
+; 61E:       48D1F8           SAR RAX, 1
+; 621:       4883E0FE         AND RAX, -2
+; 625:       4A8D1CC500000000 LEA RBX, [R8*8]
+; 62D:       4899             CQO
+; 62F:       48F7FB           IDIV RBX
+; 632:       48D1E0           SHL RAX, 1
+; 635:       48D1F8           SAR RAX, 1
+; 638:       498BD0           MOV RDX, R8
+; 63B:       48D1FA           SAR RDX, 1
+; 63E:       48F7E2           MUL RDX
+; 641:       488BF8           MOV RDI, RAX
+; 644:       4D8BD8           MOV R11, R8
+; 647:       49C1FB04         SAR R11, 4
+; 64B:       49D1FB           SAR R11, 1
+; 64E:       498BD0           MOV RDX, R8
+; 651:       48D1FA           SAR RDX, 1
+; 654:       4883E2FE         AND RDX, -2
+; 658:       4E8D3402         LEA R14, [RDX+R8]
+; 65C:       49C1FE03         SAR R14, 3
+; 660:       4983E6FE         AND R14, -2
+; 664:       498BD0           MOV RDX, R8
+; 667:       48D1FA           SAR RDX, 1
+; 66A:       4883E2FE         AND RDX, -2
+; 66E:       4B8D0400         LEA RAX, [R8+R8]
+; 672:       4C8D3C02         LEA R15, [RDX+RAX]
+; 676:       49C1FF03         SAR R15, 3
+; 67A:       4983E7FE         AND R15, -2
+; 67E:       498BD0           MOV RDX, R8
+; 681:       48D1FA           SAR RDX, 1
+; 684:       4883E2FE         AND RDX, -2
+; 688:       4B8D0440         LEA RAX, [R8+R8*2]
+; 68C:       488D1C02         LEA RBX, [RDX+RAX]
+; 690:       48C1FB03         SAR RBX, 3
+; 694:       4883E3FE         AND RBX, -2
+; 698:       498BD0           MOV RDX, R8
+; 69B:       48D1FA           SAR RDX, 1
+; 69E:       4883E2FE         AND RDX, -2
+; 6A2:       4A8D048500000000 LEA RAX, [R8*4]
+; 6AA:       488D3402         LEA RSI, [RDX+RAX]
+; 6AE:       48C1FE03         SAR RSI, 3
+; 6B2:       4883E6FE         AND RSI, -2
+; 6B6:       498BD0           MOV RDX, R8
+; 6B9:       48D1FA           SAR RDX, 1
+; 6BC:       4883E2FE         AND RDX, -2
+; 6C0:       4B8D0480         LEA RAX, [R8+R8*4]
+; 6C4:       4801D0           ADD RAX, RDX
+; 6C7:       488945E8         MOV [RBP-24], RAX
+; 6CB:       48C17DE803       SAR QWORD PTR [RBP-24], 3
+; 6D0:       488365E8FE       AND QWORD PTR [RBP-24], -2
+; 6D5:       498BD0           MOV RDX, R8
+; 6D8:       48D1FA           SAR RDX, 1
+; 6DB:       4883E2FE         AND RDX, -2
+; 6DF:       496BC006         IMUL RAX, R8, 6
+; 6E3:       4801D0           ADD RAX, RDX
+; 6E6:       488945E0         MOV [RBP-32], RAX
+; 6EA:       48C17DE003       SAR QWORD PTR [RBP-32], 3
+; 6EF:       488365E0FE       AND QWORD PTR [RBP-32], -2
+; 6F4:       498BD0           MOV RDX, R8
+; 6F7:       48D1FA           SAR RDX, 1
+; 6FA:       4883E2FE         AND RDX, -2
+; 6FE:       496BC007         IMUL RAX, R8, 7
+; 702:       4801D0           ADD RAX, RDX
+; 705:       48C1F803         SAR RAX, 3
+; 709:       4883E0FE         AND RAX, -2
+; 70D:       49D1FE           SAR R14, 1
+; 710:       49D1FF           SAR R15, 1
+; 713:       48D1FB           SAR RBX, 1
+; 716:       48895DF8         MOV [RBP-8], RBX
+; 71A:       48D1FE           SAR RSI, 1
+; 71D:       488975F0         MOV [RBP-16], RSI
+; 721:       48D17DE8         SAR QWORD PTR [RBP-24], 1
+; 725:       48D17DE0         SAR QWORD PTR [RBP-32], 1
+; 729:       48D1F8           SAR RAX, 1
+; 72C:       488945D8         MOV [RBP-40], RAX
+; 730:       EB72             JMP L1
+; 732:       0F1F8000000000   NOP
+; 739:       0F1F8000000000   NOP
+; 740: L0:   4A8D041F         LEA RAX, [RDI+R11]
+; 744:       41800C0102       OR BYTE PTR [R9+RAX], 2
+; 749:       4A8D0437         LEA RAX, [RDI+R14]
+; 74D:       41800C0110       OR BYTE PTR [R9+RAX], 16
+; 752:       4A8D043F         LEA RAX, [RDI+R15]
+; 756:       41800C0180       OR BYTE PTR [R9+RAX], -128
+; 75B:       488BC7           MOV RAX, RDI
+; 75E:       480345F8         ADD RAX, [RBP-8]
+; 762:       41800C0104       OR BYTE PTR [R9+RAX], 4
+; 767:       488BC7           MOV RAX, RDI
+; 76A:       480345F0         ADD RAX, [RBP-16]
+; 76E:       41800C0120       OR BYTE PTR [R9+RAX], 32
+; 773:       488BC7           MOV RAX, RDI
+; 776:       480345E8         ADD RAX, [RBP-24]
+; 77A:       41800C0101       OR BYTE PTR [R9+RAX], 1
+; 77F:       488BC7           MOV RAX, RDI
+; 782:       480345E0         ADD RAX, [RBP-32]
+; 786:       41800C0108       OR BYTE PTR [R9+RAX], 8
+; 78B:       488BC7           MOV RAX, RDI
+; 78E:       480345D8         ADD RAX, [RBP-40]
+; 792:       41800C0140       OR BYTE PTR [R9+RAX], 64
+; 797:       498BD0           MOV RDX, R8
+; 79A:       48D1FA           SAR RDX, 1
+; 79D:       488D043A         LEA RAX, [RDX+RDI]
+; 7A1:       488BF8           MOV RDI, RAX
+; 7A4: L1:   498BF2           MOV RSI, R10
+; 7A7:       48D1FE           SAR RSI, 1
+; 7AA:       498BD0           MOV RDX, R8
+; 7AD:       48D1FA           SAR RDX, 1
+; 7B0:       4829D6           SUB RSI, RDX
+; 7B3:       4839F7           CMP RDI, RSI
+; 7B6:       7E88             JLE L0
+; 7B8:       488BCF           MOV RCX, RDI
+; 7BB:       4C01D9           ADD RCX, R11
+; 7BE:       41B001           MOV R8B, 1
+; 7C1:       700B             JO L2
+; 7C3:       488BC1           MOV RAX, RCX
+; 7C6:       48D1E0           SHL RAX, 1
+; 7C9:       7110             JNO L3
+; 7CB:       4531C0           XOR R8D, R8D
+; 7CE: L2:   4819DB           SBB RBX, RBX
+; 7D1:       53               PUSH RBX
+; 7D2:       51               PUSH RCX
+; 7D3:       418AC0           MOV AL, R8B
+; 7D6:       E8055D42FF       CALL #xB8000014E0               ; SB-VM::BIGNUM-TO-RAX
+; 7DB: L3:   A801             TEST AL, 1
+; 7DD:       750E             JNE L4
+; 7DF:       498BCA           MOV RCX, R10
+; 7E2:       4839C8           CMP RAX, RCX
+; 7E5:       0F8C5A020000     JL L41
+; 7EB:       EB0E             JMP L5
+; 7ED: L4:   8B48F2           MOV ECX, [RAX-14]
+; 7F0:       837CC8F500       CMP DWORD PTR [RAX+RCX*8-11], 0
+; 7F5:       0F8C4A020000     JL L41
+; 7FB: L5:   488BCF           MOV RCX, RDI
+; 7FE:       4C01F1           ADD RCX, R14
+; 801:       41B001           MOV R8B, 1
+; 804:       700B             JO L6
+; 806:       488BC1           MOV RAX, RCX
+; 809:       48D1E0           SHL RAX, 1
+; 80C:       7110             JNO L7
+; 80E:       4531C0           XOR R8D, R8D
+; 811: L6:   4819DB           SBB RBX, RBX
+; 814:       53               PUSH RBX
+; 815:       51               PUSH RCX
+; 816:       418AC0           MOV AL, R8B
+; 819:       E8C25C42FF       CALL #xB8000014E0               ; SB-VM::BIGNUM-TO-RAX
+; 81E: L7:   A801             TEST AL, 1
+; 820:       750E             JNE L8
+; 822:       498BCA           MOV RCX, R10
+; 825:       4839C8           CMP RAX, RCX
+; 828:       0F8C09020000     JL L40
+; 82E:       EB0E             JMP L9
+; 830: L8:   8B48F2           MOV ECX, [RAX-14]
+; 833:       837CC8F500       CMP DWORD PTR [RAX+RCX*8-11], 0
+; 838:       0F8CF9010000     JL L40
+; 83E: L9:   488BCF           MOV RCX, RDI
+; 841:       4C01F9           ADD RCX, R15
+; 844:       41B001           MOV R8B, 1
+; 847:       700B             JO L10
+; 849:       488BC1           MOV RAX, RCX
+; 84C:       48D1E0           SHL RAX, 1
+; 84F:       7110             JNO L11
+; 851:       4531C0           XOR R8D, R8D
+; 854: L10:  4819DB           SBB RBX, RBX
+; 857:       53               PUSH RBX
+; 858:       51               PUSH RCX
+; 859:       418AC0           MOV AL, R8B
+; 85C:       E87F5C42FF       CALL #xB8000014E0               ; SB-VM::BIGNUM-TO-RAX
+; 861: L11:  A801             TEST AL, 1
+; 863:       750E             JNE L12
+; 865:       498BCA           MOV RCX, R10
+; 868:       4839C8           CMP RAX, RCX
+; 86B:       0F8CB8010000     JL L39
+; 871:       EB0E             JMP L13
+; 873: L12:  8B48F2           MOV ECX, [RAX-14]
+; 876:       837CC8F500       CMP DWORD PTR [RAX+RCX*8-11], 0
+; 87B:       0F8CA8010000     JL L39
+; 881: L13:  488B45F8         MOV RAX, [RBP-8]
+; 885:       488BCF           MOV RCX, RDI
+; 888:       4801C1           ADD RCX, RAX
+; 88B:       41B001           MOV R8B, 1
+; 88E:       700B             JO L14
+; 890:       488BC1           MOV RAX, RCX
+; 893:       48D1E0           SHL RAX, 1
+; 896:       7110             JNO L15
+; 898:       4531C0           XOR R8D, R8D
+; 89B: L14:  4819DB           SBB RBX, RBX
+; 89E:       53               PUSH RBX
+; 89F:       51               PUSH RCX
+; 8A0:       418AC0           MOV AL, R8B
+; 8A3:       E8385C42FF       CALL #xB8000014E0               ; SB-VM::BIGNUM-TO-RAX
+; 8A8: L15:  A801             TEST AL, 1
+; 8AA:       750E             JNE L16
+; 8AC:       498BCA           MOV RCX, R10
+; 8AF:       4839C8           CMP RAX, RCX
+; 8B2:       0F8C60010000     JL L38
+; 8B8:       EB0E             JMP L17
+; 8BA: L16:  8B48F2           MOV ECX, [RAX-14]
+; 8BD:       837CC8F500       CMP DWORD PTR [RAX+RCX*8-11], 0
+; 8C2:       0F8C50010000     JL L38
+; 8C8: L17:  488B45F0         MOV RAX, [RBP-16]
+; 8CC:       488BCF           MOV RCX, RDI
+; 8CF:       4801C1           ADD RCX, RAX
+; 8D2:       41B001           MOV R8B, 1
+; 8D5:       700B             JO L18
+; 8D7:       488BC1           MOV RAX, RCX
+; 8DA:       48D1E0           SHL RAX, 1
+; 8DD:       7110             JNO L19
+; 8DF:       4531C0           XOR R8D, R8D
+; 8E2: L18:  4819DB           SBB RBX, RBX
+; 8E5:       53               PUSH RBX
+; 8E6:       51               PUSH RCX
+; 8E7:       418AC0           MOV AL, R8B
+; 8EA:       E8F15B42FF       CALL #xB8000014E0               ; SB-VM::BIGNUM-TO-RAX
+; 8EF: L19:  A801             TEST AL, 1
+; 8F1:       750E             JNE L20
+; 8F3:       498BCA           MOV RCX, R10
+; 8F6:       4839C8           CMP RAX, RCX
+; 8F9:       0F8C08010000     JL L37
+; 8FF:       EB0E             JMP L21
+; 901: L20:  8B48F2           MOV ECX, [RAX-14]
+; 904:       837CC8F500       CMP DWORD PTR [RAX+RCX*8-11], 0
+; 909:       0F8CF8000000     JL L37
+; 90F: L21:  488B45E8         MOV RAX, [RBP-24]
+; 913:       488BCF           MOV RCX, RDI
+; 916:       4801C1           ADD RCX, RAX
+; 919:       41B001           MOV R8B, 1
+; 91C:       700B             JO L22
+; 91E:       488BC1           MOV RAX, RCX
+; 921:       48D1E0           SHL RAX, 1
+; 924:       7110             JNO L23
+; 926:       4531C0           XOR R8D, R8D
+; 929: L22:  4819DB           SBB RBX, RBX
+; 92C:       53               PUSH RBX
+; 92D:       51               PUSH RCX
+; 92E:       418AC0           MOV AL, R8B
+; 931:       E8AA5B42FF       CALL #xB8000014E0               ; SB-VM::BIGNUM-TO-RAX
+; 936: L23:  A801             TEST AL, 1
+; 938:       750E             JNE L24
+; 93A:       498BCA           MOV RCX, R10
+; 93D:       4839C8           CMP RAX, RCX
+; 940:       0F8CB0000000     JL L36
+; 946:       EB0E             JMP L25
+; 948: L24:  8B48F2           MOV ECX, [RAX-14]
+; 94B:       837CC8F500       CMP DWORD PTR [RAX+RCX*8-11], 0
+; 950:       0F8CA0000000     JL L36
+; 956: L25:  488B45E0         MOV RAX, [RBP-32]
+; 95A:       488BCF           MOV RCX, RDI
+; 95D:       4801C1           ADD RCX, RAX
+; 960:       41B001           MOV R8B, 1
+; 963:       700B             JO L26
+; 965:       488BC1           MOV RAX, RCX
+; 968:       48D1E0           SHL RAX, 1
+; 96B:       7110             JNO L27
+; 96D:       4531C0           XOR R8D, R8D
+; 970: L26:  4819DB           SBB RBX, RBX
+; 973:       53               PUSH RBX
+; 974:       51               PUSH RCX
+; 975:       418AC0           MOV AL, R8B
+; 978:       E8635B42FF       CALL #xB8000014E0               ; SB-VM::BIGNUM-TO-RAX
+; 97D: L27:  A801             TEST AL, 1
+; 97F:       750A             JNE L28
+; 981:       498BCA           MOV RCX, R10
+; 984:       4839C8           CMP RAX, RCX
+; 987:       7C5F             JL L35
+; 989:       EB0A             JMP L29
+; 98B: L28:  8B48F2           MOV ECX, [RAX-14]
+; 98E:       837CC8F500       CMP DWORD PTR [RAX+RCX*8-11], 0
+; 993:       7C53             JL L35
+; 995: L29:  488B45D8         MOV RAX, [RBP-40]
+; 999:       488BCF           MOV RCX, RDI
+; 99C:       4801C1           ADD RCX, RAX
+; 99F:       41B001           MOV R8B, 1
+; 9A2:       700B             JO L30
+; 9A4:       488BC1           MOV RAX, RCX
+; 9A7:       48D1E0           SHL RAX, 1
+; 9AA:       7110             JNO L31
+; 9AC:       4531C0           XOR R8D, R8D
+; 9AF: L30:  4819DB           SBB RBX, RBX
+; 9B2:       53               PUSH RBX
+; 9B3:       51               PUSH RCX
+; 9B4:       418AC0           MOV AL, R8B
+; 9B7:       E8245B42FF       CALL #xB8000014E0               ; SB-VM::BIGNUM-TO-RAX
+; 9BC: L31:  A801             TEST AL, 1
+; 9BE:       750A             JNE L32
+; 9C0:       498BCA           MOV RCX, R10
+; 9C3:       4839C8           CMP RAX, RCX
+; 9C6:       7C12             JL L34
+; 9C8:       EB0A             JMP L33
+; 9CA: L32:  8B48F2           MOV ECX, [RAX-14]
+; 9CD:       837CC8F500       CMP DWORD PTR [RAX+RCX*8-11], 0
+; 9D2:       7C06             JL L34
+; 9D4: L33:  498BFC           MOV RDI, R12                    ; NIL
+; 9D7:       C9               LEAVE
+; 9D8:       F8               CLC
+; 9D9:       C3               RET
+; 9DA: L34:  488BC7           MOV RAX, RDI
+; 9DD:       480345D8         ADD RAX, [RBP-40]
+; 9E1:       41800C0140       OR BYTE PTR [R9+RAX], 64
+; 9E6:       EBEC             JMP L33
+; 9E8: L35:  488BC7           MOV RAX, RDI
+; 9EB:       480345E0         ADD RAX, [RBP-32]
+; 9EF:       41800C0108       OR BYTE PTR [R9+RAX], 8
+; 9F4:       EB9F             JMP L29
+; 9F6: L36:  488BC7           MOV RAX, RDI
+; 9F9:       480345E8         ADD RAX, [RBP-24]
+; 9FD:       41800C0101       OR BYTE PTR [R9+RAX], 1
+; A02:       E94FFFFFFF       JMP L25
+; A07: L37:  488BC7           MOV RAX, RDI
+; A0A:       480345F0         ADD RAX, [RBP-16]
+; A0E:       41800C0120       OR BYTE PTR [R9+RAX], 32
+; A13:       E9F7FEFFFF       JMP L21
+; A18: L38:  488BC7           MOV RAX, RDI
+; A1B:       480345F8         ADD RAX, [RBP-8]
+; A1F:       41800C0104       OR BYTE PTR [R9+RAX], 4
+; A24:       E99FFEFFFF       JMP L17
+; A29: L39:  4A8D043F         LEA RAX, [RDI+R15]
+; A2D:       41800C0180       OR BYTE PTR [R9+RAX], -128
+; A32:       E94AFEFFFF       JMP L13
+; A37: L40:  4A8D0437         LEA RAX, [RDI+R14]
+; A3B:       41800C0110       OR BYTE PTR [R9+RAX], 16
+; A40:       E9F9FDFFFF       JMP L9
+; A45: L41:  4A8D041F         LEA RAX, [RDI+R11]
+; A49:       41800C0102       OR BYTE PTR [R9+RAX], 2
+; A4E:       E9A8FDFFFF       JMP L5

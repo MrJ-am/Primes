@@ -1,0 +1,147 @@
+
+; file: /workspace/scratch/73f29dd8a4f8/primes-experiments/batch/PrimeLisp/solution_3/sieve.lisp
+; in: DEFUN MARK
+;     (DEFUN PRIME-CANDIDATE::MARK (PRIME-CANDIDATE::WORDS PRIME-CANDIDATE::INDEX)
+;       (DECLARE (TYPE PRIME-CANDIDATE::WORDS PRIME-CANDIDATE::WORDS)
+;                (TYPE FIXNUM PRIME-CANDIDATE::INDEX))
+;       (LET ((PRIME-CANDIDATE::WORD-INDEX (ASH PRIME-CANDIDATE::INDEX -6)))
+;         (SETF (AREF PRIME-CANDIDATE::WORDS PRIME-CANDIDATE::WORD-INDEX)
+;                 (LOGIOR # #))))
+; --> SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA 
+; ==>
+;   #'(SB-INT:NAMED-LAMBDA PRIME-CANDIDATE::MARK
+;         (PRIME-CANDIDATE::WORDS PRIME-CANDIDATE::INDEX)
+;       (DECLARE (SB-C::TOP-LEVEL-FORM))
+;       (DECLARE (TYPE PRIME-CANDIDATE::WORDS PRIME-CANDIDATE::WORDS)
+;                (TYPE FIXNUM PRIME-CANDIDATE::INDEX))
+;       (BLOCK PRIME-CANDIDATE::MARK
+;         (LET ((PRIME-CANDIDATE::WORD-INDEX #))
+;           (SETF # #))))
+; 
+; note: doing unsigned word to integer coercion (cost 20) to "<return value>"
+
+; in: DEFMACRO DEFINE-DENSE-RESETTERS
+;     (LOOP PRIME-CANDIDATE::FOR PRIME-CANDIDATE::FACTOR PRIME-CANDIDATE::FROM 3 PRIME-CANDIDATE::TO PRIME-CANDIDATE::MAXIMUM PRIME-CANDIDATE::BY 2
+;           PRIME-CANDIDATE::FOR PRIME-CANDIDATE::NAME = ...)
+; --> LET LET LET SB-LOOP::WITH-LOOP-LIST-COLLECTION-HEAD LET* TAGBODY WHEN IF 
+; ==>
+;   (> PRIME-CANDIDATE::FACTOR #:LIM1)
+; 
+; note: forced to do GENERIC-> (cost 10)
+;       unable to do inline fixnum comparison (cost 4) because:
+;       The second argument is a REAL, not a FIXNUM.
+
+;     (* PRIME-CANDIDATE::FACTOR PRIME-CANDIDATE::FACTOR)
+; 
+; note: forced to do */UNSIGNED=>INTEGER (cost 10)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The result is a (VALUES
+;                        (OR (INTEGER 9 9) (INTEGER 25 25) (INTEGER 49 49)
+;                            (INTEGER 81 81) (INTEGER 121 121)
+;                            (INTEGER 169 309485009821380253096869889))
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       unable to do inline (unsigned-byte 64) arithmetic (cost 4) because:
+;       The result is a (VALUES
+;                        (OR (INTEGER 9 9) (INTEGER 25 25) (INTEGER 49 49)
+;                            (INTEGER 81 81) (INTEGER 121 121)
+;                            (INTEGER 169 309485009821380253096869889))
+;                        &OPTIONAL), not a (VALUES (UNSIGNED-BYTE 64) &OPTIONAL).
+;       etc.
+
+;     (* PRIME-CANDIDATE::FACTOR
+;        (FLOOR (FLOOR (* PRIME-CANDIDATE::FACTOR PRIME-CANDIDATE::FACTOR) 2)
+;               (* 64 PRIME-CANDIDATE::FACTOR)))
+; 
+; note: forced to do GENERIC-* (cost 30)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The second argument is a (MOD 805950546409844409106433), not a FIXNUM.
+;       The result is a (VALUES
+;                        (OR (INTEGER 0 0)
+;                            (INTEGER 3 14178431955041520495946504659632390144))
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       unable to do inline (unsigned-byte 64) arithmetic (cost 4) because:
+;       The second argument is a (MOD 805950546409844409106433), not a (UNSIGNED-BYTE
+;                                                                       64).
+;       The result is a (VALUES
+;                        (OR (INTEGER 0 0)
+;                            (INTEGER 3 14178431955041520495946504659632390144))
+;                        &OPTIONAL), not a (VALUES (UNSIGNED-BYTE 64) &OPTIONAL).
+;       etc.
+
+; in: DEFMACRO DEFINE-DENSE-RESETTERS => DEFUN ,NAME
+;     (LOOP PRIME-CANDIDATE::FOR PRIME-CANDIDATE::MASKS PRIME-CANDIDATE::ACROSS PRIME-CANDIDATE::GROUPS
+;           PRIME-CANDIDATE::FOR PRIME-CANDIDATE::I PRIME-CANDIDATE::FROM 0
+;           WHEN PRIME-CANDIDATE::MASKS
+;           PRIME-CANDIDATE::COLLECT ...)
+; 
+; note: forced to do GENERIC-+ (cost 10)
+;       unable to do inline fixnum arithmetic (cost 1) because:
+;       The first argument is a UNSIGNED-BYTE, not a FIXNUM.
+;       The result is a (VALUES (INTEGER 1) &OPTIONAL), not a (VALUES FIXNUM
+;                                                                     &OPTIONAL).
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a UNSIGNED-BYTE, not a FIXNUM.
+;       The result is a (VALUES (INTEGER 1) &OPTIONAL), not a (VALUES FIXNUM
+;                                                                     &OPTIONAL).
+;       etc.
+; 
+; note: forced to do GENERIC-+ (cost 10)
+;       unable to do inline fixnum arithmetic (cost 1) because:
+;       The first argument is a UNSIGNED-BYTE, not a FIXNUM.
+;       The result is a (VALUES (INTEGER 1) &OPTIONAL), not a (VALUES FIXNUM
+;                                                                     &OPTIONAL).
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a UNSIGNED-BYTE, not a FIXNUM.
+;       The result is a (VALUES (INTEGER 1) &OPTIONAL), not a (VALUES FIXNUM
+;                                                                     &OPTIONAL).
+;       etc.
+
+; in: DEFMACRO DEFINE-DENSE-RESETTERS
+;     (ASH 1 (MOD PRIME-CANDIDATE::INDEX 64))
+; 
+; note: doing unsigned word to integer coercion (cost 20), for:
+;       the first result of inline ASH
+
+;     `(DEFUN ,PRIME-CANDIDATE::NAME (PRIME-CANDIDATE::WORDS)
+;        (DECLARE (TYPE PRIME-CANDIDATE::WORDS PRIME-CANDIDATE::WORDS))
+;        (LET ((PRIME-CANDIDATE::BASE ,PRIME-CANDIDATE::FIRST-WORD)
+;              (PRIME-CANDIDATE::END (LENGTH PRIME-CANDIDATE::WORDS)))
+;          (DECLARE (TYPE FIXNUM PRIME-CANDIDATE::BASE PRIME-CANDIDATE::END))
+;          (LOOP PRIME-CANDIDATE::WHILE (<=
+;                                        (+ PRIME-CANDIDATE::BASE
+;                                           ,PRIME-CANDIDATE::FACTOR)
+;                                        PRIME-CANDIDATE::END)
+;                DO ,@(LOOP PRIME-CANDIDATE::FOR PRIME-CANDIDATE::MASKS PRIME-CANDIDATE::ACROSS PRIME-CANDIDATE::GROUPS
+;                           PRIME-CANDIDATE::FOR PRIME-CANDIDATE::I PRIME-CANDIDATE::FROM 0
+;                           WHEN PRIME-CANDIDATE::MASKS
+;                           PRIME-CANDIDATE::COLLECT ...) (INCF
+;                                                          PRIME-CANDIDATE::BASE
+;                                                          ,PRIME-CANDIDATE::FACTOR))
+;          ,@(LOOP PRIME-CANDIDATE::FOR PRIME-CANDIDATE::MASKS PRIME-CANDIDATE::ACROSS PRIME-CANDIDATE::GROUPS
+;                  PRIME-CANDIDATE::FOR PRIME-CANDIDATE::I PRIME-CANDIDATE::FROM 0
+;                  WHEN PRIME-CANDIDATE::MASKS
+;                  PRIME-CANDIDATE::COLLECT ...)
+;          (SETF (AREF PRIME-CANDIDATE::WORDS ,#) (LOGANDC2 # ,#)))
+;        (VALUES))
+; 
+; note: doing unsigned word to integer coercion (cost 20), for:
+;       the third argument of LIST
+
+; in: DEFUN COUNT-PRIMES
+;     (+
+;      (IF (>= PRIME-CANDIDATE::LIMIT 2)
+;          1
+;          0)
+;      (- PRIME-CANDIDATE::SIZE PRIME-CANDIDATE::COMPOSITES))
+; 
+; note: doing signed word to integer coercion (cost 20), for:
+;       the first result of inline (signed-byte 64) arithmetic
+; 
+; compilation unit finished
+;   printed 9 notes
+Candidate validated (including 78,498 primes through 1,000,000).
+echologie-cl-batch-dense129;11595;5.003976;1;algorithm=base,faithful=yes,bits=1
+echologie-cl-batch-dense129;11867;5.003979;1;algorithm=base,faithful=yes,bits=1
+echologie-cl-batch-dense129;11953;5.003975;1;algorithm=base,faithful=yes,bits=1
+Median: 421.672 us/sieve (2371.5 sieves/s).
+Saved: /workspace/scratch/73f29dd8a4f8/primes-experiments/batch/PrimeLisp/solution_3/results/3998278703-277986140.sexp

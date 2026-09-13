@@ -1,0 +1,21 @@
+constantize: (SB-VM::X)
+; disassembly for SB-VM::CONSTANTIZE
+; Size: 60 bytes. Origin: #xB8005182DF                        ; SB-VM::CONSTANTIZE
+; 2DF:       488975F8         MOV [RBP-8], RSI
+; 2E3:       4883EC10         SUB RSP, 16
+; 2E7:       488BFE           MOV RDI, RSI
+; 2EA:       B902000000       MOV ECX, 2
+; 2EF:       48892C24         MOV [RSP], RBP
+; 2F3:       488BEC           MOV RBP, RSP
+; 2F6:       FF15ACD65EFF     CALL [RIP-10561876]             ; SB-X86-64-ASM::PLAUSIBLE-SIGNED-IMM32-OPERAND-P
+; 2FC:       488B75F8         MOV RSI, [RBP-8]
+; 300:       4438E7           CMP DIL, R12B                   ; NIL
+; 303:       7403             JE L0
+; 305:       C9               LEAVE
+; 306:       F8               CLC
+; 307:       C3               RET
+; 308: L0:   488BFE           MOV RDI, RSI
+; 30B:       B902000000       MOV ECX, 2
+; 310:       FF7508           PUSH QWORD PTR [RBP+8]
+; 313:       FF250FE15EFF     JMP [RIP-10559217]              ; SB-VM::REF-SHARED-QWORD-LITERAL
+; 319:       CC0F             INT3 15                         ; Invalid argument count trap

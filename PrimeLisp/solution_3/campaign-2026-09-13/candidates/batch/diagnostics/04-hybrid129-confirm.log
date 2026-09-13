@@ -1,0 +1,2653 @@
+
+; file: /workspace/scratch/73f29dd8a4f8/primes-experiments/batch/PrimeLisp/solution_3/sieve.lisp
+; in: DEFUN MARK
+;     (DEFUN PRIME-CANDIDATE::MARK (PRIME-CANDIDATE::WORDS PRIME-CANDIDATE::INDEX)
+;       (DECLARE (TYPE PRIME-CANDIDATE::WORDS PRIME-CANDIDATE::WORDS)
+;                (TYPE FIXNUM PRIME-CANDIDATE::INDEX))
+;       (LET ((PRIME-CANDIDATE::WORD-INDEX (ASH PRIME-CANDIDATE::INDEX -6)))
+;         (SETF (AREF PRIME-CANDIDATE::WORDS PRIME-CANDIDATE::WORD-INDEX)
+;                 (LOGIOR # #))))
+; --> SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA 
+; ==>
+;   #'(SB-INT:NAMED-LAMBDA PRIME-CANDIDATE::MARK
+;         (PRIME-CANDIDATE::WORDS PRIME-CANDIDATE::INDEX)
+;       (DECLARE (SB-C::TOP-LEVEL-FORM))
+;       (DECLARE (TYPE PRIME-CANDIDATE::WORDS PRIME-CANDIDATE::WORDS)
+;                (TYPE FIXNUM PRIME-CANDIDATE::INDEX))
+;       (BLOCK PRIME-CANDIDATE::MARK
+;         (LET ((PRIME-CANDIDATE::WORD-INDEX #))
+;           (SETF # #))))
+; 
+; note: doing unsigned word to integer coercion (cost 20) to "<return value>"
+
+; in: DEFMACRO DEFINE-DENSE-RESETTERS
+;     (LOOP PRIME-CANDIDATE::FOR PRIME-CANDIDATE::FACTOR PRIME-CANDIDATE::FROM 3 PRIME-CANDIDATE::TO PRIME-CANDIDATE::MAXIMUM PRIME-CANDIDATE::BY 2
+;           PRIME-CANDIDATE::FOR PRIME-CANDIDATE::NAME = ...)
+; --> LET LET LET SB-LOOP::WITH-LOOP-LIST-COLLECTION-HEAD LET* TAGBODY WHEN IF 
+; ==>
+;   (> PRIME-CANDIDATE::FACTOR #:LIM1)
+; 
+; note: forced to do GENERIC-> (cost 10)
+;       unable to do inline fixnum comparison (cost 4) because:
+;       The second argument is a REAL, not a FIXNUM.
+
+;     (* PRIME-CANDIDATE::FACTOR PRIME-CANDIDATE::FACTOR)
+; 
+; note: forced to do */UNSIGNED=>INTEGER (cost 10)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The result is a (VALUES
+;                        (OR (INTEGER 9 9) (INTEGER 25 25) (INTEGER 49 49)
+;                            (INTEGER 81 81) (INTEGER 121 121)
+;                            (INTEGER 169 309485009821380253096869889))
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       unable to do inline (unsigned-byte 64) arithmetic (cost 4) because:
+;       The result is a (VALUES
+;                        (OR (INTEGER 9 9) (INTEGER 25 25) (INTEGER 49 49)
+;                            (INTEGER 81 81) (INTEGER 121 121)
+;                            (INTEGER 169 309485009821380253096869889))
+;                        &OPTIONAL), not a (VALUES (UNSIGNED-BYTE 64) &OPTIONAL).
+;       etc.
+
+;     (* PRIME-CANDIDATE::FACTOR
+;        (FLOOR (FLOOR (* PRIME-CANDIDATE::FACTOR PRIME-CANDIDATE::FACTOR) 2)
+;               (* 64 PRIME-CANDIDATE::FACTOR)))
+; 
+; note: forced to do GENERIC-* (cost 30)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The second argument is a (MOD 805950546409844409106433), not a FIXNUM.
+;       The result is a (VALUES
+;                        (OR (INTEGER 0 0)
+;                            (INTEGER 3 14178431955041520495946504659632390144))
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       unable to do inline (unsigned-byte 64) arithmetic (cost 4) because:
+;       The second argument is a (MOD 805950546409844409106433), not a (UNSIGNED-BYTE
+;                                                                       64).
+;       The result is a (VALUES
+;                        (OR (INTEGER 0 0)
+;                            (INTEGER 3 14178431955041520495946504659632390144))
+;                        &OPTIONAL), not a (VALUES (UNSIGNED-BYTE 64) &OPTIONAL).
+;       etc.
+
+; in: DEFMACRO DEFINE-DENSE-RESETTERS => DEFUN ,NAME
+;     (LOOP PRIME-CANDIDATE::FOR PRIME-CANDIDATE::MASKS PRIME-CANDIDATE::ACROSS PRIME-CANDIDATE::GROUPS
+;           PRIME-CANDIDATE::FOR PRIME-CANDIDATE::I PRIME-CANDIDATE::FROM 0
+;           WHEN PRIME-CANDIDATE::MASKS
+;           PRIME-CANDIDATE::COLLECT ...)
+; 
+; note: forced to do GENERIC-+ (cost 10)
+;       unable to do inline fixnum arithmetic (cost 1) because:
+;       The first argument is a UNSIGNED-BYTE, not a FIXNUM.
+;       The result is a (VALUES (INTEGER 1) &OPTIONAL), not a (VALUES FIXNUM
+;                                                                     &OPTIONAL).
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a UNSIGNED-BYTE, not a FIXNUM.
+;       The result is a (VALUES (INTEGER 1) &OPTIONAL), not a (VALUES FIXNUM
+;                                                                     &OPTIONAL).
+;       etc.
+; 
+; note: forced to do GENERIC-+ (cost 10)
+;       unable to do inline fixnum arithmetic (cost 1) because:
+;       The first argument is a UNSIGNED-BYTE, not a FIXNUM.
+;       The result is a (VALUES (INTEGER 1) &OPTIONAL), not a (VALUES FIXNUM
+;                                                                     &OPTIONAL).
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a UNSIGNED-BYTE, not a FIXNUM.
+;       The result is a (VALUES (INTEGER 1) &OPTIONAL), not a (VALUES FIXNUM
+;                                                                     &OPTIONAL).
+;       etc.
+
+; in: DEFMACRO DEFINE-DENSE-RESETTERS
+;     (ASH 1 (MOD PRIME-CANDIDATE::INDEX 64))
+; 
+; note: doing unsigned word to integer coercion (cost 20), for:
+;       the first result of inline ASH
+
+;     `(DEFUN ,PRIME-CANDIDATE::NAME (PRIME-CANDIDATE::WORDS)
+;        (DECLARE (TYPE PRIME-CANDIDATE::WORDS PRIME-CANDIDATE::WORDS))
+;        (LET ((PRIME-CANDIDATE::BASE ,PRIME-CANDIDATE::FIRST-WORD)
+;              (PRIME-CANDIDATE::END (LENGTH PRIME-CANDIDATE::WORDS)))
+;          (DECLARE (TYPE FIXNUM PRIME-CANDIDATE::BASE PRIME-CANDIDATE::END))
+;          (LOOP PRIME-CANDIDATE::WHILE (<=
+;                                        (+ PRIME-CANDIDATE::BASE
+;                                           ,PRIME-CANDIDATE::FACTOR)
+;                                        PRIME-CANDIDATE::END)
+;                DO ,@(LOOP PRIME-CANDIDATE::FOR PRIME-CANDIDATE::MASKS PRIME-CANDIDATE::ACROSS PRIME-CANDIDATE::GROUPS
+;                           PRIME-CANDIDATE::FOR PRIME-CANDIDATE::I PRIME-CANDIDATE::FROM 0
+;                           WHEN PRIME-CANDIDATE::MASKS
+;                           PRIME-CANDIDATE::COLLECT ...) (INCF
+;                                                          PRIME-CANDIDATE::BASE
+;                                                          ,PRIME-CANDIDATE::FACTOR))
+;          ,@(LOOP PRIME-CANDIDATE::FOR PRIME-CANDIDATE::MASKS PRIME-CANDIDATE::ACROSS PRIME-CANDIDATE::GROUPS
+;                  PRIME-CANDIDATE::FOR PRIME-CANDIDATE::I PRIME-CANDIDATE::FROM 0
+;                  WHEN PRIME-CANDIDATE::MASKS
+;                  PRIME-CANDIDATE::COLLECT ...)
+;          (SETF (AREF PRIME-CANDIDATE::WORDS ,#) (LOGANDC2 # ,#)))
+;        (VALUES))
+; 
+; note: doing unsigned word to integer coercion (cost 20), for:
+;       the third argument of LIST
+
+; in: DEFMACRO DEFINE-SPARSE-RESETTERS => DEFUN ,NAME
+;     (LOOP PRIME-CANDIDATE::FOR PRIME-CANDIDATE::INDEX PRIME-CANDIDATE::IN PRIME-CANDIDATE::INDICES
+;           PRIME-CANDIDATE::FOR PRIME-CANDIDATE::I PRIME-CANDIDATE::FROM 0
+;           PRIME-CANDIDATE::COLLECT `(,PRIME-CANDIDATE::INDEX
+;                                      (ASH
+;                                       (+ PRIME-CANDIDATE::HALF
+;                                          (* ,PRIME-CANDIDATE::I
+;                                             PRIME-CANDIDATE::FACTOR))
+;                                       -3)))
+; 
+; note: forced to do GENERIC-+ (cost 10)
+;       unable to do inline fixnum arithmetic (cost 1) because:
+;       The first argument is a UNSIGNED-BYTE, not a FIXNUM.
+;       The result is a (VALUES (INTEGER 1) &OPTIONAL), not a (VALUES FIXNUM
+;                                                                     &OPTIONAL).
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a UNSIGNED-BYTE, not a FIXNUM.
+;       The result is a (VALUES (INTEGER 1) &OPTIONAL), not a (VALUES FIXNUM
+;                                                                     &OPTIONAL).
+;       etc.
+
+;     (LOOP PRIME-CANDIDATE::FOR PRIME-CANDIDATE::INDEX PRIME-CANDIDATE::IN PRIME-CANDIDATE::INDICES
+;           PRIME-CANDIDATE::FOR PRIME-CANDIDATE::I PRIME-CANDIDATE::FROM 0
+;           PRIME-CANDIDATE::FOR PRIME-CANDIDATE::MASK = ...)
+; 
+; note: forced to do GENERIC-+ (cost 10)
+;       unable to do inline fixnum arithmetic (cost 1) because:
+;       The first argument is a UNSIGNED-BYTE, not a FIXNUM.
+;       The result is a (VALUES (INTEGER 1) &OPTIONAL), not a (VALUES FIXNUM
+;                                                                     &OPTIONAL).
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a UNSIGNED-BYTE, not a FIXNUM.
+;       The result is a (VALUES (INTEGER 1) &OPTIONAL), not a (VALUES FIXNUM
+;                                                                     &OPTIONAL).
+;       etc.
+; 
+; note: forced to do GENERIC-+ (cost 10)
+;       unable to do inline fixnum arithmetic (cost 1) because:
+;       The first argument is a UNSIGNED-BYTE, not a FIXNUM.
+;       The result is a (VALUES (INTEGER 1) &OPTIONAL), not a (VALUES FIXNUM
+;                                                                     &OPTIONAL).
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a UNSIGNED-BYTE, not a FIXNUM.
+;       The result is a (VALUES (INTEGER 1) &OPTIONAL), not a (VALUES FIXNUM
+;                                                                     &OPTIONAL).
+;       etc.
+
+; in: DEFINE-SPARSE-RESETTERS
+;     (PRIME-CANDIDATE::DEFINE-SPARSE-RESETTERS)
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* * 
+; ==>
+;   (FLOOR (ASH (* PRIME-CANDIDATE::FACTOR PRIME-CANDIDATE::FACTOR) -1)
+;          (* PRIME-CANDIDATE::FACTOR 8))
+; 
+; note: unable to
+;   optimize
+; due to type uncertainty:
+;   The second argument is a (OR (INTEGER -36893488147419103232 -8) (INTEGER 0 0)
+;                                (INTEGER 8 36893488147419103224)), not a FIXNUM.
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* * FLOOR ASH 
+; ==>
+;   (* PRIME-CANDIDATE::FACTOR PRIME-CANDIDATE::FACTOR)
+; 
+; note: forced to do */SIGNED=>INTEGER (cost 10)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The result is a (VALUES (MOD 21267647932558653966460912964485513217)
+;                               &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       unable to do inline (unsigned-byte 64) arithmetic (cost 4) because:
+;       The first argument is a FIXNUM, not a (UNSIGNED-BYTE 64).
+;       The second argument is a FIXNUM, not a (UNSIGNED-BYTE 64).
+;       The result is a (VALUES (MOD 21267647932558653966460912964485513217)
+;                               &OPTIONAL), not a (VALUES (UNSIGNED-BYTE 64)
+;                                                         &OPTIONAL).
+;       etc.
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* * FLOOR 
+; ==>
+;   (* PRIME-CANDIDATE::FACTOR 8)
+; 
+; note: forced to do */SIGNED=>INTEGER (cost 10)
+;       unable to do inline fixnum arithmetic (cost 1) because:
+;       The result is a (VALUES
+;                        (OR (INTEGER -36893488147419103232 -8) (INTEGER 0 0)
+;                            (INTEGER 8 36893488147419103224))
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The result is a (VALUES
+;                        (OR (INTEGER -36893488147419103232 -8) (INTEGER 0 0)
+;                            (INTEGER 8 36893488147419103224))
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       etc.
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* 
+; ==>
+;   (* PRIME-CANDIDATE::FACTOR
+;      (FLOOR (ASH (* PRIME-CANDIDATE::FACTOR PRIME-CANDIDATE::FACTOR) -1)
+;             (* PRIME-CANDIDATE::FACTOR 8)))
+; 
+; note: forced to do GENERIC-* (cost 30)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The second argument is a (INTEGER -1329227995784915872903807060280344576
+;                                 1329227995784915872903807060280344576), not a FIXNUM.
+;       unable to do inline (unsigned-byte 64) arithmetic (cost 4) because:
+;       The first argument is a FIXNUM, not a (UNSIGNED-BYTE 64).
+;       The second argument is a (INTEGER -1329227995784915872903807060280344576
+;                                 1329227995784915872903807060280344576), not a (UNSIGNED-BYTE
+;                                                                                64).
+;       The result is a (VALUES FIXNUM &OPTIONAL), not a (VALUES
+;                                                         (UNSIGNED-BYTE 64)
+;                                                         &OPTIONAL).
+;       etc.
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* ASH 
+; ==>
+;   (+ PRIME-CANDIDATE::HALF (* 2 PRIME-CANDIDATE::FACTOR))
+; 
+; note: forced to do +/SIGNED=>INTEGER (cost 7)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The second argument is a (OR (INTEGER -9223372036854775808 -2)
+;                                    (INTEGER 0 0)
+;                                    (INTEGER 2 9223372036854775806)), not a FIXNUM.
+;       The result is a (VALUES
+;                        (INTEGER -11529215046068469760 11529215046068469757)
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* ASH + 
+; ==>
+;   (* 3 PRIME-CANDIDATE::FACTOR)
+; 
+; note: forced to do */SIGNED=>INTEGER (cost 10)
+;       unable to do inline fixnum arithmetic (cost 1) because:
+;       The result is a (VALUES
+;                        (OR (INTEGER -13835058055282163712 -3) (INTEGER 0 0)
+;                            (INTEGER 3 13835058055282163709))
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The result is a (VALUES
+;                        (OR (INTEGER -13835058055282163712 -3) (INTEGER 0 0)
+;                            (INTEGER 3 13835058055282163709))
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       etc.
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* ASH 
+; ==>
+;   (+ PRIME-CANDIDATE::HALF (* 3 PRIME-CANDIDATE::FACTOR))
+; 
+; note: forced to do GENERIC-+ (cost 10)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The second argument is a (OR (INTEGER -13835058055282163712 -3)
+;                                    (INTEGER 0 0)
+;                                    (INTEGER 3 13835058055282163709)), not a FIXNUM.
+;       The result is a (VALUES
+;                        (INTEGER -16140901064495857664 16140901064495857660)
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       unable to do inline (unsigned-byte 64) arithmetic (cost 4) because:
+;       The first argument is a (SIGNED-BYTE 62), not a (UNSIGNED-BYTE 64).
+;       The second argument is a (OR (INTEGER -13835058055282163712 -3)
+;                                    (INTEGER 0 0)
+;                                    (INTEGER 3 13835058055282163709)), not a (UNSIGNED-BYTE
+;                                                                              64).
+;       The result is a (VALUES
+;                        (INTEGER -16140901064495857664 16140901064495857660)
+;                        &OPTIONAL), not a (VALUES (UNSIGNED-BYTE 64) &OPTIONAL).
+;       etc.
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* ASH + 
+; ==>
+;   (* 4 PRIME-CANDIDATE::FACTOR)
+; 
+; note: forced to do */SIGNED=>INTEGER (cost 10)
+;       unable to do inline fixnum arithmetic (cost 1) because:
+;       The result is a (VALUES
+;                        (OR (INTEGER -18446744073709551616 -4) (INTEGER 0 0)
+;                            (INTEGER 4 18446744073709551612))
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The result is a (VALUES
+;                        (OR (INTEGER -18446744073709551616 -4) (INTEGER 0 0)
+;                            (INTEGER 4 18446744073709551612))
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       etc.
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* ASH 
+; ==>
+;   (+ PRIME-CANDIDATE::HALF (* 4 PRIME-CANDIDATE::FACTOR))
+; 
+; note: forced to do GENERIC-+ (cost 10)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The second argument is a (OR (INTEGER -18446744073709551616 -4)
+;                                    (INTEGER 0 0)
+;                                    (INTEGER 4 18446744073709551612)), not a FIXNUM.
+;       The result is a (VALUES
+;                        (INTEGER -20752587082923245568 20752587082923245563)
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       unable to do inline (unsigned-byte 64) arithmetic (cost 4) because:
+;       The first argument is a (SIGNED-BYTE 62), not a (UNSIGNED-BYTE 64).
+;       The second argument is a (OR (INTEGER -18446744073709551616 -4)
+;                                    (INTEGER 0 0)
+;                                    (INTEGER 4 18446744073709551612)), not a (UNSIGNED-BYTE
+;                                                                              64).
+;       The result is a (VALUES
+;                        (INTEGER -20752587082923245568 20752587082923245563)
+;                        &OPTIONAL), not a (VALUES (UNSIGNED-BYTE 64) &OPTIONAL).
+;       etc.
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* ASH + 
+; ==>
+;   (* 5 PRIME-CANDIDATE::FACTOR)
+; 
+; note: forced to do */SIGNED=>INTEGER (cost 10)
+;       unable to do inline fixnum arithmetic (cost 1) because:
+;       The result is a (VALUES
+;                        (OR (INTEGER -23058430092136939520 -5) (INTEGER 0 0)
+;                            (INTEGER 5 23058430092136939515))
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The result is a (VALUES
+;                        (OR (INTEGER -23058430092136939520 -5) (INTEGER 0 0)
+;                            (INTEGER 5 23058430092136939515))
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       etc.
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* ASH 
+; ==>
+;   (+ PRIME-CANDIDATE::HALF (* 5 PRIME-CANDIDATE::FACTOR))
+; 
+; note: forced to do GENERIC-+ (cost 10)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The second argument is a (OR (INTEGER -23058430092136939520 -5)
+;                                    (INTEGER 0 0)
+;                                    (INTEGER 5 23058430092136939515)), not a FIXNUM.
+;       The result is a (VALUES
+;                        (INTEGER -25364273101350633472 25364273101350633466)
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       unable to do inline (unsigned-byte 64) arithmetic (cost 4) because:
+;       The first argument is a (SIGNED-BYTE 62), not a (UNSIGNED-BYTE 64).
+;       The second argument is a (OR (INTEGER -23058430092136939520 -5)
+;                                    (INTEGER 0 0)
+;                                    (INTEGER 5 23058430092136939515)), not a (UNSIGNED-BYTE
+;                                                                              64).
+;       The result is a (VALUES
+;                        (INTEGER -25364273101350633472 25364273101350633466)
+;                        &OPTIONAL), not a (VALUES (UNSIGNED-BYTE 64) &OPTIONAL).
+;       etc.
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* ASH + 
+; ==>
+;   (* 6 PRIME-CANDIDATE::FACTOR)
+; 
+; note: forced to do */SIGNED=>INTEGER (cost 10)
+;       unable to do inline fixnum arithmetic (cost 1) because:
+;       The result is a (VALUES
+;                        (OR (INTEGER -27670116110564327424 -6) (INTEGER 0 0)
+;                            (INTEGER 6 27670116110564327418))
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The result is a (VALUES
+;                        (OR (INTEGER -27670116110564327424 -6) (INTEGER 0 0)
+;                            (INTEGER 6 27670116110564327418))
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       etc.
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* ASH 
+; ==>
+;   (+ PRIME-CANDIDATE::HALF (* 6 PRIME-CANDIDATE::FACTOR))
+; 
+; note: forced to do GENERIC-+ (cost 10)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The second argument is a (OR (INTEGER -27670116110564327424 -6)
+;                                    (INTEGER 0 0)
+;                                    (INTEGER 6 27670116110564327418)), not a FIXNUM.
+;       The result is a (VALUES
+;                        (INTEGER -29975959119778021376 29975959119778021369)
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       unable to do inline (unsigned-byte 64) arithmetic (cost 4) because:
+;       The first argument is a (SIGNED-BYTE 62), not a (UNSIGNED-BYTE 64).
+;       The second argument is a (OR (INTEGER -27670116110564327424 -6)
+;                                    (INTEGER 0 0)
+;                                    (INTEGER 6 27670116110564327418)), not a (UNSIGNED-BYTE
+;                                                                              64).
+;       The result is a (VALUES
+;                        (INTEGER -29975959119778021376 29975959119778021369)
+;                        &OPTIONAL), not a (VALUES (UNSIGNED-BYTE 64) &OPTIONAL).
+;       etc.
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* ASH + 
+; ==>
+;   (* 7 PRIME-CANDIDATE::FACTOR)
+; 
+; note: forced to do */SIGNED=>INTEGER (cost 10)
+;       unable to do inline fixnum arithmetic (cost 1) because:
+;       The result is a (VALUES
+;                        (OR (INTEGER -32281802128991715328 -7) (INTEGER 0 0)
+;                            (INTEGER 7 32281802128991715321))
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The result is a (VALUES
+;                        (OR (INTEGER -32281802128991715328 -7) (INTEGER 0 0)
+;                            (INTEGER 7 32281802128991715321))
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       etc.
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* ASH 
+; ==>
+;   (+ PRIME-CANDIDATE::HALF (* 7 PRIME-CANDIDATE::FACTOR))
+; 
+; note: forced to do GENERIC-+ (cost 10)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The second argument is a (OR (INTEGER -32281802128991715328 -7)
+;                                    (INTEGER 0 0)
+;                                    (INTEGER 7 32281802128991715321)), not a FIXNUM.
+;       The result is a (VALUES
+;                        (INTEGER -34587645138205409280 34587645138205409272)
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       unable to do inline (unsigned-byte 64) arithmetic (cost 4) because:
+;       The first argument is a (SIGNED-BYTE 62), not a (UNSIGNED-BYTE 64).
+;       The second argument is a (OR (INTEGER -32281802128991715328 -7)
+;                                    (INTEGER 0 0)
+;                                    (INTEGER 7 32281802128991715321)), not a (UNSIGNED-BYTE
+;                                                                              64).
+;       The result is a (VALUES
+;                        (INTEGER -34587645138205409280 34587645138205409272)
+;                        &OPTIONAL), not a (VALUES (UNSIGNED-BYTE 64) &OPTIONAL).
+;       etc.
+
+; ==>
+;   1
+; 
+; note: doing unsigned word to integer coercion (cost 20)
+; 
+; note: doing unsigned word to integer coercion (cost 20)
+; 
+; note: doing unsigned word to integer coercion (cost 20)
+; 
+; note: doing unsigned word to integer coercion (cost 20)
+; 
+; note: doing unsigned word to integer coercion (cost 20)
+; 
+; note: doing unsigned word to integer coercion (cost 20)
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* * 
+; ==>
+;   (FLOOR (ASH (* PRIME-CANDIDATE::FACTOR PRIME-CANDIDATE::FACTOR) -1)
+;          (* PRIME-CANDIDATE::FACTOR 8))
+; 
+; note: unable to
+;   optimize
+; due to type uncertainty:
+;   The second argument is a (OR (INTEGER -36893488147419103232 -8) (INTEGER 0 0)
+;                                (INTEGER 8 36893488147419103224)), not a FIXNUM.
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* * FLOOR ASH 
+; ==>
+;   (* PRIME-CANDIDATE::FACTOR PRIME-CANDIDATE::FACTOR)
+; 
+; note: forced to do */SIGNED=>INTEGER (cost 10)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The result is a (VALUES (MOD 21267647932558653966460912964485513217)
+;                               &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       unable to do inline (unsigned-byte 64) arithmetic (cost 4) because:
+;       The first argument is a FIXNUM, not a (UNSIGNED-BYTE 64).
+;       The second argument is a FIXNUM, not a (UNSIGNED-BYTE 64).
+;       The result is a (VALUES (MOD 21267647932558653966460912964485513217)
+;                               &OPTIONAL), not a (VALUES (UNSIGNED-BYTE 64)
+;                                                         &OPTIONAL).
+;       etc.
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* * FLOOR 
+; ==>
+;   (* PRIME-CANDIDATE::FACTOR 8)
+; 
+; note: forced to do */SIGNED=>INTEGER (cost 10)
+;       unable to do inline fixnum arithmetic (cost 1) because:
+;       The result is a (VALUES
+;                        (OR (INTEGER -36893488147419103232 -8) (INTEGER 0 0)
+;                            (INTEGER 8 36893488147419103224))
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The result is a (VALUES
+;                        (OR (INTEGER -36893488147419103232 -8) (INTEGER 0 0)
+;                            (INTEGER 8 36893488147419103224))
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       etc.
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* 
+; ==>
+;   (* PRIME-CANDIDATE::FACTOR
+;      (FLOOR (ASH (* PRIME-CANDIDATE::FACTOR PRIME-CANDIDATE::FACTOR) -1)
+;             (* PRIME-CANDIDATE::FACTOR 8)))
+; 
+; note: forced to do GENERIC-* (cost 30)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The second argument is a (INTEGER -1329227995784915872903807060280344576
+;                                 1329227995784915872903807060280344576), not a FIXNUM.
+;       unable to do inline (unsigned-byte 64) arithmetic (cost 4) because:
+;       The first argument is a FIXNUM, not a (UNSIGNED-BYTE 64).
+;       The second argument is a (INTEGER -1329227995784915872903807060280344576
+;                                 1329227995784915872903807060280344576), not a (UNSIGNED-BYTE
+;                                                                                64).
+;       The result is a (VALUES FIXNUM &OPTIONAL), not a (VALUES
+;                                                         (UNSIGNED-BYTE 64)
+;                                                         &OPTIONAL).
+;       etc.
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* ASH 
+; ==>
+;   (+ PRIME-CANDIDATE::HALF (* 2 PRIME-CANDIDATE::FACTOR))
+; 
+; note: forced to do +/SIGNED=>INTEGER (cost 7)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The second argument is a (OR (INTEGER -9223372036854775808 -2)
+;                                    (INTEGER 0 0)
+;                                    (INTEGER 2 9223372036854775806)), not a FIXNUM.
+;       The result is a (VALUES
+;                        (INTEGER -11529215046068469760 11529215046068469757)
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* ASH + 
+; ==>
+;   (* 3 PRIME-CANDIDATE::FACTOR)
+; 
+; note: forced to do */SIGNED=>INTEGER (cost 10)
+;       unable to do inline fixnum arithmetic (cost 1) because:
+;       The result is a (VALUES
+;                        (OR (INTEGER -13835058055282163712 -3) (INTEGER 0 0)
+;                            (INTEGER 3 13835058055282163709))
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The result is a (VALUES
+;                        (OR (INTEGER -13835058055282163712 -3) (INTEGER 0 0)
+;                            (INTEGER 3 13835058055282163709))
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       etc.
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* ASH 
+; ==>
+;   (+ PRIME-CANDIDATE::HALF (* 3 PRIME-CANDIDATE::FACTOR))
+; 
+; note: forced to do GENERIC-+ (cost 10)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The second argument is a (OR (INTEGER -13835058055282163712 -3)
+;                                    (INTEGER 0 0)
+;                                    (INTEGER 3 13835058055282163709)), not a FIXNUM.
+;       The result is a (VALUES
+;                        (INTEGER -16140901064495857664 16140901064495857660)
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       unable to do inline (unsigned-byte 64) arithmetic (cost 4) because:
+;       The first argument is a (SIGNED-BYTE 62), not a (UNSIGNED-BYTE 64).
+;       The second argument is a (OR (INTEGER -13835058055282163712 -3)
+;                                    (INTEGER 0 0)
+;                                    (INTEGER 3 13835058055282163709)), not a (UNSIGNED-BYTE
+;                                                                              64).
+;       The result is a (VALUES
+;                        (INTEGER -16140901064495857664 16140901064495857660)
+;                        &OPTIONAL), not a (VALUES (UNSIGNED-BYTE 64) &OPTIONAL).
+;       etc.
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* ASH + 
+; ==>
+;   (* 4 PRIME-CANDIDATE::FACTOR)
+; 
+; note: forced to do */SIGNED=>INTEGER (cost 10)
+;       unable to do inline fixnum arithmetic (cost 1) because:
+;       The result is a (VALUES
+;                        (OR (INTEGER -18446744073709551616 -4) (INTEGER 0 0)
+;                            (INTEGER 4 18446744073709551612))
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The result is a (VALUES
+;                        (OR (INTEGER -18446744073709551616 -4) (INTEGER 0 0)
+;                            (INTEGER 4 18446744073709551612))
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       etc.
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* ASH 
+; ==>
+;   (+ PRIME-CANDIDATE::HALF (* 4 PRIME-CANDIDATE::FACTOR))
+; 
+; note: forced to do GENERIC-+ (cost 10)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The second argument is a (OR (INTEGER -18446744073709551616 -4)
+;                                    (INTEGER 0 0)
+;                                    (INTEGER 4 18446744073709551612)), not a FIXNUM.
+;       The result is a (VALUES
+;                        (INTEGER -20752587082923245568 20752587082923245563)
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       unable to do inline (unsigned-byte 64) arithmetic (cost 4) because:
+;       The first argument is a (SIGNED-BYTE 62), not a (UNSIGNED-BYTE 64).
+;       The second argument is a (OR (INTEGER -18446744073709551616 -4)
+;                                    (INTEGER 0 0)
+;                                    (INTEGER 4 18446744073709551612)), not a (UNSIGNED-BYTE
+;                                                                              64).
+;       The result is a (VALUES
+;                        (INTEGER -20752587082923245568 20752587082923245563)
+;                        &OPTIONAL), not a (VALUES (UNSIGNED-BYTE 64) &OPTIONAL).
+;       etc.
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* ASH + 
+; ==>
+;   (* 5 PRIME-CANDIDATE::FACTOR)
+; 
+; note: forced to do */SIGNED=>INTEGER (cost 10)
+;       unable to do inline fixnum arithmetic (cost 1) because:
+;       The result is a (VALUES
+;                        (OR (INTEGER -23058430092136939520 -5) (INTEGER 0 0)
+;                            (INTEGER 5 23058430092136939515))
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The result is a (VALUES
+;                        (OR (INTEGER -23058430092136939520 -5) (INTEGER 0 0)
+;                            (INTEGER 5 23058430092136939515))
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       etc.
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* ASH 
+; ==>
+;   (+ PRIME-CANDIDATE::HALF (* 5 PRIME-CANDIDATE::FACTOR))
+; 
+; note: forced to do GENERIC-+ (cost 10)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The second argument is a (OR (INTEGER -23058430092136939520 -5)
+;                                    (INTEGER 0 0)
+;                                    (INTEGER 5 23058430092136939515)), not a FIXNUM.
+;       The result is a (VALUES
+;                        (INTEGER -25364273101350633472 25364273101350633466)
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       unable to do inline (unsigned-byte 64) arithmetic (cost 4) because:
+;       The first argument is a (SIGNED-BYTE 62), not a (UNSIGNED-BYTE 64).
+;       The second argument is a (OR (INTEGER -23058430092136939520 -5)
+;                                    (INTEGER 0 0)
+;                                    (INTEGER 5 23058430092136939515)), not a (UNSIGNED-BYTE
+;                                                                              64).
+;       The result is a (VALUES
+;                        (INTEGER -25364273101350633472 25364273101350633466)
+;                        &OPTIONAL), not a (VALUES (UNSIGNED-BYTE 64) &OPTIONAL).
+;       etc.
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* ASH + 
+; ==>
+;   (* 6 PRIME-CANDIDATE::FACTOR)
+; 
+; note: forced to do */SIGNED=>INTEGER (cost 10)
+;       unable to do inline fixnum arithmetic (cost 1) because:
+;       The result is a (VALUES
+;                        (OR (INTEGER -27670116110564327424 -6) (INTEGER 0 0)
+;                            (INTEGER 6 27670116110564327418))
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The result is a (VALUES
+;                        (OR (INTEGER -27670116110564327424 -6) (INTEGER 0 0)
+;                            (INTEGER 6 27670116110564327418))
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       etc.
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* ASH 
+; ==>
+;   (+ PRIME-CANDIDATE::HALF (* 6 PRIME-CANDIDATE::FACTOR))
+; 
+; note: forced to do GENERIC-+ (cost 10)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The second argument is a (OR (INTEGER -27670116110564327424 -6)
+;                                    (INTEGER 0 0)
+;                                    (INTEGER 6 27670116110564327418)), not a FIXNUM.
+;       The result is a (VALUES
+;                        (INTEGER -29975959119778021376 29975959119778021369)
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       unable to do inline (unsigned-byte 64) arithmetic (cost 4) because:
+;       The first argument is a (SIGNED-BYTE 62), not a (UNSIGNED-BYTE 64).
+;       The second argument is a (OR (INTEGER -27670116110564327424 -6)
+;                                    (INTEGER 0 0)
+;                                    (INTEGER 6 27670116110564327418)), not a (UNSIGNED-BYTE
+;                                                                              64).
+;       The result is a (VALUES
+;                        (INTEGER -29975959119778021376 29975959119778021369)
+;                        &OPTIONAL), not a (VALUES (UNSIGNED-BYTE 64) &OPTIONAL).
+;       etc.
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* ASH + 
+; ==>
+;   (* 7 PRIME-CANDIDATE::FACTOR)
+; 
+; note: forced to do */SIGNED=>INTEGER (cost 10)
+;       unable to do inline fixnum arithmetic (cost 1) because:
+;       The result is a (VALUES
+;                        (OR (INTEGER -32281802128991715328 -7) (INTEGER 0 0)
+;                            (INTEGER 7 32281802128991715321))
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The result is a (VALUES
+;                        (OR (INTEGER -32281802128991715328 -7) (INTEGER 0 0)
+;                            (INTEGER 7 32281802128991715321))
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       etc.
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* ASH 
+; ==>
+;   (+ PRIME-CANDIDATE::HALF (* 7 PRIME-CANDIDATE::FACTOR))
+; 
+; note: forced to do GENERIC-+ (cost 10)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The second argument is a (OR (INTEGER -32281802128991715328 -7)
+;                                    (INTEGER 0 0)
+;                                    (INTEGER 7 32281802128991715321)), not a FIXNUM.
+;       The result is a (VALUES
+;                        (INTEGER -34587645138205409280 34587645138205409272)
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       unable to do inline (unsigned-byte 64) arithmetic (cost 4) because:
+;       The first argument is a (SIGNED-BYTE 62), not a (UNSIGNED-BYTE 64).
+;       The second argument is a (OR (INTEGER -32281802128991715328 -7)
+;                                    (INTEGER 0 0)
+;                                    (INTEGER 7 32281802128991715321)), not a (UNSIGNED-BYTE
+;                                                                              64).
+;       The result is a (VALUES
+;                        (INTEGER -34587645138205409280 34587645138205409272)
+;                        &OPTIONAL), not a (VALUES (UNSIGNED-BYTE 64) &OPTIONAL).
+;       etc.
+
+; ==>
+;   1
+; 
+; note: doing unsigned word to integer coercion (cost 20)
+; 
+; note: doing unsigned word to integer coercion (cost 20)
+; 
+; note: doing unsigned word to integer coercion (cost 20)
+; 
+; note: doing unsigned word to integer coercion (cost 20)
+; 
+; note: doing unsigned word to integer coercion (cost 20)
+; 
+; note: doing unsigned word to integer coercion (cost 20)
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* * 
+; ==>
+;   (FLOOR (ASH (* PRIME-CANDIDATE::FACTOR PRIME-CANDIDATE::FACTOR) -1)
+;          (* PRIME-CANDIDATE::FACTOR 8))
+; 
+; note: unable to
+;   optimize
+; due to type uncertainty:
+;   The second argument is a (OR (INTEGER -36893488147419103232 -8) (INTEGER 0 0)
+;                                (INTEGER 8 36893488147419103224)), not a FIXNUM.
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* * FLOOR ASH 
+; ==>
+;   (* PRIME-CANDIDATE::FACTOR PRIME-CANDIDATE::FACTOR)
+; 
+; note: forced to do */SIGNED=>INTEGER (cost 10)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The result is a (VALUES (MOD 21267647932558653966460912964485513217)
+;                               &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       unable to do inline (unsigned-byte 64) arithmetic (cost 4) because:
+;       The first argument is a FIXNUM, not a (UNSIGNED-BYTE 64).
+;       The second argument is a FIXNUM, not a (UNSIGNED-BYTE 64).
+;       The result is a (VALUES (MOD 21267647932558653966460912964485513217)
+;                               &OPTIONAL), not a (VALUES (UNSIGNED-BYTE 64)
+;                                                         &OPTIONAL).
+;       etc.
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* * FLOOR 
+; ==>
+;   (* PRIME-CANDIDATE::FACTOR 8)
+; 
+; note: forced to do */SIGNED=>INTEGER (cost 10)
+;       unable to do inline fixnum arithmetic (cost 1) because:
+;       The result is a (VALUES
+;                        (OR (INTEGER -36893488147419103232 -8) (INTEGER 0 0)
+;                            (INTEGER 8 36893488147419103224))
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The result is a (VALUES
+;                        (OR (INTEGER -36893488147419103232 -8) (INTEGER 0 0)
+;                            (INTEGER 8 36893488147419103224))
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       etc.
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* 
+; ==>
+;   (* PRIME-CANDIDATE::FACTOR
+;      (FLOOR (ASH (* PRIME-CANDIDATE::FACTOR PRIME-CANDIDATE::FACTOR) -1)
+;             (* PRIME-CANDIDATE::FACTOR 8)))
+; 
+; note: forced to do GENERIC-* (cost 30)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The second argument is a (INTEGER -1329227995784915872903807060280344576
+;                                 1329227995784915872903807060280344576), not a FIXNUM.
+;       unable to do inline (unsigned-byte 64) arithmetic (cost 4) because:
+;       The first argument is a FIXNUM, not a (UNSIGNED-BYTE 64).
+;       The second argument is a (INTEGER -1329227995784915872903807060280344576
+;                                 1329227995784915872903807060280344576), not a (UNSIGNED-BYTE
+;                                                                                64).
+;       The result is a (VALUES FIXNUM &OPTIONAL), not a (VALUES
+;                                                         (UNSIGNED-BYTE 64)
+;                                                         &OPTIONAL).
+;       etc.
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* ASH 
+; ==>
+;   (+ PRIME-CANDIDATE::HALF (* 2 PRIME-CANDIDATE::FACTOR))
+; 
+; note: forced to do +/SIGNED=>INTEGER (cost 7)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The second argument is a (OR (INTEGER -9223372036854775808 -2)
+;                                    (INTEGER 0 0)
+;                                    (INTEGER 2 9223372036854775806)), not a FIXNUM.
+;       The result is a (VALUES
+;                        (INTEGER -11529215046068469760 11529215046068469757)
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* ASH + 
+; ==>
+;   (* 3 PRIME-CANDIDATE::FACTOR)
+; 
+; note: forced to do */SIGNED=>INTEGER (cost 10)
+;       unable to do inline fixnum arithmetic (cost 1) because:
+;       The result is a (VALUES
+;                        (OR (INTEGER -13835058055282163712 -3) (INTEGER 0 0)
+;                            (INTEGER 3 13835058055282163709))
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The result is a (VALUES
+;                        (OR (INTEGER -13835058055282163712 -3) (INTEGER 0 0)
+;                            (INTEGER 3 13835058055282163709))
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       etc.
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* ASH 
+; ==>
+;   (+ PRIME-CANDIDATE::HALF (* 3 PRIME-CANDIDATE::FACTOR))
+; 
+; note: forced to do GENERIC-+ (cost 10)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The second argument is a (OR (INTEGER -13835058055282163712 -3)
+;                                    (INTEGER 0 0)
+;                                    (INTEGER 3 13835058055282163709)), not a FIXNUM.
+;       The result is a (VALUES
+;                        (INTEGER -16140901064495857664 16140901064495857660)
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       unable to do inline (unsigned-byte 64) arithmetic (cost 4) because:
+;       The first argument is a (SIGNED-BYTE 62), not a (UNSIGNED-BYTE 64).
+;       The second argument is a (OR (INTEGER -13835058055282163712 -3)
+;                                    (INTEGER 0 0)
+;                                    (INTEGER 3 13835058055282163709)), not a (UNSIGNED-BYTE
+;                                                                              64).
+;       The result is a (VALUES
+;                        (INTEGER -16140901064495857664 16140901064495857660)
+;                        &OPTIONAL), not a (VALUES (UNSIGNED-BYTE 64) &OPTIONAL).
+;       etc.
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* ASH + 
+; ==>
+;   (* 4 PRIME-CANDIDATE::FACTOR)
+; 
+; note: forced to do */SIGNED=>INTEGER (cost 10)
+;       unable to do inline fixnum arithmetic (cost 1) because:
+;       The result is a (VALUES
+;                        (OR (INTEGER -18446744073709551616 -4) (INTEGER 0 0)
+;                            (INTEGER 4 18446744073709551612))
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The result is a (VALUES
+;                        (OR (INTEGER -18446744073709551616 -4) (INTEGER 0 0)
+;                            (INTEGER 4 18446744073709551612))
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       etc.
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* ASH 
+; ==>
+;   (+ PRIME-CANDIDATE::HALF (* 4 PRIME-CANDIDATE::FACTOR))
+; 
+; note: forced to do GENERIC-+ (cost 10)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The second argument is a (OR (INTEGER -18446744073709551616 -4)
+;                                    (INTEGER 0 0)
+;                                    (INTEGER 4 18446744073709551612)), not a FIXNUM.
+;       The result is a (VALUES
+;                        (INTEGER -20752587082923245568 20752587082923245563)
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       unable to do inline (unsigned-byte 64) arithmetic (cost 4) because:
+;       The first argument is a (SIGNED-BYTE 62), not a (UNSIGNED-BYTE 64).
+;       The second argument is a (OR (INTEGER -18446744073709551616 -4)
+;                                    (INTEGER 0 0)
+;                                    (INTEGER 4 18446744073709551612)), not a (UNSIGNED-BYTE
+;                                                                              64).
+;       The result is a (VALUES
+;                        (INTEGER -20752587082923245568 20752587082923245563)
+;                        &OPTIONAL), not a (VALUES (UNSIGNED-BYTE 64) &OPTIONAL).
+;       etc.
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* ASH + 
+; ==>
+;   (* 5 PRIME-CANDIDATE::FACTOR)
+; 
+; note: forced to do */SIGNED=>INTEGER (cost 10)
+;       unable to do inline fixnum arithmetic (cost 1) because:
+;       The result is a (VALUES
+;                        (OR (INTEGER -23058430092136939520 -5) (INTEGER 0 0)
+;                            (INTEGER 5 23058430092136939515))
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The result is a (VALUES
+;                        (OR (INTEGER -23058430092136939520 -5) (INTEGER 0 0)
+;                            (INTEGER 5 23058430092136939515))
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       etc.
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* ASH 
+; ==>
+;   (+ PRIME-CANDIDATE::HALF (* 5 PRIME-CANDIDATE::FACTOR))
+; 
+; note: forced to do GENERIC-+ (cost 10)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The second argument is a (OR (INTEGER -23058430092136939520 -5)
+;                                    (INTEGER 0 0)
+;                                    (INTEGER 5 23058430092136939515)), not a FIXNUM.
+;       The result is a (VALUES
+;                        (INTEGER -25364273101350633472 25364273101350633466)
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       unable to do inline (unsigned-byte 64) arithmetic (cost 4) because:
+;       The first argument is a (SIGNED-BYTE 62), not a (UNSIGNED-BYTE 64).
+;       The second argument is a (OR (INTEGER -23058430092136939520 -5)
+;                                    (INTEGER 0 0)
+;                                    (INTEGER 5 23058430092136939515)), not a (UNSIGNED-BYTE
+;                                                                              64).
+;       The result is a (VALUES
+;                        (INTEGER -25364273101350633472 25364273101350633466)
+;                        &OPTIONAL), not a (VALUES (UNSIGNED-BYTE 64) &OPTIONAL).
+;       etc.
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* ASH + 
+; ==>
+;   (* 6 PRIME-CANDIDATE::FACTOR)
+; 
+; note: forced to do */SIGNED=>INTEGER (cost 10)
+;       unable to do inline fixnum arithmetic (cost 1) because:
+;       The result is a (VALUES
+;                        (OR (INTEGER -27670116110564327424 -6) (INTEGER 0 0)
+;                            (INTEGER 6 27670116110564327418))
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The result is a (VALUES
+;                        (OR (INTEGER -27670116110564327424 -6) (INTEGER 0 0)
+;                            (INTEGER 6 27670116110564327418))
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       etc.
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* ASH 
+; ==>
+;   (+ PRIME-CANDIDATE::HALF (* 6 PRIME-CANDIDATE::FACTOR))
+; 
+; note: forced to do GENERIC-+ (cost 10)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The second argument is a (OR (INTEGER -27670116110564327424 -6)
+;                                    (INTEGER 0 0)
+;                                    (INTEGER 6 27670116110564327418)), not a FIXNUM.
+;       The result is a (VALUES
+;                        (INTEGER -29975959119778021376 29975959119778021369)
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       unable to do inline (unsigned-byte 64) arithmetic (cost 4) because:
+;       The first argument is a (SIGNED-BYTE 62), not a (UNSIGNED-BYTE 64).
+;       The second argument is a (OR (INTEGER -27670116110564327424 -6)
+;                                    (INTEGER 0 0)
+;                                    (INTEGER 6 27670116110564327418)), not a (UNSIGNED-BYTE
+;                                                                              64).
+;       The result is a (VALUES
+;                        (INTEGER -29975959119778021376 29975959119778021369)
+;                        &OPTIONAL), not a (VALUES (UNSIGNED-BYTE 64) &OPTIONAL).
+;       etc.
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* ASH + 
+; ==>
+;   (* 7 PRIME-CANDIDATE::FACTOR)
+; 
+; note: forced to do */SIGNED=>INTEGER (cost 10)
+;       unable to do inline fixnum arithmetic (cost 1) because:
+;       The result is a (VALUES
+;                        (OR (INTEGER -32281802128991715328 -7) (INTEGER 0 0)
+;                            (INTEGER 7 32281802128991715321))
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The result is a (VALUES
+;                        (OR (INTEGER -32281802128991715328 -7) (INTEGER 0 0)
+;                            (INTEGER 7 32281802128991715321))
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       etc.
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* ASH 
+; ==>
+;   (+ PRIME-CANDIDATE::HALF (* 7 PRIME-CANDIDATE::FACTOR))
+; 
+; note: forced to do GENERIC-+ (cost 10)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The second argument is a (OR (INTEGER -32281802128991715328 -7)
+;                                    (INTEGER 0 0)
+;                                    (INTEGER 7 32281802128991715321)), not a FIXNUM.
+;       The result is a (VALUES
+;                        (INTEGER -34587645138205409280 34587645138205409272)
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       unable to do inline (unsigned-byte 64) arithmetic (cost 4) because:
+;       The first argument is a (SIGNED-BYTE 62), not a (UNSIGNED-BYTE 64).
+;       The second argument is a (OR (INTEGER -32281802128991715328 -7)
+;                                    (INTEGER 0 0)
+;                                    (INTEGER 7 32281802128991715321)), not a (UNSIGNED-BYTE
+;                                                                              64).
+;       The result is a (VALUES
+;                        (INTEGER -34587645138205409280 34587645138205409272)
+;                        &OPTIONAL), not a (VALUES (UNSIGNED-BYTE 64) &OPTIONAL).
+;       etc.
+
+; ==>
+;   1
+; 
+; note: doing unsigned word to integer coercion (cost 20)
+; 
+; note: doing unsigned word to integer coercion (cost 20)
+; 
+; note: doing unsigned word to integer coercion (cost 20)
+; 
+; note: doing unsigned word to integer coercion (cost 20)
+; 
+; note: doing unsigned word to integer coercion (cost 20)
+; 
+; note: doing unsigned word to integer coercion (cost 20)
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* * 
+; ==>
+;   (FLOOR (ASH (* PRIME-CANDIDATE::FACTOR PRIME-CANDIDATE::FACTOR) -1)
+;          (* PRIME-CANDIDATE::FACTOR 8))
+; 
+; note: unable to
+;   optimize
+; due to type uncertainty:
+;   The second argument is a (OR (INTEGER -36893488147419103232 -8) (INTEGER 0 0)
+;                                (INTEGER 8 36893488147419103224)), not a FIXNUM.
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* * FLOOR ASH 
+; ==>
+;   (* PRIME-CANDIDATE::FACTOR PRIME-CANDIDATE::FACTOR)
+; 
+; note: forced to do */SIGNED=>INTEGER (cost 10)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The result is a (VALUES (MOD 21267647932558653966460912964485513217)
+;                               &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       unable to do inline (unsigned-byte 64) arithmetic (cost 4) because:
+;       The first argument is a FIXNUM, not a (UNSIGNED-BYTE 64).
+;       The second argument is a FIXNUM, not a (UNSIGNED-BYTE 64).
+;       The result is a (VALUES (MOD 21267647932558653966460912964485513217)
+;                               &OPTIONAL), not a (VALUES (UNSIGNED-BYTE 64)
+;                                                         &OPTIONAL).
+;       etc.
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* * FLOOR 
+; ==>
+;   (* PRIME-CANDIDATE::FACTOR 8)
+; 
+; note: forced to do */SIGNED=>INTEGER (cost 10)
+;       unable to do inline fixnum arithmetic (cost 1) because:
+;       The result is a (VALUES
+;                        (OR (INTEGER -36893488147419103232 -8) (INTEGER 0 0)
+;                            (INTEGER 8 36893488147419103224))
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The result is a (VALUES
+;                        (OR (INTEGER -36893488147419103232 -8) (INTEGER 0 0)
+;                            (INTEGER 8 36893488147419103224))
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       etc.
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* 
+; ==>
+;   (* PRIME-CANDIDATE::FACTOR
+;      (FLOOR (ASH (* PRIME-CANDIDATE::FACTOR PRIME-CANDIDATE::FACTOR) -1)
+;             (* PRIME-CANDIDATE::FACTOR 8)))
+; 
+; note: forced to do GENERIC-* (cost 30)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The second argument is a (INTEGER -1329227995784915872903807060280344576
+;                                 1329227995784915872903807060280344576), not a FIXNUM.
+;       unable to do inline (unsigned-byte 64) arithmetic (cost 4) because:
+;       The first argument is a FIXNUM, not a (UNSIGNED-BYTE 64).
+;       The second argument is a (INTEGER -1329227995784915872903807060280344576
+;                                 1329227995784915872903807060280344576), not a (UNSIGNED-BYTE
+;                                                                                64).
+;       The result is a (VALUES FIXNUM &OPTIONAL), not a (VALUES
+;                                                         (UNSIGNED-BYTE 64)
+;                                                         &OPTIONAL).
+;       etc.
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* ASH 
+; ==>
+;   (+ PRIME-CANDIDATE::HALF (* 2 PRIME-CANDIDATE::FACTOR))
+; 
+; note: forced to do +/SIGNED=>INTEGER (cost 7)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The second argument is a (OR (INTEGER -9223372036854775808 -2)
+;                                    (INTEGER 0 0)
+;                                    (INTEGER 2 9223372036854775806)), not a FIXNUM.
+;       The result is a (VALUES
+;                        (INTEGER -11529215046068469760 11529215046068469757)
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* ASH + 
+; ==>
+;   (* 3 PRIME-CANDIDATE::FACTOR)
+; 
+; note: forced to do */SIGNED=>INTEGER (cost 10)
+;       unable to do inline fixnum arithmetic (cost 1) because:
+;       The result is a (VALUES
+;                        (OR (INTEGER -13835058055282163712 -3) (INTEGER 0 0)
+;                            (INTEGER 3 13835058055282163709))
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The result is a (VALUES
+;                        (OR (INTEGER -13835058055282163712 -3) (INTEGER 0 0)
+;                            (INTEGER 3 13835058055282163709))
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       etc.
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* ASH 
+; ==>
+;   (+ PRIME-CANDIDATE::HALF (* 3 PRIME-CANDIDATE::FACTOR))
+; 
+; note: forced to do GENERIC-+ (cost 10)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The second argument is a (OR (INTEGER -13835058055282163712 -3)
+;                                    (INTEGER 0 0)
+;                                    (INTEGER 3 13835058055282163709)), not a FIXNUM.
+;       The result is a (VALUES
+;                        (INTEGER -16140901064495857664 16140901064495857660)
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       unable to do inline (unsigned-byte 64) arithmetic (cost 4) because:
+;       The first argument is a (SIGNED-BYTE 62), not a (UNSIGNED-BYTE 64).
+;       The second argument is a (OR (INTEGER -13835058055282163712 -3)
+;                                    (INTEGER 0 0)
+;                                    (INTEGER 3 13835058055282163709)), not a (UNSIGNED-BYTE
+;                                                                              64).
+;       The result is a (VALUES
+;                        (INTEGER -16140901064495857664 16140901064495857660)
+;                        &OPTIONAL), not a (VALUES (UNSIGNED-BYTE 64) &OPTIONAL).
+;       etc.
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* ASH + 
+; ==>
+;   (* 4 PRIME-CANDIDATE::FACTOR)
+; 
+; note: forced to do */SIGNED=>INTEGER (cost 10)
+;       unable to do inline fixnum arithmetic (cost 1) because:
+;       The result is a (VALUES
+;                        (OR (INTEGER -18446744073709551616 -4) (INTEGER 0 0)
+;                            (INTEGER 4 18446744073709551612))
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The result is a (VALUES
+;                        (OR (INTEGER -18446744073709551616 -4) (INTEGER 0 0)
+;                            (INTEGER 4 18446744073709551612))
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       etc.
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* ASH 
+; ==>
+;   (+ PRIME-CANDIDATE::HALF (* 4 PRIME-CANDIDATE::FACTOR))
+; 
+; note: forced to do GENERIC-+ (cost 10)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The second argument is a (OR (INTEGER -18446744073709551616 -4)
+;                                    (INTEGER 0 0)
+;                                    (INTEGER 4 18446744073709551612)), not a FIXNUM.
+;       The result is a (VALUES
+;                        (INTEGER -20752587082923245568 20752587082923245563)
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       unable to do inline (unsigned-byte 64) arithmetic (cost 4) because:
+;       The first argument is a (SIGNED-BYTE 62), not a (UNSIGNED-BYTE 64).
+;       The second argument is a (OR (INTEGER -18446744073709551616 -4)
+;                                    (INTEGER 0 0)
+;                                    (INTEGER 4 18446744073709551612)), not a (UNSIGNED-BYTE
+;                                                                              64).
+;       The result is a (VALUES
+;                        (INTEGER -20752587082923245568 20752587082923245563)
+;                        &OPTIONAL), not a (VALUES (UNSIGNED-BYTE 64) &OPTIONAL).
+;       etc.
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* ASH + 
+; ==>
+;   (* 5 PRIME-CANDIDATE::FACTOR)
+; 
+; note: forced to do */SIGNED=>INTEGER (cost 10)
+;       unable to do inline fixnum arithmetic (cost 1) because:
+;       The result is a (VALUES
+;                        (OR (INTEGER -23058430092136939520 -5) (INTEGER 0 0)
+;                            (INTEGER 5 23058430092136939515))
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The result is a (VALUES
+;                        (OR (INTEGER -23058430092136939520 -5) (INTEGER 0 0)
+;                            (INTEGER 5 23058430092136939515))
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       etc.
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* ASH 
+; ==>
+;   (+ PRIME-CANDIDATE::HALF (* 5 PRIME-CANDIDATE::FACTOR))
+; 
+; note: forced to do GENERIC-+ (cost 10)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The second argument is a (OR (INTEGER -23058430092136939520 -5)
+;                                    (INTEGER 0 0)
+;                                    (INTEGER 5 23058430092136939515)), not a FIXNUM.
+;       The result is a (VALUES
+;                        (INTEGER -25364273101350633472 25364273101350633466)
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       unable to do inline (unsigned-byte 64) arithmetic (cost 4) because:
+;       The first argument is a (SIGNED-BYTE 62), not a (UNSIGNED-BYTE 64).
+;       The second argument is a (OR (INTEGER -23058430092136939520 -5)
+;                                    (INTEGER 0 0)
+;                                    (INTEGER 5 23058430092136939515)), not a (UNSIGNED-BYTE
+;                                                                              64).
+;       The result is a (VALUES
+;                        (INTEGER -25364273101350633472 25364273101350633466)
+;                        &OPTIONAL), not a (VALUES (UNSIGNED-BYTE 64) &OPTIONAL).
+;       etc.
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* ASH + 
+; ==>
+;   (* 6 PRIME-CANDIDATE::FACTOR)
+; 
+; note: forced to do */SIGNED=>INTEGER (cost 10)
+;       unable to do inline fixnum arithmetic (cost 1) because:
+;       The result is a (VALUES
+;                        (OR (INTEGER -27670116110564327424 -6) (INTEGER 0 0)
+;                            (INTEGER 6 27670116110564327418))
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The result is a (VALUES
+;                        (OR (INTEGER -27670116110564327424 -6) (INTEGER 0 0)
+;                            (INTEGER 6 27670116110564327418))
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       etc.
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* ASH 
+; ==>
+;   (+ PRIME-CANDIDATE::HALF (* 6 PRIME-CANDIDATE::FACTOR))
+; 
+; note: forced to do GENERIC-+ (cost 10)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The second argument is a (OR (INTEGER -27670116110564327424 -6)
+;                                    (INTEGER 0 0)
+;                                    (INTEGER 6 27670116110564327418)), not a FIXNUM.
+;       The result is a (VALUES
+;                        (INTEGER -29975959119778021376 29975959119778021369)
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       unable to do inline (unsigned-byte 64) arithmetic (cost 4) because:
+;       The first argument is a (SIGNED-BYTE 62), not a (UNSIGNED-BYTE 64).
+;       The second argument is a (OR (INTEGER -27670116110564327424 -6)
+;                                    (INTEGER 0 0)
+;                                    (INTEGER 6 27670116110564327418)), not a (UNSIGNED-BYTE
+;                                                                              64).
+;       The result is a (VALUES
+;                        (INTEGER -29975959119778021376 29975959119778021369)
+;                        &OPTIONAL), not a (VALUES (UNSIGNED-BYTE 64) &OPTIONAL).
+;       etc.
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* ASH + 
+; ==>
+;   (* 7 PRIME-CANDIDATE::FACTOR)
+; 
+; note: forced to do */SIGNED=>INTEGER (cost 10)
+;       unable to do inline fixnum arithmetic (cost 1) because:
+;       The result is a (VALUES
+;                        (OR (INTEGER -32281802128991715328 -7) (INTEGER 0 0)
+;                            (INTEGER 7 32281802128991715321))
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The result is a (VALUES
+;                        (OR (INTEGER -32281802128991715328 -7) (INTEGER 0 0)
+;                            (INTEGER 7 32281802128991715321))
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       etc.
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* ASH 
+; ==>
+;   (+ PRIME-CANDIDATE::HALF (* 7 PRIME-CANDIDATE::FACTOR))
+; 
+; note: forced to do GENERIC-+ (cost 10)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The second argument is a (OR (INTEGER -32281802128991715328 -7)
+;                                    (INTEGER 0 0)
+;                                    (INTEGER 7 32281802128991715321)), not a FIXNUM.
+;       The result is a (VALUES
+;                        (INTEGER -34587645138205409280 34587645138205409272)
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       unable to do inline (unsigned-byte 64) arithmetic (cost 4) because:
+;       The first argument is a (SIGNED-BYTE 62), not a (UNSIGNED-BYTE 64).
+;       The second argument is a (OR (INTEGER -32281802128991715328 -7)
+;                                    (INTEGER 0 0)
+;                                    (INTEGER 7 32281802128991715321)), not a (UNSIGNED-BYTE
+;                                                                              64).
+;       The result is a (VALUES
+;                        (INTEGER -34587645138205409280 34587645138205409272)
+;                        &OPTIONAL), not a (VALUES (UNSIGNED-BYTE 64) &OPTIONAL).
+;       etc.
+
+; ==>
+;   1
+; 
+; note: doing unsigned word to integer coercion (cost 20)
+; 
+; note: doing unsigned word to integer coercion (cost 20)
+; 
+; note: doing unsigned word to integer coercion (cost 20)
+; 
+; note: doing unsigned word to integer coercion (cost 20)
+; 
+; note: doing unsigned word to integer coercion (cost 20)
+; 
+; note: doing unsigned word to integer coercion (cost 20)
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* * 
+; ==>
+;   (FLOOR (ASH (* PRIME-CANDIDATE::FACTOR PRIME-CANDIDATE::FACTOR) -1)
+;          (* PRIME-CANDIDATE::FACTOR 8))
+; 
+; note: unable to
+;   optimize
+; due to type uncertainty:
+;   The second argument is a (OR (INTEGER -36893488147419103232 -8) (INTEGER 0 0)
+;                                (INTEGER 8 36893488147419103224)), not a FIXNUM.
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* * FLOOR ASH 
+; ==>
+;   (* PRIME-CANDIDATE::FACTOR PRIME-CANDIDATE::FACTOR)
+; 
+; note: forced to do */SIGNED=>INTEGER (cost 10)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The result is a (VALUES (MOD 21267647932558653966460912964485513217)
+;                               &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       unable to do inline (unsigned-byte 64) arithmetic (cost 4) because:
+;       The first argument is a FIXNUM, not a (UNSIGNED-BYTE 64).
+;       The second argument is a FIXNUM, not a (UNSIGNED-BYTE 64).
+;       The result is a (VALUES (MOD 21267647932558653966460912964485513217)
+;                               &OPTIONAL), not a (VALUES (UNSIGNED-BYTE 64)
+;                                                         &OPTIONAL).
+;       etc.
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* * FLOOR 
+; ==>
+;   (* PRIME-CANDIDATE::FACTOR 8)
+; 
+; note: forced to do */SIGNED=>INTEGER (cost 10)
+;       unable to do inline fixnum arithmetic (cost 1) because:
+;       The result is a (VALUES
+;                        (OR (INTEGER -36893488147419103232 -8) (INTEGER 0 0)
+;                            (INTEGER 8 36893488147419103224))
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The result is a (VALUES
+;                        (OR (INTEGER -36893488147419103232 -8) (INTEGER 0 0)
+;                            (INTEGER 8 36893488147419103224))
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       etc.
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* 
+; ==>
+;   (* PRIME-CANDIDATE::FACTOR
+;      (FLOOR (ASH (* PRIME-CANDIDATE::FACTOR PRIME-CANDIDATE::FACTOR) -1)
+;             (* PRIME-CANDIDATE::FACTOR 8)))
+; 
+; note: forced to do GENERIC-* (cost 30)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The second argument is a (INTEGER -1329227995784915872903807060280344576
+;                                 1329227995784915872903807060280344576), not a FIXNUM.
+;       unable to do inline (unsigned-byte 64) arithmetic (cost 4) because:
+;       The first argument is a FIXNUM, not a (UNSIGNED-BYTE 64).
+;       The second argument is a (INTEGER -1329227995784915872903807060280344576
+;                                 1329227995784915872903807060280344576), not a (UNSIGNED-BYTE
+;                                                                                64).
+;       The result is a (VALUES FIXNUM &OPTIONAL), not a (VALUES
+;                                                         (UNSIGNED-BYTE 64)
+;                                                         &OPTIONAL).
+;       etc.
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* ASH 
+; ==>
+;   (+ PRIME-CANDIDATE::HALF (* 2 PRIME-CANDIDATE::FACTOR))
+; 
+; note: forced to do +/SIGNED=>INTEGER (cost 7)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The second argument is a (OR (INTEGER -9223372036854775808 -2)
+;                                    (INTEGER 0 0)
+;                                    (INTEGER 2 9223372036854775806)), not a FIXNUM.
+;       The result is a (VALUES
+;                        (INTEGER -11529215046068469760 11529215046068469757)
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* ASH + 
+; ==>
+;   (* 3 PRIME-CANDIDATE::FACTOR)
+; 
+; note: forced to do */SIGNED=>INTEGER (cost 10)
+;       unable to do inline fixnum arithmetic (cost 1) because:
+;       The result is a (VALUES
+;                        (OR (INTEGER -13835058055282163712 -3) (INTEGER 0 0)
+;                            (INTEGER 3 13835058055282163709))
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The result is a (VALUES
+;                        (OR (INTEGER -13835058055282163712 -3) (INTEGER 0 0)
+;                            (INTEGER 3 13835058055282163709))
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       etc.
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* ASH 
+; ==>
+;   (+ PRIME-CANDIDATE::HALF (* 3 PRIME-CANDIDATE::FACTOR))
+; 
+; note: forced to do GENERIC-+ (cost 10)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The second argument is a (OR (INTEGER -13835058055282163712 -3)
+;                                    (INTEGER 0 0)
+;                                    (INTEGER 3 13835058055282163709)), not a FIXNUM.
+;       The result is a (VALUES
+;                        (INTEGER -16140901064495857664 16140901064495857660)
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       unable to do inline (unsigned-byte 64) arithmetic (cost 4) because:
+;       The first argument is a (SIGNED-BYTE 62), not a (UNSIGNED-BYTE 64).
+;       The second argument is a (OR (INTEGER -13835058055282163712 -3)
+;                                    (INTEGER 0 0)
+;                                    (INTEGER 3 13835058055282163709)), not a (UNSIGNED-BYTE
+;                                                                              64).
+;       The result is a (VALUES
+;                        (INTEGER -16140901064495857664 16140901064495857660)
+;                        &OPTIONAL), not a (VALUES (UNSIGNED-BYTE 64) &OPTIONAL).
+;       etc.
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* ASH + 
+; ==>
+;   (* 4 PRIME-CANDIDATE::FACTOR)
+; 
+; note: forced to do */SIGNED=>INTEGER (cost 10)
+;       unable to do inline fixnum arithmetic (cost 1) because:
+;       The result is a (VALUES
+;                        (OR (INTEGER -18446744073709551616 -4) (INTEGER 0 0)
+;                            (INTEGER 4 18446744073709551612))
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The result is a (VALUES
+;                        (OR (INTEGER -18446744073709551616 -4) (INTEGER 0 0)
+;                            (INTEGER 4 18446744073709551612))
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       etc.
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* ASH 
+; ==>
+;   (+ PRIME-CANDIDATE::HALF (* 4 PRIME-CANDIDATE::FACTOR))
+; 
+; note: forced to do GENERIC-+ (cost 10)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The second argument is a (OR (INTEGER -18446744073709551616 -4)
+;                                    (INTEGER 0 0)
+;                                    (INTEGER 4 18446744073709551612)), not a FIXNUM.
+;       The result is a (VALUES
+;                        (INTEGER -20752587082923245568 20752587082923245563)
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       unable to do inline (unsigned-byte 64) arithmetic (cost 4) because:
+;       The first argument is a (SIGNED-BYTE 62), not a (UNSIGNED-BYTE 64).
+;       The second argument is a (OR (INTEGER -18446744073709551616 -4)
+;                                    (INTEGER 0 0)
+;                                    (INTEGER 4 18446744073709551612)), not a (UNSIGNED-BYTE
+;                                                                              64).
+;       The result is a (VALUES
+;                        (INTEGER -20752587082923245568 20752587082923245563)
+;                        &OPTIONAL), not a (VALUES (UNSIGNED-BYTE 64) &OPTIONAL).
+;       etc.
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* ASH + 
+; ==>
+;   (* 5 PRIME-CANDIDATE::FACTOR)
+; 
+; note: forced to do */SIGNED=>INTEGER (cost 10)
+;       unable to do inline fixnum arithmetic (cost 1) because:
+;       The result is a (VALUES
+;                        (OR (INTEGER -23058430092136939520 -5) (INTEGER 0 0)
+;                            (INTEGER 5 23058430092136939515))
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The result is a (VALUES
+;                        (OR (INTEGER -23058430092136939520 -5) (INTEGER 0 0)
+;                            (INTEGER 5 23058430092136939515))
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       etc.
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* ASH 
+; ==>
+;   (+ PRIME-CANDIDATE::HALF (* 5 PRIME-CANDIDATE::FACTOR))
+; 
+; note: forced to do GENERIC-+ (cost 10)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The second argument is a (OR (INTEGER -23058430092136939520 -5)
+;                                    (INTEGER 0 0)
+;                                    (INTEGER 5 23058430092136939515)), not a FIXNUM.
+;       The result is a (VALUES
+;                        (INTEGER -25364273101350633472 25364273101350633466)
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       unable to do inline (unsigned-byte 64) arithmetic (cost 4) because:
+;       The first argument is a (SIGNED-BYTE 62), not a (UNSIGNED-BYTE 64).
+;       The second argument is a (OR (INTEGER -23058430092136939520 -5)
+;                                    (INTEGER 0 0)
+;                                    (INTEGER 5 23058430092136939515)), not a (UNSIGNED-BYTE
+;                                                                              64).
+;       The result is a (VALUES
+;                        (INTEGER -25364273101350633472 25364273101350633466)
+;                        &OPTIONAL), not a (VALUES (UNSIGNED-BYTE 64) &OPTIONAL).
+;       etc.
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* ASH + 
+; ==>
+;   (* 6 PRIME-CANDIDATE::FACTOR)
+; 
+; note: forced to do */SIGNED=>INTEGER (cost 10)
+;       unable to do inline fixnum arithmetic (cost 1) because:
+;       The result is a (VALUES
+;                        (OR (INTEGER -27670116110564327424 -6) (INTEGER 0 0)
+;                            (INTEGER 6 27670116110564327418))
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The result is a (VALUES
+;                        (OR (INTEGER -27670116110564327424 -6) (INTEGER 0 0)
+;                            (INTEGER 6 27670116110564327418))
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       etc.
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* ASH 
+; ==>
+;   (+ PRIME-CANDIDATE::HALF (* 6 PRIME-CANDIDATE::FACTOR))
+; 
+; note: forced to do GENERIC-+ (cost 10)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The second argument is a (OR (INTEGER -27670116110564327424 -6)
+;                                    (INTEGER 0 0)
+;                                    (INTEGER 6 27670116110564327418)), not a FIXNUM.
+;       The result is a (VALUES
+;                        (INTEGER -29975959119778021376 29975959119778021369)
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       unable to do inline (unsigned-byte 64) arithmetic (cost 4) because:
+;       The first argument is a (SIGNED-BYTE 62), not a (UNSIGNED-BYTE 64).
+;       The second argument is a (OR (INTEGER -27670116110564327424 -6)
+;                                    (INTEGER 0 0)
+;                                    (INTEGER 6 27670116110564327418)), not a (UNSIGNED-BYTE
+;                                                                              64).
+;       The result is a (VALUES
+;                        (INTEGER -29975959119778021376 29975959119778021369)
+;                        &OPTIONAL), not a (VALUES (UNSIGNED-BYTE 64) &OPTIONAL).
+;       etc.
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* ASH + 
+; ==>
+;   (* 7 PRIME-CANDIDATE::FACTOR)
+; 
+; note: forced to do */SIGNED=>INTEGER (cost 10)
+;       unable to do inline fixnum arithmetic (cost 1) because:
+;       The result is a (VALUES
+;                        (OR (INTEGER -32281802128991715328 -7) (INTEGER 0 0)
+;                            (INTEGER 7 32281802128991715321))
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The result is a (VALUES
+;                        (OR (INTEGER -32281802128991715328 -7) (INTEGER 0 0)
+;                            (INTEGER 7 32281802128991715321))
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       etc.
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* ASH 
+; ==>
+;   (+ PRIME-CANDIDATE::HALF (* 7 PRIME-CANDIDATE::FACTOR))
+; 
+; note: forced to do GENERIC-+ (cost 10)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The second argument is a (OR (INTEGER -32281802128991715328 -7)
+;                                    (INTEGER 0 0)
+;                                    (INTEGER 7 32281802128991715321)), not a FIXNUM.
+;       The result is a (VALUES
+;                        (INTEGER -34587645138205409280 34587645138205409272)
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       unable to do inline (unsigned-byte 64) arithmetic (cost 4) because:
+;       The first argument is a (SIGNED-BYTE 62), not a (UNSIGNED-BYTE 64).
+;       The second argument is a (OR (INTEGER -32281802128991715328 -7)
+;                                    (INTEGER 0 0)
+;                                    (INTEGER 7 32281802128991715321)), not a (UNSIGNED-BYTE
+;                                                                              64).
+;       The result is a (VALUES
+;                        (INTEGER -34587645138205409280 34587645138205409272)
+;                        &OPTIONAL), not a (VALUES (UNSIGNED-BYTE 64) &OPTIONAL).
+;       etc.
+
+; ==>
+;   1
+; 
+; note: doing unsigned word to integer coercion (cost 20)
+; 
+; note: doing unsigned word to integer coercion (cost 20)
+; 
+; note: doing unsigned word to integer coercion (cost 20)
+; 
+; note: doing unsigned word to integer coercion (cost 20)
+; 
+; note: doing unsigned word to integer coercion (cost 20)
+; 
+; note: doing unsigned word to integer coercion (cost 20)
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* * 
+; ==>
+;   (FLOOR (ASH (* PRIME-CANDIDATE::FACTOR PRIME-CANDIDATE::FACTOR) -1)
+;          (* PRIME-CANDIDATE::FACTOR 8))
+; 
+; note: unable to
+;   optimize
+; due to type uncertainty:
+;   The second argument is a (OR (INTEGER -36893488147419103232 -8) (INTEGER 0 0)
+;                                (INTEGER 8 36893488147419103224)), not a FIXNUM.
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* * FLOOR ASH 
+; ==>
+;   (* PRIME-CANDIDATE::FACTOR PRIME-CANDIDATE::FACTOR)
+; 
+; note: forced to do */SIGNED=>INTEGER (cost 10)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The result is a (VALUES (MOD 21267647932558653966460912964485513217)
+;                               &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       unable to do inline (unsigned-byte 64) arithmetic (cost 4) because:
+;       The first argument is a FIXNUM, not a (UNSIGNED-BYTE 64).
+;       The second argument is a FIXNUM, not a (UNSIGNED-BYTE 64).
+;       The result is a (VALUES (MOD 21267647932558653966460912964485513217)
+;                               &OPTIONAL), not a (VALUES (UNSIGNED-BYTE 64)
+;                                                         &OPTIONAL).
+;       etc.
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* * FLOOR 
+; ==>
+;   (* PRIME-CANDIDATE::FACTOR 8)
+; 
+; note: forced to do */SIGNED=>INTEGER (cost 10)
+;       unable to do inline fixnum arithmetic (cost 1) because:
+;       The result is a (VALUES
+;                        (OR (INTEGER -36893488147419103232 -8) (INTEGER 0 0)
+;                            (INTEGER 8 36893488147419103224))
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The result is a (VALUES
+;                        (OR (INTEGER -36893488147419103232 -8) (INTEGER 0 0)
+;                            (INTEGER 8 36893488147419103224))
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       etc.
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* 
+; ==>
+;   (* PRIME-CANDIDATE::FACTOR
+;      (FLOOR (ASH (* PRIME-CANDIDATE::FACTOR PRIME-CANDIDATE::FACTOR) -1)
+;             (* PRIME-CANDIDATE::FACTOR 8)))
+; 
+; note: forced to do GENERIC-* (cost 30)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The second argument is a (INTEGER -1329227995784915872903807060280344576
+;                                 1329227995784915872903807060280344576), not a FIXNUM.
+;       unable to do inline (unsigned-byte 64) arithmetic (cost 4) because:
+;       The first argument is a FIXNUM, not a (UNSIGNED-BYTE 64).
+;       The second argument is a (INTEGER -1329227995784915872903807060280344576
+;                                 1329227995784915872903807060280344576), not a (UNSIGNED-BYTE
+;                                                                                64).
+;       The result is a (VALUES FIXNUM &OPTIONAL), not a (VALUES
+;                                                         (UNSIGNED-BYTE 64)
+;                                                         &OPTIONAL).
+;       etc.
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* ASH 
+; ==>
+;   (+ PRIME-CANDIDATE::HALF (* 2 PRIME-CANDIDATE::FACTOR))
+; 
+; note: forced to do +/SIGNED=>INTEGER (cost 7)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The second argument is a (OR (INTEGER -9223372036854775808 -2)
+;                                    (INTEGER 0 0)
+;                                    (INTEGER 2 9223372036854775806)), not a FIXNUM.
+;       The result is a (VALUES
+;                        (INTEGER -11529215046068469760 11529215046068469757)
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* ASH + 
+; ==>
+;   (* 3 PRIME-CANDIDATE::FACTOR)
+; 
+; note: forced to do */SIGNED=>INTEGER (cost 10)
+;       unable to do inline fixnum arithmetic (cost 1) because:
+;       The result is a (VALUES
+;                        (OR (INTEGER -13835058055282163712 -3) (INTEGER 0 0)
+;                            (INTEGER 3 13835058055282163709))
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The result is a (VALUES
+;                        (OR (INTEGER -13835058055282163712 -3) (INTEGER 0 0)
+;                            (INTEGER 3 13835058055282163709))
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       etc.
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* ASH 
+; ==>
+;   (+ PRIME-CANDIDATE::HALF (* 3 PRIME-CANDIDATE::FACTOR))
+; 
+; note: forced to do GENERIC-+ (cost 10)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The second argument is a (OR (INTEGER -13835058055282163712 -3)
+;                                    (INTEGER 0 0)
+;                                    (INTEGER 3 13835058055282163709)), not a FIXNUM.
+;       The result is a (VALUES
+;                        (INTEGER -16140901064495857664 16140901064495857660)
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       unable to do inline (unsigned-byte 64) arithmetic (cost 4) because:
+;       The first argument is a (SIGNED-BYTE 62), not a (UNSIGNED-BYTE 64).
+;       The second argument is a (OR (INTEGER -13835058055282163712 -3)
+;                                    (INTEGER 0 0)
+;                                    (INTEGER 3 13835058055282163709)), not a (UNSIGNED-BYTE
+;                                                                              64).
+;       The result is a (VALUES
+;                        (INTEGER -16140901064495857664 16140901064495857660)
+;                        &OPTIONAL), not a (VALUES (UNSIGNED-BYTE 64) &OPTIONAL).
+;       etc.
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* ASH + 
+; ==>
+;   (* 4 PRIME-CANDIDATE::FACTOR)
+; 
+; note: forced to do */SIGNED=>INTEGER (cost 10)
+;       unable to do inline fixnum arithmetic (cost 1) because:
+;       The result is a (VALUES
+;                        (OR (INTEGER -18446744073709551616 -4) (INTEGER 0 0)
+;                            (INTEGER 4 18446744073709551612))
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The result is a (VALUES
+;                        (OR (INTEGER -18446744073709551616 -4) (INTEGER 0 0)
+;                            (INTEGER 4 18446744073709551612))
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       etc.
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* ASH 
+; ==>
+;   (+ PRIME-CANDIDATE::HALF (* 4 PRIME-CANDIDATE::FACTOR))
+; 
+; note: forced to do GENERIC-+ (cost 10)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The second argument is a (OR (INTEGER -18446744073709551616 -4)
+;                                    (INTEGER 0 0)
+;                                    (INTEGER 4 18446744073709551612)), not a FIXNUM.
+;       The result is a (VALUES
+;                        (INTEGER -20752587082923245568 20752587082923245563)
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       unable to do inline (unsigned-byte 64) arithmetic (cost 4) because:
+;       The first argument is a (SIGNED-BYTE 62), not a (UNSIGNED-BYTE 64).
+;       The second argument is a (OR (INTEGER -18446744073709551616 -4)
+;                                    (INTEGER 0 0)
+;                                    (INTEGER 4 18446744073709551612)), not a (UNSIGNED-BYTE
+;                                                                              64).
+;       The result is a (VALUES
+;                        (INTEGER -20752587082923245568 20752587082923245563)
+;                        &OPTIONAL), not a (VALUES (UNSIGNED-BYTE 64) &OPTIONAL).
+;       etc.
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* ASH + 
+; ==>
+;   (* 5 PRIME-CANDIDATE::FACTOR)
+; 
+; note: forced to do */SIGNED=>INTEGER (cost 10)
+;       unable to do inline fixnum arithmetic (cost 1) because:
+;       The result is a (VALUES
+;                        (OR (INTEGER -23058430092136939520 -5) (INTEGER 0 0)
+;                            (INTEGER 5 23058430092136939515))
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The result is a (VALUES
+;                        (OR (INTEGER -23058430092136939520 -5) (INTEGER 0 0)
+;                            (INTEGER 5 23058430092136939515))
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       etc.
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* ASH 
+; ==>
+;   (+ PRIME-CANDIDATE::HALF (* 5 PRIME-CANDIDATE::FACTOR))
+; 
+; note: forced to do GENERIC-+ (cost 10)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The second argument is a (OR (INTEGER -23058430092136939520 -5)
+;                                    (INTEGER 0 0)
+;                                    (INTEGER 5 23058430092136939515)), not a FIXNUM.
+;       The result is a (VALUES
+;                        (INTEGER -25364273101350633472 25364273101350633466)
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       unable to do inline (unsigned-byte 64) arithmetic (cost 4) because:
+;       The first argument is a (SIGNED-BYTE 62), not a (UNSIGNED-BYTE 64).
+;       The second argument is a (OR (INTEGER -23058430092136939520 -5)
+;                                    (INTEGER 0 0)
+;                                    (INTEGER 5 23058430092136939515)), not a (UNSIGNED-BYTE
+;                                                                              64).
+;       The result is a (VALUES
+;                        (INTEGER -25364273101350633472 25364273101350633466)
+;                        &OPTIONAL), not a (VALUES (UNSIGNED-BYTE 64) &OPTIONAL).
+;       etc.
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* ASH + 
+; ==>
+;   (* 6 PRIME-CANDIDATE::FACTOR)
+; 
+; note: forced to do */SIGNED=>INTEGER (cost 10)
+;       unable to do inline fixnum arithmetic (cost 1) because:
+;       The result is a (VALUES
+;                        (OR (INTEGER -27670116110564327424 -6) (INTEGER 0 0)
+;                            (INTEGER 6 27670116110564327418))
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The result is a (VALUES
+;                        (OR (INTEGER -27670116110564327424 -6) (INTEGER 0 0)
+;                            (INTEGER 6 27670116110564327418))
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       etc.
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* ASH 
+; ==>
+;   (+ PRIME-CANDIDATE::HALF (* 6 PRIME-CANDIDATE::FACTOR))
+; 
+; note: forced to do GENERIC-+ (cost 10)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The second argument is a (OR (INTEGER -27670116110564327424 -6)
+;                                    (INTEGER 0 0)
+;                                    (INTEGER 6 27670116110564327418)), not a FIXNUM.
+;       The result is a (VALUES
+;                        (INTEGER -29975959119778021376 29975959119778021369)
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       unable to do inline (unsigned-byte 64) arithmetic (cost 4) because:
+;       The first argument is a (SIGNED-BYTE 62), not a (UNSIGNED-BYTE 64).
+;       The second argument is a (OR (INTEGER -27670116110564327424 -6)
+;                                    (INTEGER 0 0)
+;                                    (INTEGER 6 27670116110564327418)), not a (UNSIGNED-BYTE
+;                                                                              64).
+;       The result is a (VALUES
+;                        (INTEGER -29975959119778021376 29975959119778021369)
+;                        &OPTIONAL), not a (VALUES (UNSIGNED-BYTE 64) &OPTIONAL).
+;       etc.
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* ASH + 
+; ==>
+;   (* 7 PRIME-CANDIDATE::FACTOR)
+; 
+; note: forced to do */SIGNED=>INTEGER (cost 10)
+;       unable to do inline fixnum arithmetic (cost 1) because:
+;       The result is a (VALUES
+;                        (OR (INTEGER -32281802128991715328 -7) (INTEGER 0 0)
+;                            (INTEGER 7 32281802128991715321))
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The result is a (VALUES
+;                        (OR (INTEGER -32281802128991715328 -7) (INTEGER 0 0)
+;                            (INTEGER 7 32281802128991715321))
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       etc.
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* ASH 
+; ==>
+;   (+ PRIME-CANDIDATE::HALF (* 7 PRIME-CANDIDATE::FACTOR))
+; 
+; note: forced to do GENERIC-+ (cost 10)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The second argument is a (OR (INTEGER -32281802128991715328 -7)
+;                                    (INTEGER 0 0)
+;                                    (INTEGER 7 32281802128991715321)), not a FIXNUM.
+;       The result is a (VALUES
+;                        (INTEGER -34587645138205409280 34587645138205409272)
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       unable to do inline (unsigned-byte 64) arithmetic (cost 4) because:
+;       The first argument is a (SIGNED-BYTE 62), not a (UNSIGNED-BYTE 64).
+;       The second argument is a (OR (INTEGER -32281802128991715328 -7)
+;                                    (INTEGER 0 0)
+;                                    (INTEGER 7 32281802128991715321)), not a (UNSIGNED-BYTE
+;                                                                              64).
+;       The result is a (VALUES
+;                        (INTEGER -34587645138205409280 34587645138205409272)
+;                        &OPTIONAL), not a (VALUES (UNSIGNED-BYTE 64) &OPTIONAL).
+;       etc.
+
+; ==>
+;   1
+; 
+; note: doing unsigned word to integer coercion (cost 20)
+; 
+; note: doing unsigned word to integer coercion (cost 20)
+; 
+; note: doing unsigned word to integer coercion (cost 20)
+; 
+; note: doing unsigned word to integer coercion (cost 20)
+; 
+; note: doing unsigned word to integer coercion (cost 20)
+; 
+; note: doing unsigned word to integer coercion (cost 20)
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* * 
+; ==>
+;   (FLOOR (ASH (* PRIME-CANDIDATE::FACTOR PRIME-CANDIDATE::FACTOR) -1)
+;          (* PRIME-CANDIDATE::FACTOR 8))
+; 
+; note: unable to
+;   optimize
+; due to type uncertainty:
+;   The second argument is a (OR (INTEGER -36893488147419103232 -8) (INTEGER 0 0)
+;                                (INTEGER 8 36893488147419103224)), not a FIXNUM.
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* * FLOOR ASH 
+; ==>
+;   (* PRIME-CANDIDATE::FACTOR PRIME-CANDIDATE::FACTOR)
+; 
+; note: forced to do */SIGNED=>INTEGER (cost 10)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The result is a (VALUES (MOD 21267647932558653966460912964485513217)
+;                               &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       unable to do inline (unsigned-byte 64) arithmetic (cost 4) because:
+;       The first argument is a FIXNUM, not a (UNSIGNED-BYTE 64).
+;       The second argument is a FIXNUM, not a (UNSIGNED-BYTE 64).
+;       The result is a (VALUES (MOD 21267647932558653966460912964485513217)
+;                               &OPTIONAL), not a (VALUES (UNSIGNED-BYTE 64)
+;                                                         &OPTIONAL).
+;       etc.
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* * FLOOR 
+; ==>
+;   (* PRIME-CANDIDATE::FACTOR 8)
+; 
+; note: forced to do */SIGNED=>INTEGER (cost 10)
+;       unable to do inline fixnum arithmetic (cost 1) because:
+;       The result is a (VALUES
+;                        (OR (INTEGER -36893488147419103232 -8) (INTEGER 0 0)
+;                            (INTEGER 8 36893488147419103224))
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The result is a (VALUES
+;                        (OR (INTEGER -36893488147419103232 -8) (INTEGER 0 0)
+;                            (INTEGER 8 36893488147419103224))
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       etc.
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* 
+; ==>
+;   (* PRIME-CANDIDATE::FACTOR
+;      (FLOOR (ASH (* PRIME-CANDIDATE::FACTOR PRIME-CANDIDATE::FACTOR) -1)
+;             (* PRIME-CANDIDATE::FACTOR 8)))
+; 
+; note: forced to do GENERIC-* (cost 30)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The second argument is a (INTEGER -1329227995784915872903807060280344576
+;                                 1329227995784915872903807060280344576), not a FIXNUM.
+;       unable to do inline (unsigned-byte 64) arithmetic (cost 4) because:
+;       The first argument is a FIXNUM, not a (UNSIGNED-BYTE 64).
+;       The second argument is a (INTEGER -1329227995784915872903807060280344576
+;                                 1329227995784915872903807060280344576), not a (UNSIGNED-BYTE
+;                                                                                64).
+;       The result is a (VALUES FIXNUM &OPTIONAL), not a (VALUES
+;                                                         (UNSIGNED-BYTE 64)
+;                                                         &OPTIONAL).
+;       etc.
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* ASH 
+; ==>
+;   (+ PRIME-CANDIDATE::HALF (* 2 PRIME-CANDIDATE::FACTOR))
+; 
+; note: forced to do +/SIGNED=>INTEGER (cost 7)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The second argument is a (OR (INTEGER -9223372036854775808 -2)
+;                                    (INTEGER 0 0)
+;                                    (INTEGER 2 9223372036854775806)), not a FIXNUM.
+;       The result is a (VALUES
+;                        (INTEGER -11529215046068469760 11529215046068469757)
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* ASH + 
+; ==>
+;   (* 3 PRIME-CANDIDATE::FACTOR)
+; 
+; note: forced to do */SIGNED=>INTEGER (cost 10)
+;       unable to do inline fixnum arithmetic (cost 1) because:
+;       The result is a (VALUES
+;                        (OR (INTEGER -13835058055282163712 -3) (INTEGER 0 0)
+;                            (INTEGER 3 13835058055282163709))
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The result is a (VALUES
+;                        (OR (INTEGER -13835058055282163712 -3) (INTEGER 0 0)
+;                            (INTEGER 3 13835058055282163709))
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       etc.
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* ASH 
+; ==>
+;   (+ PRIME-CANDIDATE::HALF (* 3 PRIME-CANDIDATE::FACTOR))
+; 
+; note: forced to do GENERIC-+ (cost 10)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The second argument is a (OR (INTEGER -13835058055282163712 -3)
+;                                    (INTEGER 0 0)
+;                                    (INTEGER 3 13835058055282163709)), not a FIXNUM.
+;       The result is a (VALUES
+;                        (INTEGER -16140901064495857664 16140901064495857660)
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       unable to do inline (unsigned-byte 64) arithmetic (cost 4) because:
+;       The first argument is a (SIGNED-BYTE 62), not a (UNSIGNED-BYTE 64).
+;       The second argument is a (OR (INTEGER -13835058055282163712 -3)
+;                                    (INTEGER 0 0)
+;                                    (INTEGER 3 13835058055282163709)), not a (UNSIGNED-BYTE
+;                                                                              64).
+;       The result is a (VALUES
+;                        (INTEGER -16140901064495857664 16140901064495857660)
+;                        &OPTIONAL), not a (VALUES (UNSIGNED-BYTE 64) &OPTIONAL).
+;       etc.
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* ASH + 
+; ==>
+;   (* 4 PRIME-CANDIDATE::FACTOR)
+; 
+; note: forced to do */SIGNED=>INTEGER (cost 10)
+;       unable to do inline fixnum arithmetic (cost 1) because:
+;       The result is a (VALUES
+;                        (OR (INTEGER -18446744073709551616 -4) (INTEGER 0 0)
+;                            (INTEGER 4 18446744073709551612))
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The result is a (VALUES
+;                        (OR (INTEGER -18446744073709551616 -4) (INTEGER 0 0)
+;                            (INTEGER 4 18446744073709551612))
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       etc.
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* ASH 
+; ==>
+;   (+ PRIME-CANDIDATE::HALF (* 4 PRIME-CANDIDATE::FACTOR))
+; 
+; note: forced to do GENERIC-+ (cost 10)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The second argument is a (OR (INTEGER -18446744073709551616 -4)
+;                                    (INTEGER 0 0)
+;                                    (INTEGER 4 18446744073709551612)), not a FIXNUM.
+;       The result is a (VALUES
+;                        (INTEGER -20752587082923245568 20752587082923245563)
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       unable to do inline (unsigned-byte 64) arithmetic (cost 4) because:
+;       The first argument is a (SIGNED-BYTE 62), not a (UNSIGNED-BYTE 64).
+;       The second argument is a (OR (INTEGER -18446744073709551616 -4)
+;                                    (INTEGER 0 0)
+;                                    (INTEGER 4 18446744073709551612)), not a (UNSIGNED-BYTE
+;                                                                              64).
+;       The result is a (VALUES
+;                        (INTEGER -20752587082923245568 20752587082923245563)
+;                        &OPTIONAL), not a (VALUES (UNSIGNED-BYTE 64) &OPTIONAL).
+;       etc.
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* ASH + 
+; ==>
+;   (* 5 PRIME-CANDIDATE::FACTOR)
+; 
+; note: forced to do */SIGNED=>INTEGER (cost 10)
+;       unable to do inline fixnum arithmetic (cost 1) because:
+;       The result is a (VALUES
+;                        (OR (INTEGER -23058430092136939520 -5) (INTEGER 0 0)
+;                            (INTEGER 5 23058430092136939515))
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The result is a (VALUES
+;                        (OR (INTEGER -23058430092136939520 -5) (INTEGER 0 0)
+;                            (INTEGER 5 23058430092136939515))
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       etc.
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* ASH 
+; ==>
+;   (+ PRIME-CANDIDATE::HALF (* 5 PRIME-CANDIDATE::FACTOR))
+; 
+; note: forced to do GENERIC-+ (cost 10)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The second argument is a (OR (INTEGER -23058430092136939520 -5)
+;                                    (INTEGER 0 0)
+;                                    (INTEGER 5 23058430092136939515)), not a FIXNUM.
+;       The result is a (VALUES
+;                        (INTEGER -25364273101350633472 25364273101350633466)
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       unable to do inline (unsigned-byte 64) arithmetic (cost 4) because:
+;       The first argument is a (SIGNED-BYTE 62), not a (UNSIGNED-BYTE 64).
+;       The second argument is a (OR (INTEGER -23058430092136939520 -5)
+;                                    (INTEGER 0 0)
+;                                    (INTEGER 5 23058430092136939515)), not a (UNSIGNED-BYTE
+;                                                                              64).
+;       The result is a (VALUES
+;                        (INTEGER -25364273101350633472 25364273101350633466)
+;                        &OPTIONAL), not a (VALUES (UNSIGNED-BYTE 64) &OPTIONAL).
+;       etc.
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* ASH + 
+; ==>
+;   (* 6 PRIME-CANDIDATE::FACTOR)
+; 
+; note: forced to do */SIGNED=>INTEGER (cost 10)
+;       unable to do inline fixnum arithmetic (cost 1) because:
+;       The result is a (VALUES
+;                        (OR (INTEGER -27670116110564327424 -6) (INTEGER 0 0)
+;                            (INTEGER 6 27670116110564327418))
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The result is a (VALUES
+;                        (OR (INTEGER -27670116110564327424 -6) (INTEGER 0 0)
+;                            (INTEGER 6 27670116110564327418))
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       etc.
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* ASH 
+; ==>
+;   (+ PRIME-CANDIDATE::HALF (* 6 PRIME-CANDIDATE::FACTOR))
+; 
+; note: forced to do GENERIC-+ (cost 10)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The second argument is a (OR (INTEGER -27670116110564327424 -6)
+;                                    (INTEGER 0 0)
+;                                    (INTEGER 6 27670116110564327418)), not a FIXNUM.
+;       The result is a (VALUES
+;                        (INTEGER -29975959119778021376 29975959119778021369)
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       unable to do inline (unsigned-byte 64) arithmetic (cost 4) because:
+;       The first argument is a (SIGNED-BYTE 62), not a (UNSIGNED-BYTE 64).
+;       The second argument is a (OR (INTEGER -27670116110564327424 -6)
+;                                    (INTEGER 0 0)
+;                                    (INTEGER 6 27670116110564327418)), not a (UNSIGNED-BYTE
+;                                                                              64).
+;       The result is a (VALUES
+;                        (INTEGER -29975959119778021376 29975959119778021369)
+;                        &OPTIONAL), not a (VALUES (UNSIGNED-BYTE 64) &OPTIONAL).
+;       etc.
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* ASH + 
+; ==>
+;   (* 7 PRIME-CANDIDATE::FACTOR)
+; 
+; note: forced to do */SIGNED=>INTEGER (cost 10)
+;       unable to do inline fixnum arithmetic (cost 1) because:
+;       The result is a (VALUES
+;                        (OR (INTEGER -32281802128991715328 -7) (INTEGER 0 0)
+;                            (INTEGER 7 32281802128991715321))
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The result is a (VALUES
+;                        (OR (INTEGER -32281802128991715328 -7) (INTEGER 0 0)
+;                            (INTEGER 7 32281802128991715321))
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       etc.
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* ASH 
+; ==>
+;   (+ PRIME-CANDIDATE::HALF (* 7 PRIME-CANDIDATE::FACTOR))
+; 
+; note: forced to do GENERIC-+ (cost 10)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The second argument is a (OR (INTEGER -32281802128991715328 -7)
+;                                    (INTEGER 0 0)
+;                                    (INTEGER 7 32281802128991715321)), not a FIXNUM.
+;       The result is a (VALUES
+;                        (INTEGER -34587645138205409280 34587645138205409272)
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       unable to do inline (unsigned-byte 64) arithmetic (cost 4) because:
+;       The first argument is a (SIGNED-BYTE 62), not a (UNSIGNED-BYTE 64).
+;       The second argument is a (OR (INTEGER -32281802128991715328 -7)
+;                                    (INTEGER 0 0)
+;                                    (INTEGER 7 32281802128991715321)), not a (UNSIGNED-BYTE
+;                                                                              64).
+;       The result is a (VALUES
+;                        (INTEGER -34587645138205409280 34587645138205409272)
+;                        &OPTIONAL), not a (VALUES (UNSIGNED-BYTE 64) &OPTIONAL).
+;       etc.
+
+; ==>
+;   1
+; 
+; note: doing unsigned word to integer coercion (cost 20)
+; 
+; note: doing unsigned word to integer coercion (cost 20)
+; 
+; note: doing unsigned word to integer coercion (cost 20)
+; 
+; note: doing unsigned word to integer coercion (cost 20)
+; 
+; note: doing unsigned word to integer coercion (cost 20)
+; 
+; note: doing unsigned word to integer coercion (cost 20)
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* * 
+; ==>
+;   (FLOOR (ASH (* PRIME-CANDIDATE::FACTOR PRIME-CANDIDATE::FACTOR) -1)
+;          (* PRIME-CANDIDATE::FACTOR 8))
+; 
+; note: unable to
+;   optimize
+; due to type uncertainty:
+;   The second argument is a (OR (INTEGER -36893488147419103232 -8) (INTEGER 0 0)
+;                                (INTEGER 8 36893488147419103224)), not a FIXNUM.
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* * FLOOR ASH 
+; ==>
+;   (* PRIME-CANDIDATE::FACTOR PRIME-CANDIDATE::FACTOR)
+; 
+; note: forced to do */SIGNED=>INTEGER (cost 10)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The result is a (VALUES (MOD 21267647932558653966460912964485513217)
+;                               &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       unable to do inline (unsigned-byte 64) arithmetic (cost 4) because:
+;       The first argument is a FIXNUM, not a (UNSIGNED-BYTE 64).
+;       The second argument is a FIXNUM, not a (UNSIGNED-BYTE 64).
+;       The result is a (VALUES (MOD 21267647932558653966460912964485513217)
+;                               &OPTIONAL), not a (VALUES (UNSIGNED-BYTE 64)
+;                                                         &OPTIONAL).
+;       etc.
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* * FLOOR 
+; ==>
+;   (* PRIME-CANDIDATE::FACTOR 8)
+; 
+; note: forced to do */SIGNED=>INTEGER (cost 10)
+;       unable to do inline fixnum arithmetic (cost 1) because:
+;       The result is a (VALUES
+;                        (OR (INTEGER -36893488147419103232 -8) (INTEGER 0 0)
+;                            (INTEGER 8 36893488147419103224))
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The result is a (VALUES
+;                        (OR (INTEGER -36893488147419103232 -8) (INTEGER 0 0)
+;                            (INTEGER 8 36893488147419103224))
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       etc.
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* 
+; ==>
+;   (* PRIME-CANDIDATE::FACTOR
+;      (FLOOR (ASH (* PRIME-CANDIDATE::FACTOR PRIME-CANDIDATE::FACTOR) -1)
+;             (* PRIME-CANDIDATE::FACTOR 8)))
+; 
+; note: forced to do GENERIC-* (cost 30)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The second argument is a (INTEGER -1329227995784915872903807060280344576
+;                                 1329227995784915872903807060280344576), not a FIXNUM.
+;       unable to do inline (unsigned-byte 64) arithmetic (cost 4) because:
+;       The first argument is a FIXNUM, not a (UNSIGNED-BYTE 64).
+;       The second argument is a (INTEGER -1329227995784915872903807060280344576
+;                                 1329227995784915872903807060280344576), not a (UNSIGNED-BYTE
+;                                                                                64).
+;       The result is a (VALUES FIXNUM &OPTIONAL), not a (VALUES
+;                                                         (UNSIGNED-BYTE 64)
+;                                                         &OPTIONAL).
+;       etc.
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* ASH 
+; ==>
+;   (+ PRIME-CANDIDATE::HALF (* 2 PRIME-CANDIDATE::FACTOR))
+; 
+; note: forced to do +/SIGNED=>INTEGER (cost 7)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The second argument is a (OR (INTEGER -9223372036854775808 -2)
+;                                    (INTEGER 0 0)
+;                                    (INTEGER 2 9223372036854775806)), not a FIXNUM.
+;       The result is a (VALUES
+;                        (INTEGER -11529215046068469760 11529215046068469757)
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* ASH + 
+; ==>
+;   (* 3 PRIME-CANDIDATE::FACTOR)
+; 
+; note: forced to do */SIGNED=>INTEGER (cost 10)
+;       unable to do inline fixnum arithmetic (cost 1) because:
+;       The result is a (VALUES
+;                        (OR (INTEGER -13835058055282163712 -3) (INTEGER 0 0)
+;                            (INTEGER 3 13835058055282163709))
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The result is a (VALUES
+;                        (OR (INTEGER -13835058055282163712 -3) (INTEGER 0 0)
+;                            (INTEGER 3 13835058055282163709))
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       etc.
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* ASH 
+; ==>
+;   (+ PRIME-CANDIDATE::HALF (* 3 PRIME-CANDIDATE::FACTOR))
+; 
+; note: forced to do GENERIC-+ (cost 10)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The second argument is a (OR (INTEGER -13835058055282163712 -3)
+;                                    (INTEGER 0 0)
+;                                    (INTEGER 3 13835058055282163709)), not a FIXNUM.
+;       The result is a (VALUES
+;                        (INTEGER -16140901064495857664 16140901064495857660)
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       unable to do inline (unsigned-byte 64) arithmetic (cost 4) because:
+;       The first argument is a (SIGNED-BYTE 62), not a (UNSIGNED-BYTE 64).
+;       The second argument is a (OR (INTEGER -13835058055282163712 -3)
+;                                    (INTEGER 0 0)
+;                                    (INTEGER 3 13835058055282163709)), not a (UNSIGNED-BYTE
+;                                                                              64).
+;       The result is a (VALUES
+;                        (INTEGER -16140901064495857664 16140901064495857660)
+;                        &OPTIONAL), not a (VALUES (UNSIGNED-BYTE 64) &OPTIONAL).
+;       etc.
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* ASH + 
+; ==>
+;   (* 4 PRIME-CANDIDATE::FACTOR)
+; 
+; note: forced to do */SIGNED=>INTEGER (cost 10)
+;       unable to do inline fixnum arithmetic (cost 1) because:
+;       The result is a (VALUES
+;                        (OR (INTEGER -18446744073709551616 -4) (INTEGER 0 0)
+;                            (INTEGER 4 18446744073709551612))
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The result is a (VALUES
+;                        (OR (INTEGER -18446744073709551616 -4) (INTEGER 0 0)
+;                            (INTEGER 4 18446744073709551612))
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       etc.
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* ASH 
+; ==>
+;   (+ PRIME-CANDIDATE::HALF (* 4 PRIME-CANDIDATE::FACTOR))
+; 
+; note: forced to do GENERIC-+ (cost 10)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The second argument is a (OR (INTEGER -18446744073709551616 -4)
+;                                    (INTEGER 0 0)
+;                                    (INTEGER 4 18446744073709551612)), not a FIXNUM.
+;       The result is a (VALUES
+;                        (INTEGER -20752587082923245568 20752587082923245563)
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       unable to do inline (unsigned-byte 64) arithmetic (cost 4) because:
+;       The first argument is a (SIGNED-BYTE 62), not a (UNSIGNED-BYTE 64).
+;       The second argument is a (OR (INTEGER -18446744073709551616 -4)
+;                                    (INTEGER 0 0)
+;                                    (INTEGER 4 18446744073709551612)), not a (UNSIGNED-BYTE
+;                                                                              64).
+;       The result is a (VALUES
+;                        (INTEGER -20752587082923245568 20752587082923245563)
+;                        &OPTIONAL), not a (VALUES (UNSIGNED-BYTE 64) &OPTIONAL).
+;       etc.
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* ASH + 
+; ==>
+;   (* 5 PRIME-CANDIDATE::FACTOR)
+; 
+; note: forced to do */SIGNED=>INTEGER (cost 10)
+;       unable to do inline fixnum arithmetic (cost 1) because:
+;       The result is a (VALUES
+;                        (OR (INTEGER -23058430092136939520 -5) (INTEGER 0 0)
+;                            (INTEGER 5 23058430092136939515))
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The result is a (VALUES
+;                        (OR (INTEGER -23058430092136939520 -5) (INTEGER 0 0)
+;                            (INTEGER 5 23058430092136939515))
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       etc.
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* ASH 
+; ==>
+;   (+ PRIME-CANDIDATE::HALF (* 5 PRIME-CANDIDATE::FACTOR))
+; 
+; note: forced to do GENERIC-+ (cost 10)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The second argument is a (OR (INTEGER -23058430092136939520 -5)
+;                                    (INTEGER 0 0)
+;                                    (INTEGER 5 23058430092136939515)), not a FIXNUM.
+;       The result is a (VALUES
+;                        (INTEGER -25364273101350633472 25364273101350633466)
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       unable to do inline (unsigned-byte 64) arithmetic (cost 4) because:
+;       The first argument is a (SIGNED-BYTE 62), not a (UNSIGNED-BYTE 64).
+;       The second argument is a (OR (INTEGER -23058430092136939520 -5)
+;                                    (INTEGER 0 0)
+;                                    (INTEGER 5 23058430092136939515)), not a (UNSIGNED-BYTE
+;                                                                              64).
+;       The result is a (VALUES
+;                        (INTEGER -25364273101350633472 25364273101350633466)
+;                        &OPTIONAL), not a (VALUES (UNSIGNED-BYTE 64) &OPTIONAL).
+;       etc.
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* ASH + 
+; ==>
+;   (* 6 PRIME-CANDIDATE::FACTOR)
+; 
+; note: forced to do */SIGNED=>INTEGER (cost 10)
+;       unable to do inline fixnum arithmetic (cost 1) because:
+;       The result is a (VALUES
+;                        (OR (INTEGER -27670116110564327424 -6) (INTEGER 0 0)
+;                            (INTEGER 6 27670116110564327418))
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The result is a (VALUES
+;                        (OR (INTEGER -27670116110564327424 -6) (INTEGER 0 0)
+;                            (INTEGER 6 27670116110564327418))
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       etc.
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* ASH 
+; ==>
+;   (+ PRIME-CANDIDATE::HALF (* 6 PRIME-CANDIDATE::FACTOR))
+; 
+; note: forced to do GENERIC-+ (cost 10)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The second argument is a (OR (INTEGER -27670116110564327424 -6)
+;                                    (INTEGER 0 0)
+;                                    (INTEGER 6 27670116110564327418)), not a FIXNUM.
+;       The result is a (VALUES
+;                        (INTEGER -29975959119778021376 29975959119778021369)
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       unable to do inline (unsigned-byte 64) arithmetic (cost 4) because:
+;       The first argument is a (SIGNED-BYTE 62), not a (UNSIGNED-BYTE 64).
+;       The second argument is a (OR (INTEGER -27670116110564327424 -6)
+;                                    (INTEGER 0 0)
+;                                    (INTEGER 6 27670116110564327418)), not a (UNSIGNED-BYTE
+;                                                                              64).
+;       The result is a (VALUES
+;                        (INTEGER -29975959119778021376 29975959119778021369)
+;                        &OPTIONAL), not a (VALUES (UNSIGNED-BYTE 64) &OPTIONAL).
+;       etc.
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* ASH + 
+; ==>
+;   (* 7 PRIME-CANDIDATE::FACTOR)
+; 
+; note: forced to do */SIGNED=>INTEGER (cost 10)
+;       unable to do inline fixnum arithmetic (cost 1) because:
+;       The result is a (VALUES
+;                        (OR (INTEGER -32281802128991715328 -7) (INTEGER 0 0)
+;                            (INTEGER 7 32281802128991715321))
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The result is a (VALUES
+;                        (OR (INTEGER -32281802128991715328 -7) (INTEGER 0 0)
+;                            (INTEGER 7 32281802128991715321))
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       etc.
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* ASH 
+; ==>
+;   (+ PRIME-CANDIDATE::HALF (* 7 PRIME-CANDIDATE::FACTOR))
+; 
+; note: forced to do GENERIC-+ (cost 10)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The second argument is a (OR (INTEGER -32281802128991715328 -7)
+;                                    (INTEGER 0 0)
+;                                    (INTEGER 7 32281802128991715321)), not a FIXNUM.
+;       The result is a (VALUES
+;                        (INTEGER -34587645138205409280 34587645138205409272)
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       unable to do inline (unsigned-byte 64) arithmetic (cost 4) because:
+;       The first argument is a (SIGNED-BYTE 62), not a (UNSIGNED-BYTE 64).
+;       The second argument is a (OR (INTEGER -32281802128991715328 -7)
+;                                    (INTEGER 0 0)
+;                                    (INTEGER 7 32281802128991715321)), not a (UNSIGNED-BYTE
+;                                                                              64).
+;       The result is a (VALUES
+;                        (INTEGER -34587645138205409280 34587645138205409272)
+;                        &OPTIONAL), not a (VALUES (UNSIGNED-BYTE 64) &OPTIONAL).
+;       etc.
+
+; ==>
+;   1
+; 
+; note: doing unsigned word to integer coercion (cost 20)
+; 
+; note: doing unsigned word to integer coercion (cost 20)
+; 
+; note: doing unsigned word to integer coercion (cost 20)
+; 
+; note: doing unsigned word to integer coercion (cost 20)
+; 
+; note: doing unsigned word to integer coercion (cost 20)
+; 
+; note: doing unsigned word to integer coercion (cost 20)
+
+; in: DEFUN RUN-SIEVE
+;     (PRIME-CANDIDATE::SIZE (CEILING PRIME-CANDIDATE::LIMIT 2))
+; 
+; caught STYLE-WARNING:
+;   The variable SIZE is defined but never used.
+
+; in: DEFUN COUNT-PRIMES
+;     (+
+;      (IF (>= PRIME-CANDIDATE::LIMIT 2)
+;          1
+;          0)
+;      (- PRIME-CANDIDATE::SIZE PRIME-CANDIDATE::COMPOSITES))
+; 
+; note: doing signed word to integer coercion (cost 20), for:
+;       the first result of inline (signed-byte 64) arithmetic
+; 
+; compilation unit finished
+;   caught 1 STYLE-WARNING condition
+;   printed 180 notes

@@ -1,0 +1,5 @@
+(load ".build/sieve.fasl")
+(require :sb-sprof)
+(sb-sprof:with-profiling (:max-samples 1500 :sample-interval 0.001 :mode :cpu :report :flat)
+  (dotimes (i 10000)
+    (prime-candidate:run-sieve (prime-candidate:make-sieve 1000000))))

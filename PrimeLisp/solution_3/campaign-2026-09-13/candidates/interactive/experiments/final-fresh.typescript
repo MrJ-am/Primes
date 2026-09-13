@@ -1,0 +1,31 @@
+Script started on 2026-09-13 02:19:30-07:00 [COMMAND="exec 9>/tmp/primes-campaign-cpu.lock; date -u +LOCK_WAIT_%Y-%m-%dT%H:%M:%S.%NZ; flock -x 9; date -u +LOCK_ACQUIRED_%Y-%m-%dT%H:%M:%S.%NZ; PRIMES_CPU=0 ./run.sh batch" <not executed on terminal>]
+LOCK_WAIT_2026-09-13T09:19:30.727547538Z
+LOCK_ACQUIRED_2026-09-13T09:19:30.747153701Z
+
+; file: /workspace/scratch/73f29dd8a4f8/primes-experiments/interactive/PrimeLisp/solution_3/sieve.lisp
+; in: DEFUN COUNT-PRIMES
+;     (+
+;      (IF (>= PRIME-CANDIDATE::LIMIT 2)
+;          1
+;          0)
+;      (- PRIME-CANDIDATE::NBITS
+;         (+
+;          (LOOP PRIME-CANDIDATE::FOR PRIME-CANDIDATE::I FIXNUM PRIME-CANDIDATE::BELOW PRIME-CANDIDATE::NWORDS
+;                PRIME-CANDIDATE::SUM (LOGCOUNT #) FIXNUM)
+;          (IF (ZEROP PRIME-CANDIDATE::TAIL)
+;              0
+;              (LOGCOUNT #)))))
+; 
+; note: doing signed word to integer coercion (cost 20), for:
+;       the first result of inline (signed-byte 64) arithmetic
+; 
+; compilation unit finished
+;   printed 1 note
+Candidate validated (including 78,498 primes through 1,000,000).
+echologie-cl-hybrid129-unboxed;21190;5.003984;1;algorithm=base,faithful=yes,bits=1
+echologie-cl-hybrid129-unboxed;20629;5.003984;1;algorithm=base,faithful=yes,bits=1
+echologie-cl-hybrid129-unboxed;20336;5.003985;1;algorithm=base,faithful=yes,bits=1
+Median: 242.570 us/sieve (4122.5 sieves/s).
+Saved: /workspace/scratch/73f29dd8a4f8/primes-experiments/interactive/PrimeLisp/solution_3/results/3998280012-277986140.sexp
+
+Script done on 2026-09-13 02:20:12-07:00 [COMMAND_EXIT_CODE="0"]

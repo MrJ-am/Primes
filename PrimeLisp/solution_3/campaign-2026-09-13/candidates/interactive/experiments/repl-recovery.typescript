@@ -1,0 +1,963 @@
+Script started on 2026-09-13 02:13:21-07:00 [COMMAND="exec 9>/tmp/primes-campaign-cpu.lock; date -u +LOCK_WAIT_%Y-%m-%dT%H:%M:%S.%NZ; flock -x 9; date -u +LOCK_ACQUIRED_%Y-%m-%dT%H:%M:%S.%NZ; PRIMES_CPU=0 ./run.sh repl" TERM="dumb" TTY="/dev/console" COLUMNS="80" LINES="24"]
+LOCK_WAIT_2026-09-13T09:13:21.895382589Z
+LOCK_ACQUIRED_2026-09-13T09:13:21.914857992Z
+
+; file: /workspace/scratch/73f29dd8a4f8/primes-experiments/interactive/PrimeLisp/solution_3/sieve.lisp
+; in: DEFUN MARK-BIT
+;     (DEFUN PRIME-CANDIDATE::MARK-BIT
+;            (PRIME-CANDIDATE::BITS PRIME-CANDIDATE::INDEX)
+;       (DECLARE (TYPE PRIME-CANDIDATE::WORDS PRIME-CANDIDATE::BITS)
+;                (TYPE FIXNUM PRIME-CANDIDATE::INDEX))
+;       (LET ((PRIME-CANDIDATE::WORD (ASH PRIME-CANDIDATE::INDEX -6))
+;             (PRIME-CANDIDATE::MASK (THE # #)))
+;         (SETF (AREF PRIME-CANDIDATE::BITS PRIME-CANDIDATE::WORD)
+;                 (LOGIOR # PRIME-CANDIDATE::MASK))))
+; --> SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA 
+; ==>
+;   #'(SB-INT:NAMED-LAMBDA PRIME-CANDIDATE::MARK-BIT
+;         (PRIME-CANDIDATE::BITS PRIME-CANDIDATE::INDEX)
+;       (DECLARE (SB-C::TOP-LEVEL-FORM))
+;       (DECLARE (TYPE PRIME-CANDIDATE::WORDS PRIME-CANDIDATE::BITS)
+;                (TYPE FIXNUM PRIME-CANDIDATE::INDEX))
+;       (BLOCK PRIME-CANDIDATE::MARK-BIT
+;         (LET ((PRIME-CANDIDATE::WORD #) (PRIME-CANDIDATE::MASK #))
+;           (SETF # #))))
+; 
+; note: doing unsigned word to integer coercion (cost 20) to "<return value>"
+
+; in: DEFINE-SPARSE-RESETTERS
+;     (PRIME-CANDIDATE::DEFINE-SPARSE-RESETTERS)
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET WHEN IF < 
+; ==>
+;   (+ PRIME-CANDIDATE::BASE PRIME-CANDIDATE::OFFSET0)
+; 
+; note: forced to do +/SIGNED=>INTEGER (cost 7)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (INTEGER -4611686020574871550 9223372036854775807), not a FIXNUM.
+;       The result is a (VALUES
+;                        (INTEGER -4611686020574871550 9223372036988993534)
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+
+; ==>
+;   (+ PRIME-CANDIDATE::BASE PRIME-CANDIDATE::OFFSET1)
+; 
+; note: forced to do +/SIGNED=>INTEGER (cost 7)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (INTEGER -4611686020574871550 9223372036854775807), not a FIXNUM.
+;       The result is a (VALUES
+;                        (INTEGER -4611686020574871550 9223372037257428990)
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+
+; ==>
+;   (+ PRIME-CANDIDATE::BASE PRIME-CANDIDATE::OFFSET2)
+; 
+; note: forced to do +/SIGNED=>INTEGER (cost 7)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (INTEGER -4611686020574871550 9223372036854775807), not a FIXNUM.
+;       The result is a (VALUES
+;                        (INTEGER -4611686020574871550 9223372037525864446)
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+
+; ==>
+;   (+ PRIME-CANDIDATE::BASE PRIME-CANDIDATE::OFFSET3)
+; 
+; note: forced to do +/SIGNED=>INTEGER (cost 7)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (INTEGER -4611686020574871550 9223372036854775807), not a FIXNUM.
+;       The result is a (VALUES
+;                        (INTEGER -4611686020574871549 9223372037794299902)
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+
+; ==>
+;   (+ PRIME-CANDIDATE::BASE PRIME-CANDIDATE::OFFSET4)
+; 
+; note: forced to do +/SIGNED=>INTEGER (cost 7)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (INTEGER -4611686020574871550 9223372036854775807), not a FIXNUM.
+;       The result is a (VALUES
+;                        (INTEGER -4611686020574871549 9223372038062735358)
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+
+; ==>
+;   (+ PRIME-CANDIDATE::BASE PRIME-CANDIDATE::OFFSET5)
+; 
+; note: forced to do +/SIGNED=>INTEGER (cost 7)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (INTEGER -4611686020574871550 9223372036854775807), not a FIXNUM.
+;       The result is a (VALUES
+;                        (INTEGER -4611686020574871548 9223372038331170814)
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+
+; ==>
+;   (+ PRIME-CANDIDATE::BASE PRIME-CANDIDATE::OFFSET6)
+; 
+; note: forced to do +/SIGNED=>INTEGER (cost 7)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (INTEGER -4611686020574871550 9223372036854775807), not a FIXNUM.
+;       The result is a (VALUES
+;                        (INTEGER -4611686020574871548 9223372038599606270)
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+
+; ==>
+;   (+ PRIME-CANDIDATE::BASE PRIME-CANDIDATE::OFFSET7)
+; 
+; note: forced to do +/SIGNED=>INTEGER (cost 7)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (INTEGER -4611686020574871550 9223372036854775807), not a FIXNUM.
+;       The result is a (VALUES
+;                        (INTEGER -4611686020574871548 9223372038868041726)
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+
+; ==>
+;   (+ PRIME-CANDIDATE::BASE PRIME-CANDIDATE::OFFSET0)
+; 
+; note: forced to do +/SIGNED=>INTEGER (cost 7)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (INTEGER -4611686020574871550 9223372036854775807), not a FIXNUM.
+;       The result is a (VALUES
+;                        (INTEGER -4611686020574871550 9223372036988993534)
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+
+; ==>
+;   (+ PRIME-CANDIDATE::BASE PRIME-CANDIDATE::OFFSET1)
+; 
+; note: forced to do +/SIGNED=>INTEGER (cost 7)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (INTEGER -4611686020574871550 9223372036854775807), not a FIXNUM.
+;       The result is a (VALUES
+;                        (INTEGER -4611686020574871550 9223372037257428990)
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+
+; ==>
+;   (+ PRIME-CANDIDATE::BASE PRIME-CANDIDATE::OFFSET2)
+; 
+; note: forced to do +/SIGNED=>INTEGER (cost 7)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (INTEGER -4611686020574871550 9223372036854775807), not a FIXNUM.
+;       The result is a (VALUES
+;                        (INTEGER -4611686020574871550 9223372037525864446)
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+
+; ==>
+;   (+ PRIME-CANDIDATE::BASE PRIME-CANDIDATE::OFFSET3)
+; 
+; note: forced to do +/SIGNED=>INTEGER (cost 7)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (INTEGER -4611686020574871550 9223372036854775807), not a FIXNUM.
+;       The result is a (VALUES
+;                        (INTEGER -4611686020574871549 9223372037794299902)
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+
+; ==>
+;   (+ PRIME-CANDIDATE::BASE PRIME-CANDIDATE::OFFSET4)
+; 
+; note: forced to do +/SIGNED=>INTEGER (cost 7)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (INTEGER -4611686020574871550 9223372036854775807), not a FIXNUM.
+;       The result is a (VALUES
+;                        (INTEGER -4611686020574871549 9223372038062735358)
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+
+; ==>
+;   (+ PRIME-CANDIDATE::BASE PRIME-CANDIDATE::OFFSET5)
+; 
+; note: forced to do +/SIGNED=>INTEGER (cost 7)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (INTEGER -4611686020574871550 9223372036854775807), not a FIXNUM.
+;       The result is a (VALUES
+;                        (INTEGER -4611686020574871548 9223372038331170814)
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+
+; ==>
+;   (+ PRIME-CANDIDATE::BASE PRIME-CANDIDATE::OFFSET6)
+; 
+; note: forced to do +/SIGNED=>INTEGER (cost 7)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (INTEGER -4611686020574871550 9223372036854775807), not a FIXNUM.
+;       The result is a (VALUES
+;                        (INTEGER -4611686020574871548 9223372038599606270)
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+
+; ==>
+;   (+ PRIME-CANDIDATE::BASE PRIME-CANDIDATE::OFFSET7)
+; 
+; note: forced to do +/SIGNED=>INTEGER (cost 7)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (INTEGER -4611686020574871550 9223372036854775807), not a FIXNUM.
+;       The result is a (VALUES
+;                        (INTEGER -4611686020574871548 9223372038868041726)
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+
+; ==>
+;   (+ PRIME-CANDIDATE::BASE PRIME-CANDIDATE::OFFSET0)
+; 
+; note: forced to do +/SIGNED=>INTEGER (cost 7)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (INTEGER -4611686020574871550 9223372036854775807), not a FIXNUM.
+;       The result is a (VALUES
+;                        (INTEGER -4611686020574871550 9223372036988993534)
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+
+; ==>
+;   (+ PRIME-CANDIDATE::BASE PRIME-CANDIDATE::OFFSET1)
+; 
+; note: forced to do +/SIGNED=>INTEGER (cost 7)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (INTEGER -4611686020574871550 9223372036854775807), not a FIXNUM.
+;       The result is a (VALUES
+;                        (INTEGER -4611686020574871550 9223372037257428990)
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+
+; ==>
+;   (+ PRIME-CANDIDATE::BASE PRIME-CANDIDATE::OFFSET2)
+; 
+; note: forced to do +/SIGNED=>INTEGER (cost 7)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (INTEGER -4611686020574871550 9223372036854775807), not a FIXNUM.
+;       The result is a (VALUES
+;                        (INTEGER -4611686020574871550 9223372037525864446)
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+
+; ==>
+;   (+ PRIME-CANDIDATE::BASE PRIME-CANDIDATE::OFFSET3)
+; 
+; note: forced to do +/SIGNED=>INTEGER (cost 7)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (INTEGER -4611686020574871550 9223372036854775807), not a FIXNUM.
+;       The result is a (VALUES
+;                        (INTEGER -4611686020574871549 9223372037794299902)
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+
+; ==>
+;   (+ PRIME-CANDIDATE::BASE PRIME-CANDIDATE::OFFSET4)
+; 
+; note: forced to do +/SIGNED=>INTEGER (cost 7)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (INTEGER -4611686020574871550 9223372036854775807), not a FIXNUM.
+;       The result is a (VALUES
+;                        (INTEGER -4611686020574871549 9223372038062735358)
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+
+; ==>
+;   (+ PRIME-CANDIDATE::BASE PRIME-CANDIDATE::OFFSET5)
+; 
+; note: forced to do +/SIGNED=>INTEGER (cost 7)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (INTEGER -4611686020574871550 9223372036854775807), not a FIXNUM.
+;       The result is a (VALUES
+;                        (INTEGER -4611686020574871548 9223372038331170814)
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+
+; ==>
+;   (+ PRIME-CANDIDATE::BASE PRIME-CANDIDATE::OFFSET6)
+; 
+; note: forced to do +/SIGNED=>INTEGER (cost 7)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (INTEGER -4611686020574871550 9223372036854775807), not a FIXNUM.
+;       The result is a (VALUES
+;                        (INTEGER -4611686020574871548 9223372038599606270)
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+
+; ==>
+;   (+ PRIME-CANDIDATE::BASE PRIME-CANDIDATE::OFFSET7)
+; 
+; note: forced to do +/SIGNED=>INTEGER (cost 7)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (INTEGER -4611686020574871550 9223372036854775807), not a FIXNUM.
+;       The result is a (VALUES
+;                        (INTEGER -4611686020574871548 9223372038868041726)
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+
+; ==>
+;   (+ PRIME-CANDIDATE::BASE PRIME-CANDIDATE::OFFSET0)
+; 
+; note: forced to do +/SIGNED=>INTEGER (cost 7)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (INTEGER -4611686020574871550 9223372036854775807), not a FIXNUM.
+;       The result is a (VALUES
+;                        (INTEGER -4611686020574871550 9223372036988993534)
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+
+; ==>
+;   (+ PRIME-CANDIDATE::BASE PRIME-CANDIDATE::OFFSET1)
+; 
+; note: forced to do +/SIGNED=>INTEGER (cost 7)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (INTEGER -4611686020574871550 9223372036854775807), not a FIXNUM.
+;       The result is a (VALUES
+;                        (INTEGER -4611686020574871550 9223372037257428990)
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+
+; ==>
+;   (+ PRIME-CANDIDATE::BASE PRIME-CANDIDATE::OFFSET2)
+; 
+; note: forced to do +/SIGNED=>INTEGER (cost 7)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (INTEGER -4611686020574871550 9223372036854775807), not a FIXNUM.
+;       The result is a (VALUES
+;                        (INTEGER -4611686020574871550 9223372037525864446)
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+
+; ==>
+;   (+ PRIME-CANDIDATE::BASE PRIME-CANDIDATE::OFFSET3)
+; 
+; note: forced to do +/SIGNED=>INTEGER (cost 7)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (INTEGER -4611686020574871550 9223372036854775807), not a FIXNUM.
+;       The result is a (VALUES
+;                        (INTEGER -4611686020574871549 9223372037794299902)
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+
+; ==>
+;   (+ PRIME-CANDIDATE::BASE PRIME-CANDIDATE::OFFSET4)
+; 
+; note: forced to do +/SIGNED=>INTEGER (cost 7)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (INTEGER -4611686020574871550 9223372036854775807), not a FIXNUM.
+;       The result is a (VALUES
+;                        (INTEGER -4611686020574871549 9223372038062735358)
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+
+; ==>
+;   (+ PRIME-CANDIDATE::BASE PRIME-CANDIDATE::OFFSET5)
+; 
+; note: forced to do +/SIGNED=>INTEGER (cost 7)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (INTEGER -4611686020574871550 9223372036854775807), not a FIXNUM.
+;       The result is a (VALUES
+;                        (INTEGER -4611686020574871548 9223372038331170814)
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+
+; ==>
+;   (+ PRIME-CANDIDATE::BASE PRIME-CANDIDATE::OFFSET6)
+; 
+; note: forced to do +/SIGNED=>INTEGER (cost 7)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (INTEGER -4611686020574871550 9223372036854775807), not a FIXNUM.
+;       The result is a (VALUES
+;                        (INTEGER -4611686020574871548 9223372038599606270)
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+
+; ==>
+;   (+ PRIME-CANDIDATE::BASE PRIME-CANDIDATE::OFFSET7)
+; 
+; note: forced to do +/SIGNED=>INTEGER (cost 7)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (INTEGER -4611686020574871550 9223372036854775807), not a FIXNUM.
+;       The result is a (VALUES
+;                        (INTEGER -4611686020574871548 9223372038868041726)
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+
+; ==>
+;   (+ PRIME-CANDIDATE::BASE PRIME-CANDIDATE::OFFSET0)
+; 
+; note: forced to do +/SIGNED=>INTEGER (cost 7)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (INTEGER -4611686020574871550 9223372036854775807), not a FIXNUM.
+;       The result is a (VALUES
+;                        (INTEGER -4611686020574871550 9223372036988993534)
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+
+; ==>
+;   (+ PRIME-CANDIDATE::BASE PRIME-CANDIDATE::OFFSET1)
+; 
+; note: forced to do +/SIGNED=>INTEGER (cost 7)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (INTEGER -4611686020574871550 9223372036854775807), not a FIXNUM.
+;       The result is a (VALUES
+;                        (INTEGER -4611686020574871550 9223372037257428990)
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+
+; ==>
+;   (+ PRIME-CANDIDATE::BASE PRIME-CANDIDATE::OFFSET2)
+; 
+; note: forced to do +/SIGNED=>INTEGER (cost 7)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (INTEGER -4611686020574871550 9223372036854775807), not a FIXNUM.
+;       The result is a (VALUES
+;                        (INTEGER -4611686020574871550 9223372037525864446)
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+
+; ==>
+;   (+ PRIME-CANDIDATE::BASE PRIME-CANDIDATE::OFFSET3)
+; 
+; note: forced to do +/SIGNED=>INTEGER (cost 7)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (INTEGER -4611686020574871550 9223372036854775807), not a FIXNUM.
+;       The result is a (VALUES
+;                        (INTEGER -4611686020574871549 9223372037794299902)
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+
+; ==>
+;   (+ PRIME-CANDIDATE::BASE PRIME-CANDIDATE::OFFSET4)
+; 
+; note: forced to do +/SIGNED=>INTEGER (cost 7)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (INTEGER -4611686020574871550 9223372036854775807), not a FIXNUM.
+;       The result is a (VALUES
+;                        (INTEGER -4611686020574871549 9223372038062735358)
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+
+; ==>
+;   (+ PRIME-CANDIDATE::BASE PRIME-CANDIDATE::OFFSET5)
+; 
+; note: forced to do +/SIGNED=>INTEGER (cost 7)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (INTEGER -4611686020574871550 9223372036854775807), not a FIXNUM.
+;       The result is a (VALUES
+;                        (INTEGER -4611686020574871548 9223372038331170814)
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+
+; ==>
+;   (+ PRIME-CANDIDATE::BASE PRIME-CANDIDATE::OFFSET6)
+; 
+; note: forced to do +/SIGNED=>INTEGER (cost 7)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (INTEGER -4611686020574871550 9223372036854775807), not a FIXNUM.
+;       The result is a (VALUES
+;                        (INTEGER -4611686020574871548 9223372038599606270)
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+
+; ==>
+;   (+ PRIME-CANDIDATE::BASE PRIME-CANDIDATE::OFFSET7)
+; 
+; note: forced to do +/SIGNED=>INTEGER (cost 7)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (INTEGER -4611686020574871550 9223372036854775807), not a FIXNUM.
+;       The result is a (VALUES
+;                        (INTEGER -4611686020574871548 9223372038868041726)
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+
+; ==>
+;   (+ PRIME-CANDIDATE::BASE PRIME-CANDIDATE::OFFSET0)
+; 
+; note: forced to do +/SIGNED=>INTEGER (cost 7)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (INTEGER -4611686020574871550 9223372036854775807), not a FIXNUM.
+;       The result is a (VALUES
+;                        (INTEGER -4611686020574871550 9223372036988993534)
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+
+; ==>
+;   (+ PRIME-CANDIDATE::BASE PRIME-CANDIDATE::OFFSET1)
+; 
+; note: forced to do +/SIGNED=>INTEGER (cost 7)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (INTEGER -4611686020574871550 9223372036854775807), not a FIXNUM.
+;       The result is a (VALUES
+;                        (INTEGER -4611686020574871550 9223372037257428990)
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+
+; ==>
+;   (+ PRIME-CANDIDATE::BASE PRIME-CANDIDATE::OFFSET2)
+; 
+; note: forced to do +/SIGNED=>INTEGER (cost 7)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (INTEGER -4611686020574871550 9223372036854775807), not a FIXNUM.
+;       The result is a (VALUES
+;                        (INTEGER -4611686020574871550 9223372037525864446)
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+
+; ==>
+;   (+ PRIME-CANDIDATE::BASE PRIME-CANDIDATE::OFFSET3)
+; 
+; note: forced to do +/SIGNED=>INTEGER (cost 7)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (INTEGER -4611686020574871550 9223372036854775807), not a FIXNUM.
+;       The result is a (VALUES
+;                        (INTEGER -4611686020574871549 9223372037794299902)
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+
+; ==>
+;   (+ PRIME-CANDIDATE::BASE PRIME-CANDIDATE::OFFSET4)
+; 
+; note: forced to do +/SIGNED=>INTEGER (cost 7)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (INTEGER -4611686020574871550 9223372036854775807), not a FIXNUM.
+;       The result is a (VALUES
+;                        (INTEGER -4611686020574871549 9223372038062735358)
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+
+; ==>
+;   (+ PRIME-CANDIDATE::BASE PRIME-CANDIDATE::OFFSET5)
+; 
+; note: forced to do +/SIGNED=>INTEGER (cost 7)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (INTEGER -4611686020574871550 9223372036854775807), not a FIXNUM.
+;       The result is a (VALUES
+;                        (INTEGER -4611686020574871548 9223372038331170814)
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+
+; ==>
+;   (+ PRIME-CANDIDATE::BASE PRIME-CANDIDATE::OFFSET6)
+; 
+; note: forced to do +/SIGNED=>INTEGER (cost 7)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (INTEGER -4611686020574871550 9223372036854775807), not a FIXNUM.
+;       The result is a (VALUES
+;                        (INTEGER -4611686020574871548 9223372038599606270)
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+
+; ==>
+;   (+ PRIME-CANDIDATE::BASE PRIME-CANDIDATE::OFFSET7)
+; 
+; note: forced to do +/SIGNED=>INTEGER (cost 7)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (INTEGER -4611686020574871550 9223372036854775807), not a FIXNUM.
+;       The result is a (VALUES
+;                        (INTEGER -4611686020574871548 9223372038868041726)
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+
+; ==>
+;   (+ PRIME-CANDIDATE::BASE PRIME-CANDIDATE::OFFSET0)
+; 
+; note: forced to do +/SIGNED=>INTEGER (cost 7)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (INTEGER -4611686020574871550 9223372036854775807), not a FIXNUM.
+;       The result is a (VALUES
+;                        (INTEGER -4611686020574871550 9223372036988993534)
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+
+; ==>
+;   (+ PRIME-CANDIDATE::BASE PRIME-CANDIDATE::OFFSET1)
+; 
+; note: forced to do +/SIGNED=>INTEGER (cost 7)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (INTEGER -4611686020574871550 9223372036854775807), not a FIXNUM.
+;       The result is a (VALUES
+;                        (INTEGER -4611686020574871550 9223372037257428990)
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+
+; ==>
+;   (+ PRIME-CANDIDATE::BASE PRIME-CANDIDATE::OFFSET2)
+; 
+; note: forced to do +/SIGNED=>INTEGER (cost 7)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (INTEGER -4611686020574871550 9223372036854775807), not a FIXNUM.
+;       The result is a (VALUES
+;                        (INTEGER -4611686020574871550 9223372037525864446)
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+
+; ==>
+;   (+ PRIME-CANDIDATE::BASE PRIME-CANDIDATE::OFFSET3)
+; 
+; note: forced to do +/SIGNED=>INTEGER (cost 7)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (INTEGER -4611686020574871550 9223372036854775807), not a FIXNUM.
+;       The result is a (VALUES
+;                        (INTEGER -4611686020574871549 9223372037794299902)
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+
+; ==>
+;   (+ PRIME-CANDIDATE::BASE PRIME-CANDIDATE::OFFSET4)
+; 
+; note: forced to do +/SIGNED=>INTEGER (cost 7)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (INTEGER -4611686020574871550 9223372036854775807), not a FIXNUM.
+;       The result is a (VALUES
+;                        (INTEGER -4611686020574871549 9223372038062735358)
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+
+; ==>
+;   (+ PRIME-CANDIDATE::BASE PRIME-CANDIDATE::OFFSET5)
+; 
+; note: forced to do +/SIGNED=>INTEGER (cost 7)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (INTEGER -4611686020574871550 9223372036854775807), not a FIXNUM.
+;       The result is a (VALUES
+;                        (INTEGER -4611686020574871548 9223372038331170814)
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+
+; ==>
+;   (+ PRIME-CANDIDATE::BASE PRIME-CANDIDATE::OFFSET6)
+; 
+; note: forced to do +/SIGNED=>INTEGER (cost 7)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (INTEGER -4611686020574871550 9223372036854775807), not a FIXNUM.
+;       The result is a (VALUES
+;                        (INTEGER -4611686020574871548 9223372038599606270)
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+
+; ==>
+;   (+ PRIME-CANDIDATE::BASE PRIME-CANDIDATE::OFFSET7)
+; 
+; note: forced to do +/SIGNED=>INTEGER (cost 7)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (INTEGER -4611686020574871550 9223372036854775807), not a FIXNUM.
+;       The result is a (VALUES
+;                        (INTEGER -4611686020574871548 9223372038868041726)
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+
+; ==>
+;   (+ PRIME-CANDIDATE::BASE PRIME-CANDIDATE::OFFSET0)
+; 
+; note: forced to do +/SIGNED=>INTEGER (cost 7)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (INTEGER -4611686020574871550 9223372036854775807), not a FIXNUM.
+;       The result is a (VALUES
+;                        (INTEGER -4611686020574871550 9223372036988993534)
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+
+; ==>
+;   (+ PRIME-CANDIDATE::BASE PRIME-CANDIDATE::OFFSET1)
+; 
+; note: forced to do +/SIGNED=>INTEGER (cost 7)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (INTEGER -4611686020574871550 9223372036854775807), not a FIXNUM.
+;       The result is a (VALUES
+;                        (INTEGER -4611686020574871550 9223372037257428990)
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+
+; ==>
+;   (+ PRIME-CANDIDATE::BASE PRIME-CANDIDATE::OFFSET2)
+; 
+; note: forced to do +/SIGNED=>INTEGER (cost 7)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (INTEGER -4611686020574871550 9223372036854775807), not a FIXNUM.
+;       The result is a (VALUES
+;                        (INTEGER -4611686020574871550 9223372037525864446)
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+
+; ==>
+;   (+ PRIME-CANDIDATE::BASE PRIME-CANDIDATE::OFFSET3)
+; 
+; note: forced to do +/SIGNED=>INTEGER (cost 7)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (INTEGER -4611686020574871550 9223372036854775807), not a FIXNUM.
+;       The result is a (VALUES
+;                        (INTEGER -4611686020574871549 9223372037794299902)
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+
+; ==>
+;   (+ PRIME-CANDIDATE::BASE PRIME-CANDIDATE::OFFSET4)
+; 
+; note: forced to do +/SIGNED=>INTEGER (cost 7)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (INTEGER -4611686020574871550 9223372036854775807), not a FIXNUM.
+;       The result is a (VALUES
+;                        (INTEGER -4611686020574871549 9223372038062735358)
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+
+; ==>
+;   (+ PRIME-CANDIDATE::BASE PRIME-CANDIDATE::OFFSET5)
+; 
+; note: forced to do +/SIGNED=>INTEGER (cost 7)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (INTEGER -4611686020574871550 9223372036854775807), not a FIXNUM.
+;       The result is a (VALUES
+;                        (INTEGER -4611686020574871548 9223372038331170814)
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+
+; ==>
+;   (+ PRIME-CANDIDATE::BASE PRIME-CANDIDATE::OFFSET6)
+; 
+; note: forced to do +/SIGNED=>INTEGER (cost 7)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (INTEGER -4611686020574871550 9223372036854775807), not a FIXNUM.
+;       The result is a (VALUES
+;                        (INTEGER -4611686020574871548 9223372038599606270)
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+
+; ==>
+;   (+ PRIME-CANDIDATE::BASE PRIME-CANDIDATE::OFFSET7)
+; 
+; note: forced to do +/SIGNED=>INTEGER (cost 7)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (INTEGER -4611686020574871550 9223372036854775807), not a FIXNUM.
+;       The result is a (VALUES
+;                        (INTEGER -4611686020574871548 9223372038868041726)
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK SB-SYS:WITH-PINNED-OBJECTS FLET #:WITH-PINNED-OBJECTS-THUNK56 BLOCK 
+; --> PROGN 
+; ==>
+;   (LET ((PRIME-CANDIDATE::SAP (SB-SYS:VECTOR-SAP PRIME-CANDIDATE::BITS))
+;         (PRIME-CANDIDATE::NBYTES (ASH (LENGTH PRIME-CANDIDATE::BITS) 3)))
+;     (DECLARE (TYPE SYSTEM-AREA-POINTER PRIME-CANDIDATE::SAP)
+;              (TYPE FIXNUM PRIME-CANDIDATE::NBYTES))
+;     (CASE (LOGAND PRIME-CANDIDATE::FACTOR 15)
+;       (1
+;        (PRIME-CANDIDATE::SPARSE-1 PRIME-CANDIDATE::SAP PRIME-CANDIDATE::NBYTES
+;         PRIME-CANDIDATE::FACTOR))
+;       (3
+;        (PRIME-CANDIDATE::SPARSE-3 PRIME-CANDIDATE::SAP PRIME-CANDIDATE::NBYTES
+;         PRIME-CANDIDATE::FACTOR))
+;       (5
+;        (PRIME-CANDIDATE::SPARSE-5 PRIME-CANDIDATE::SAP PRIME-CANDIDATE::NBYTES
+;         PRIME-CANDIDATE::FACTOR))
+;       (7
+;        (PRIME-CANDIDATE::SPARSE-7 PRIME-CANDIDATE::SAP PRIME-CANDIDATE::NBYTES
+;         PRIME-CANDIDATE::FACTOR))
+;       (9
+;        (PRIME-CANDIDATE::SPARSE-9 PRIME-CANDIDATE::SAP PRIME-CANDIDATE::NBYTES
+;         PRIME-CANDIDATE::FACTOR))
+;       (11
+;        (PRIME-CANDIDATE::SPARSE-11 PRIME-CANDIDATE::SAP PRIME-CANDIDATE::NBYTES
+;         PRIME-CANDIDATE::FACTOR))
+;       (13
+;        (PRIME-CANDIDATE::SPARSE-13 PRIME-CANDIDATE::SAP PRIME-CANDIDATE::NBYTES
+;         PRIME-CANDIDATE::FACTOR))
+;       (15
+;        (PRIME-CANDIDATE::SPARSE-15 PRIME-CANDIDATE::SAP PRIME-CANDIDATE::NBYTES
+;         PRIME-CANDIDATE::FACTOR))))
+; 
+; note: doing SAP to pointer coercion (cost 20) to SAP
+
+; in: DEFUN RUN-SIEVE
+;     (PRIME-CANDIDATE::END (CEILING PRIME-CANDIDATE::LIMIT 2))
+; 
+; caught STYLE-WARNING:
+;   The variable END is defined but never used.
+
+; in: DEFUN COUNT-PRIMES
+;     (+
+;      (IF (>= PRIME-CANDIDATE::LIMIT 2)
+;          1
+;          0)
+;      (- PRIME-CANDIDATE::NBITS
+;         (+
+;          (LOOP PRIME-CANDIDATE::FOR PRIME-CANDIDATE::I FIXNUM PRIME-CANDIDATE::BELOW PRIME-CANDIDATE::NWORDS
+;                PRIME-CANDIDATE::SUM (LOGCOUNT #) FIXNUM)
+;          (IF (ZEROP PRIME-CANDIDATE::TAIL)
+;              0
+;              (LOGCOUNT #)))))
+; 
+; note: doing signed word to integer coercion (cost 20), for:
+;       the first result of inline (signed-byte 64) arithmetic
+; 
+; compilation unit finished
+;   caught 1 STYLE-WARNING condition
+;   printed 67 notes
+While evaluating the form starting at line 2, column 0
+  of #P"/workspace/scratch/73f29dd8a4f8/primes-experiments/interactive/PrimeLisp/solution_3/bootstrap.lisp":
+
+debugger invoked on a SIMPLE-ERROR in thread
+#<THREAD tid=5 "main thread" RUNNING {1200038003}>:
+  overwriting old FUN-INFO
+    #<SB-C::FUN-INFO :ATTRIBUTES (SB-C:ALWAYS-TRANSLATABLE) :TEMPLATES (#)>
+  for OR-BYTE!
+
+Type HELP for debugger help, or (SB-EXT:EXIT) to exit from SBCL.
+
+restarts (invokable by number or by possibly-abbreviated name):
+  0: [CONTINUE] Go ahead, overwrite it.
+  1:            Inherit templates and optimizers
+  2: [IGNORE  ] IGNORE
+  3: [RETRY   ] Retry EVAL of current toplevel form.
+  4:            Ignore error and continue loading file "/workspace/scratch/73f29dd8a4f8/primes-experiments/interactive/PrimeLisp/solution_3/bootstrap.lisp".
+  5: [ABORT   ] Abort loading file "/workspace/scratch/73f29dd8a4f8/primes-experiments/interactive/PrimeLisp/solution_3/bootstrap.lisp".
+  6:            Ignore runtime option --load "bootstrap.lisp".
+  7:            Skip rest of --eval and --load options.
+  8:            Skip to toplevel READ/EVAL/PRINT loop.
+  9: [EXIT    ] Exit SBCL (calling #'EXIT, killing the process).
+
+(SB-C::%DEFKNOWN (OR-BYTE!) (SB-INT:SFUNCTION (SB-SYS:SYSTEM-AREA-POINTER (SIGNED-BYTE 64) (UNSIGNED-BYTE 8)) (VALUES)) 2048 #S(SB-C:DEFINITION-SOURCE-LOCATION :NAMESTRING "/workspace/scratch/73f29dd8a4f8/primes-experiments/interactive/PrimeLisp/solution_3/sieve.lisp" :INDICES 622595) :DERIVE-TYPE NIL :OPTIMIZER NIL :RESULT-ARG NIL :OVERWRITE-FNDB-SILENTLY NIL :CALL-TYPE-DERIVER NIL :ANNOTATION NIL :FOLDER NIL :READ-ONLY NIL)
+0] (defvar *cpu-lock* (open "/tmp/primes-campaign-cpu.lock" :direction :io :if-exists :append :if-does-not-exist :create))
+(defvar *cpu-wait-total* 80.231624d0)
+(defun cpu-lock () (let ((start (get-internal-real-time))) (prime-bench::%flock (sb-sys:fd-stream-fd *cpu-lock*) 2) (let ((wait (/ (- (get-internal-real-time) start) (float internal-time-units-per-second 1d0)))) (incf *cpu-wait-total* wait) (format t "~&CPU ACQUIRED wait=~,6F total=~,6F utc=~D~%" wait *cpu-wait-total* (get-universal-time)))))
+(defun cpu-unlock () (prime-bench::%flock (sb-sys:fd-stream-fd *cpu-lock*) 8))
+(prime-bench::%flock 9 8)
+(cpu-lock)
+
+*CPU-LOCK*
+0] 
+*CPU-WAIT-TOTAL*
+0] 
+While evaluating the form starting at line 2, column 0
+  of #P"/workspace/scratch/73f29dd8a4f8/primes-experiments/interactive/PrimeLisp/solution_3/bootstrap.lisp":
+
+debugger invoked on a SB-INT:SIMPLE-READER-PACKAGE-ERROR in thread
+#<THREAD tid=5 "main thread" RUNNING {1200038003}>:
+  Package PRIME-BENCH does not exist.
+
+    Stream: #<SYNONYM-STREAM :SYMBOL *TERMINAL-IO* {12000410F3}>
+
+Type HELP for debugger help, or (SB-EXT:EXIT) to exit from SBCL.
+
+restarts (invokable by number or by possibly-abbreviated name):
+  0: [CONTINUE ] Use the current package, PRIME-CANDIDATE.
+  1: [RETRY    ] Retry finding the package.
+  2: [USE-VALUE] Specify a different package
+  3: [UNINTERN ] Read the symbol as uninterned.
+  4: [SYMBOL   ] Specify a symbol to return
+  5: [ABORT    ] Reduce debugger level (to debug level 1).
+  6:             Retry EVAL of current toplevel form.
+  7:             Ignore error and continue loading file "/workspace/scratch/73f29dd8a4f8/primes-experiments/interactive/PrimeLisp/solution_3/bootstrap.lisp".
+  8:             Abort loading file "/workspace/scratch/73f29dd8a4f8/primes-experiments/interactive/PrimeLisp/solution_3/bootstrap.lisp".
+  9:             Ignore runtime option --load "bootstrap.lisp".
+ 10:             Skip rest of --eval and --load options.
+ 11:             Skip to toplevel READ/EVAL/PRINT loop.
+ 12: [EXIT     ] Exit SBCL (calling #'EXIT, killing the process).
+
+(SB-IMPL::READER-FIND-PACKAGE "PRIME-BENCH" #<SYNONYM-STREAM :SYMBOL *TERMINAL-IO* {12000410F3}> T)
+0[2] 5
+0
+
+0] * (in-package #:cl-user)
+(defvar *cpu-lock* (open "/tmp/primes-campaign-cpu.lock" :direction :io :if-exists :append :if-does-not-exist :create))
+(defvar *cpu-wait-total* 80.231624d0)
+(defun cpu-lock () (let ((start (get-internal-real-time))) (prime-bench::%flock (sb-sys:fd-stream-fd *cpu-lock*) 2) (let ((wait (/ (- (get-internal-real-time) start) (float internal-time-units-per-second 1d0)))) (incf *cpu-wait-total* wait) (format t "~&CPU ACQUIRED wait=~,6F total=~,6F utc=~D~%" wait *cpu-wait-total* (get-universal-time)))))
+(defun cpu-unlock () (prime-bench::%flock (sb-sys:fd-stream-fd *cpu-lock*) 8))
+(prime-bench::%flock 9 8)
+(cpu-lock)
+#<PACKAGE "COMMON-LISP-USER">
+* *CPU-LOCK*
+* *CPU-WAIT-TOTAL*
+* CPU-LOCK
+* CPU-UNLOCK
+* 0
+* CPU ACQUIRED wait=0.000000 total=80.231624 utc=3998279680
+NIL
+* (prime-bench:check-candidate)
+(load "experiments/09-cutoff-driver.lisp")
+(cpu-unlock)
+Candidate validated (including 78,498 primes through 1,000,000).
+T
+* 
+; file: /workspace/scratch/73f29dd8a4f8/primes-experiments/interactive/PrimeLisp/solution_3/experiments/09-cutoff-17-delta.lisp
+; in: DEFUN RUN-SIEVE
+;     (PRIME-CANDIDATE::END (CEILING PRIME-CANDIDATE::LIMIT 2))
+; 
+; caught STYLE-WARNING:
+;   The variable END is defined but never used.
+; 
+; compilation unit finished
+;   caught 1 STYLE-WARNING condition
+WARNING: redefining PRIME-CANDIDATE:RUN-SIEVE in DEFUN
+Candidate validated (including 78,498 primes through 1,000,000).
+echologie-cl-hybrid17-vop;1345;1.003995;1;algorithm=base,faithful=yes,bits=1
+echologie-cl-hybrid17-vop;1123;1.003995;1;algorithm=base,faithful=yes,bits=1
+Median: 820.247 us/sieve (1219.1 sieves/s).
+Saved: /workspace/scratch/73f29dd8a4f8/primes-experiments/interactive/PrimeLisp/solution_3/results/3998279687-277986140.sexp
+
+; file: /workspace/scratch/73f29dd8a4f8/primes-experiments/interactive/PrimeLisp/solution_3/experiments/09-cutoff-31-delta.lisp
+; in: DEFUN RUN-SIEVE
+;     (PRIME-CANDIDATE::END (CEILING PRIME-CANDIDATE::LIMIT 2))
+; 
+; caught STYLE-WARNING:
+;   The variable END is defined but never used.
+; 
+; compilation unit finished
+;   caught 1 STYLE-WARNING condition
+WARNING: redefining PRIME-CANDIDATE:RUN-SIEVE in DEFUN
+Candidate validated (including 78,498 primes through 1,000,000).
+echologie-cl-hybrid31-vop;1191;1.003995;1;algorithm=base,faithful=yes,bits=1
+echologie-cl-hybrid31-vop;1212;1.003995;1;algorithm=base,faithful=yes,bits=1
+Median: 835.682 us/sieve (1196.6 sieves/s).
+Saved: /workspace/scratch/73f29dd8a4f8/primes-experiments/interactive/PrimeLisp/solution_3/results/3998279689-581869302.sexp
+
+; file: /workspace/scratch/73f29dd8a4f8/primes-experiments/interactive/PrimeLisp/solution_3/experiments/09-cutoff-63-delta.lisp
+; in: DEFUN RUN-SIEVE
+;     (PRIME-CANDIDATE::END (CEILING PRIME-CANDIDATE::LIMIT 2))
+; 
+; caught STYLE-WARNING:
+;   The variable END is defined but never used.
+; 
+; compilation unit finished
+;   caught 1 STYLE-WARNING condition
+WARNING: redefining PRIME-CANDIDATE:RUN-SIEVE in DEFUN
+Candidate validated (including 78,498 primes through 1,000,000).
+echologie-cl-hybrid63-vop;1337;1.003995;1;algorithm=base,faithful=yes,bits=1
+echologie-cl-hybrid63-vop;1617;1.003996;1;algorithm=base,faithful=yes,bits=1
+Median: 685.916 us/sieve (1457.9 sieves/s).
+Saved: /workspace/scratch/73f29dd8a4f8/primes-experiments/interactive/PrimeLisp/solution_3/results/3998279691-669121262.sexp
+
+; file: /workspace/scratch/73f29dd8a4f8/primes-experiments/interactive/PrimeLisp/solution_3/experiments/09-cutoff-95-delta.lisp
+; in: DEFUN RUN-SIEVE
+;     (PRIME-CANDIDATE::END (CEILING PRIME-CANDIDATE::LIMIT 2))
+; 
+; caught STYLE-WARNING:
+;   The variable END is defined but never used.
+; 
+; compilation unit finished
+;   caught 1 STYLE-WARNING condition
+WARNING: redefining PRIME-CANDIDATE:RUN-SIEVE in DEFUN
+Candidate validated (including 78,498 primes through 1,000,000).
+echologie-cl-hybrid95-vop;1430;1.003996;1;algorithm=base,faithful=yes,bits=1
+echologie-cl-hybrid95-vop;1589;1.003996;1;algorithm=base,faithful=yes,bits=1
+Median: 666.968 us/sieve (1499.3 sieves/s).
+Saved: /workspace/scratch/73f29dd8a4f8/primes-experiments/interactive/PrimeLisp/solution_3/results/3998279694-365109113.sexp
+
+; file: /workspace/scratch/73f29dd8a4f8/primes-experiments/interactive/PrimeLisp/solution_3/experiments/09-cutoff-129-delta.lisp
+; in: DEFUN RUN-SIEVE
+;     (PRIME-CANDIDATE::END (CEILING PRIME-CANDIDATE::LIMIT 2))
+; 
+; caught STYLE-WARNING:
+;   The variable END is defined but never used.
+; 
+; compilation unit finished
+;   caught 1 STYLE-WARNING condition
+WARNING: redefining PRIME-CANDIDATE:RUN-SIEVE in DEFUN
+Candidate validated (including 78,498 primes through 1,000,000).
+echologie-cl-hybrid129-vop;1756;1.003995;1;algorithm=base,faithful=yes,bits=1
+echologie-cl-hybrid129-vop;1697;1.003995;1;algorithm=base,faithful=yes,bits=1
+Median: 581.690 us/sieve (1719.1 sieves/s).
+Saved: /workspace/scratch/73f29dd8a4f8/primes-experiments/interactive/PrimeLisp/solution_3/results/3998279696-545404204.sexp
+T
+* 0
+* (cpu-lock)
+CPU ACQUIRED wait=0.000000 total=80.231624 utc=3998279774
+NIL
+* (with-open-file (out "experiments/09-recovered-sparse3-disassembly.txt" :direction :output :if-exists :supersede) (let ((*standard-output* out)) (disassemble 'prime-candidate::sparse-3)))
+(cpu-unlock)
+NIL
+* 0
+* (cpu-lock)
+CPU ACQUIRED wait=0.000000 total=80.231624 utc=3998279840
+NIL
+* (cpu-unlock)
+0
+* (cpu-lock)
+CPU ACQUIRED wait=0.000000 total=80.231624 utc=3998279862
+NIL
+* (handler-bind ((sb-ext:compiler-note #'muffle-warning)) (load "experiments/10-sparse-delta.lisp"))
+(prime-bench:measure)
+(cpu-unlock)
+WARNING: redefining PRIME-CANDIDATE::DEFINE-SPARSE-RESETTERS in DEFMACRO
+WARNING: redefining PRIME-CANDIDATE::SPARSE-1 in DEFUN
+WARNING: redefining PRIME-CANDIDATE::SPARSE-3 in DEFUN
+WARNING: redefining PRIME-CANDIDATE::SPARSE-5 in DEFUN
+WARNING: redefining PRIME-CANDIDATE::SPARSE-7 in DEFUN
+WARNING: redefining PRIME-CANDIDATE::SPARSE-9 in DEFUN
+WARNING: redefining PRIME-CANDIDATE::SPARSE-11 in DEFUN
+WARNING: redefining PRIME-CANDIDATE::SPARSE-13 in DEFUN
+WARNING: redefining PRIME-CANDIDATE::SPARSE-15 in DEFUN
+WARNING: redefining PRIME-CANDIDATE::SPARSE-RESET in DEFUN
+WARNING: redefining PRIME-CANDIDATE:RUN-SIEVE in DEFUN
+T
+* Candidate validated (including 78,498 primes through 1,000,000).
+echologie-cl-hybrid129-unboxed;19418;5.003985;1;algorithm=base,faithful=yes,bits=1
+echologie-cl-hybrid129-unboxed;20591;5.003983;1;algorithm=base,faithful=yes,bits=1
+echologie-cl-hybrid129-unboxed;20530;5.003982;1;algorithm=base,faithful=yes,bits=1
+Median: 243.740 us/sieve (4102.7 sieves/s).
+Saved: /workspace/scratch/73f29dd8a4f8/primes-experiments/interactive/PrimeLisp/solution_3/results/3998279883-940029919.sexp
+(:UTC-UNIVERSAL-TIME 3998279883 :METHOD "interactive" :SBCL "2.6.8" :MACHINE
+ "Intel(R) Xeon(R) Platinum 8370C CPU @ 2.80GHz" :SYSTEM "6.18.44" :CPU "0"
+ :MODE "repl" :LABEL "echologie-cl-hybrid129-unboxed" :TAGS
+ "algorithm=base,faithful=yes,bits=1" :LIMIT 1000000 :SOURCE-FILES-SHA256
+ "ca7a8342e26c22ab4455592958a2a5a74ad3b2ee95edf6505b1d06611f23167f  /workspace/scratch/73f29dd8a4f8/primes-experiments/interactive/PrimeLisp/solution_3/sieve.lisp
+1206c525a19c95872a09b77e1ce652f5e7e4d941780a753c40c20e43b0002b7d  /workspace/scratch/73f29dd8a4f8/primes-experiments/interactive/PrimeLisp/solution_3/bench.lisp
+88ce9e36823b2386eb98d826c9d30f9bc194c424875a16172f6aa9fbb1644e8f  /workspace/scratch/73f29dd8a4f8/primes-experiments/interactive/PrimeLisp/solution_3/bootstrap.lisp
+"
+ :MEDIAN-MICROSECONDS-PER-SIEVE 243.7399902581588d0 :SAMPLES
+ ((:PASSES 19418 :SECONDS 5.003985d0 :CPU-SECONDS 5.000193d0
+   :MICROSECONDS-PER-SIEVE 257.69826964671955d0 :SIEVES-PER-SECOND
+   3880.5072357331205d0 :BYTES-CONSED 1213483552 :GC-SECONDS 0.023415d0)
+  (:PASSES 20591 :SECONDS 5.003983d0 :CPU-SECONDS 5.000249d0
+   :MICROSECONDS-PER-SIEVE 243.01796901558933d0 :SIEVES-PER-SECOND
+   4114.922053092507d0 :BYTES-CONSED 1286856752 :GC-SECONDS 0.024013d0)
+  (:PASSES 20530 :SECONDS 5.003982d0 :CPU-SECONDS 4.999557d0
+   :MICROSECONDS-PER-SIEVE 243.7399902581588d0 :SIEVES-PER-SECOND
+   4102.732583770286d0 :BYTES-CONSED 1283036544 :GC-SECONDS 0.026344d0)))
+* 0
+* (cpu-lock)
+CPU ACQUIRED wait=0.000000 total=80.231624 utc=3998280086
+NIL
+* (format t "~&END-INTERACTIVE cpu-wait-total=~,6F utc=~D~%" *cpu-wait-total* (get-universal-time))
+(sb-ext:exit)
+END-INTERACTIVE cpu-wait-total=80.231624 utc=3998280126
+NIL
+* 
+Script done on 2026-09-13 02:22:06-07:00 [COMMAND_EXIT_CODE="0"]

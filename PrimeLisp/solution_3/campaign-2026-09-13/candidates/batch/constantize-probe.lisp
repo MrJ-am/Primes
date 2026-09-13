@@ -1,0 +1,5 @@
+(require :sb-introspect)
+(format t "~&constantize: ~S~%" (sb-introspect:function-lambda-list #'sb-vm::constantize))
+(let ((s (find-symbol "REGISTER-INLINE-CONSTANT" "SB-ASSEM")))
+  (when s (format t "~&register-inline-constant: ~S~%" (sb-introspect:function-lambda-list (symbol-function s)))))
+(disassemble #'sb-vm::constantize)

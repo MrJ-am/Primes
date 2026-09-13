@@ -1,0 +1,24 @@
+echologie-cl-hybrid129-unboxed;19449;5.003974;1;algorithm=base,faithful=yes,bits=1
+
+; file: /workspace/scratch/73f29dd8a4f8/primes-experiments/interactive/PrimeLisp/solution_3/sieve.lisp
+; in: DEFUN COUNT-PRIMES
+;     (+
+;      (IF (>= PRIME-CANDIDATE::LIMIT 2)
+;          1
+;          0)
+;      (- PRIME-CANDIDATE::NBITS
+;         (+
+;          (LOOP PRIME-CANDIDATE::FOR PRIME-CANDIDATE::I FIXNUM PRIME-CANDIDATE::BELOW PRIME-CANDIDATE::NWORDS
+;                PRIME-CANDIDATE::SUM (LOGCOUNT #) FIXNUM)
+;          (IF (ZEROP PRIME-CANDIDATE::TAIL)
+;              0
+;              (LOGCOUNT #)))))
+; 
+; note: doing signed word to integer coercion (cost 20), for:
+;       the first result of inline (signed-byte 64) arithmetic
+; 
+; compilation unit finished
+;   printed 1 note
+Candidate validated (including 78,498 primes through 1,000,000).
+Median: 257.287 us/sieve (3886.7 sieves/s).
+Saved: /workspace/scratch/73f29dd8a4f8/primes-experiments/interactive/PrimeLisp/solution_3/results/3998280532-277986140.sexp

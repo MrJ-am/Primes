@@ -1,0 +1,8 @@
+(in-package #:cl-user)
+(dolist (cutoff '(17 31 63 95 129))
+  (let* ((source (format nil "experiments/09-cutoff-~D.lisp" cutoff))
+         (delta (format nil "experiments/09-cutoff-~D-delta.lisp" cutoff))
+         (copy (sb-ext:run-program "/bin/cp" (list source "sieve.lisp"))))
+    (assert (zerop (sb-ext:process-exit-code copy)))
+    (load delta)
+    (prime-bench:measure :seconds 1d0 :repeats 2)))

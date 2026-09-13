@@ -1,0 +1,116 @@
+
+; file: /workspace/scratch/73f29dd8a4f8/primes-experiments/batch/PrimeLisp/solution_3/sieve.lisp
+; in: DEFUN MARK
+;     (DEFUN PRIME-CANDIDATE::MARK (PRIME-CANDIDATE::WORDS PRIME-CANDIDATE::INDEX)
+;       (DECLARE (TYPE PRIME-CANDIDATE::WORDS PRIME-CANDIDATE::WORDS)
+;                (TYPE FIXNUM PRIME-CANDIDATE::INDEX))
+;       (LET ((PRIME-CANDIDATE::WORD-INDEX (ASH PRIME-CANDIDATE::INDEX -6)))
+;         (SETF (AREF PRIME-CANDIDATE::WORDS PRIME-CANDIDATE::WORD-INDEX)
+;                 (LOGIOR # #))))
+; --> SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA 
+; ==>
+;   #'(SB-INT:NAMED-LAMBDA PRIME-CANDIDATE::MARK
+;         (PRIME-CANDIDATE::WORDS PRIME-CANDIDATE::INDEX)
+;       (DECLARE (SB-C::TOP-LEVEL-FORM))
+;       (DECLARE (TYPE PRIME-CANDIDATE::WORDS PRIME-CANDIDATE::WORDS)
+;                (TYPE FIXNUM PRIME-CANDIDATE::INDEX))
+;       (BLOCK PRIME-CANDIDATE::MARK
+;         (LET ((PRIME-CANDIDATE::WORD-INDEX #))
+;           (SETF # #))))
+; 
+; note: doing unsigned word to integer coercion (cost 20) to "<return value>"
+
+; in: DEFUN COUNT-PRIMES
+;     (+
+;      (IF (>= PRIME-CANDIDATE::LIMIT 2)
+;          1
+;          0)
+;      (- PRIME-CANDIDATE::SIZE PRIME-CANDIDATE::COMPOSITES))
+; 
+; note: doing signed word to integer coercion (cost 20), for:
+;       the first result of inline (signed-byte 64) arithmetic
+; 
+; compilation unit finished
+;   printed 2 notes
+; disassembly for PRIME-CANDIDATE:RUN-SIEVE
+; Size: 284 bytes. Origin: #xB800BA352B                       ; PRIME-CANDIDATE:RUN-SIEVE
+; 52B:       4883EC10         SUB RSP, 16
+; 52F:       488B7DF8         MOV RDI, [RBP-8]
+; 533:       B902000000       MOV ECX, 2
+; 538:       48892C24         MOV [RSP], RBP
+; 53C:       488BEC           MOV RBP, RSP
+; 53F:       FF1573D1F5FE     CALL [RIP-17444493]             ; PRIME-CANDIDATE::SIEVE-BITS
+; 545:       480F42E3         CMOVB RSP, RBX
+; 549:       4C8BC7           MOV R8, RDI
+; 54C:       4C8945F0         MOV [RBP-16], R8
+; 550:       4883EC10         SUB RSP, 16
+; 554:       488B7DF8         MOV RDI, [RBP-8]
+; 558:       B902000000       MOV ECX, 2
+; 55D:       48892C24         MOV [RSP], RBP
+; 561:       488BEC           MOV RBP, RSP
+; 564:       FF15A6CFF5FE     CALL [RIP-17444954]             ; PRIME-CANDIDATE::SIEVE-LIMIT
+; 56A:       480F42E3         CMOVB RSP, RBX
+; 56E:       488BC7           MOV RAX, RDI
+; 571:       488BC7           MOV RAX, RDI
+; 574:       48D1F8           SAR RAX, 1
+; 577:       4C8D5801         LEA R11, [RAX+1]
+; 57B:       49D1FB           SAR R11, 1
+; 57E:       49D1E3           SHL R11, 1
+; 581:       4C895DE8         MOV [RBP-24], R11
+; 585:       4883EC10         SUB RSP, 16
+; 589:       B902000000       MOV ECX, 2
+; 58E:       48892C24         MOV [RSP], RBP
+; 592:       488BEC           MOV RBP, RSP
+; 595:       FF155D33F6FE     CALL [RIP-17419427]             ; ISQRT
+; 59B:       4C8B5DE8         MOV R11, [RBP-24]
+; 59F:       4C8B45F0         MOV R8, [RBP-16]
+; 5A3:       4C8BF7           MOV R14, RDI
+; 5A6:       BE06000000       MOV ESI, 6
+; 5AB:       EB32             JMP L2
+; 5AD:       0F1F00           NOP
+; 5B0: L0:   488BDE           MOV RBX, RSI
+; 5B3:       48D1FB           SAR RBX, 1
+; 5B6:       4883E3FE         AND RBX, -2
+; 5BA:       8BCB             MOV ECX, EBX
+; 5BC:       83E17E           AND ECX, 126
+; 5BF:       488BC3           MOV RAX, RBX
+; 5C2:       48C1F806         SAR RAX, 6
+; 5C6:       4883E0FE         AND RAX, -2
+; 5CA:       498B448001       MOV RAX, [R8+RAX*4+1]
+; 5CF:       488BD9           MOV RBX, RCX
+; 5D2:       48D1FB           SAR RBX, 1
+; 5D5:       480FA3D8         BT RAX, RBX
+; 5D9:       7310             JAE L3
+; 5DB: L1:   4883C604         ADD RSI, 4
+; 5DF: L2:   4C39F6           CMP RSI, R14
+; 5E2:       7ECC             JLE L0
+; 5E4:       488B7DF8         MOV RDI, [RBP-8]
+; 5E8:       C9               LEAVE
+; 5E9:       F8               CLC
+; 5EA:       C3               RET
+; 5EB: L3:   488BC6           MOV RAX, RSI
+; 5EE:       48D1F8           SAR RAX, 1
+; 5F1:       480FAFC6         IMUL RAX, RSI
+; 5F5:       48D1F8           SAR RAX, 1
+; 5F8:       4883E0FE         AND RAX, -2
+; 5FC:       4C8BD6           MOV R10, RSI
+; 5FF:       488BD8           MOV RBX, RAX
+; 602:       EB3C             JMP L5
+; 604:       660F1F440000     NOP
+; 60A:       660F1F440000     NOP
+; 610: L4:   488BFB           MOV RDI, RBX
+; 613:       48C1FF06         SAR RDI, 6
+; 617:       4883E7FE         AND RDI, -2
+; 61B:       498B44B801       MOV RAX, [R8+RDI*4+1]
+; 620:       8BCB             MOV ECX, EBX
+; 622:       83E17E           AND ECX, 126
+; 625:       48D1F9           SAR RCX, 1
+; 628:       41B901000000     MOV R9D, 1
+; 62E:       49D3E1           SHL R9, CL
+; 631:       4C09C8           OR RAX, R9
+; 634:       498944B801       MOV [R8+RDI*4+1], RAX
+; 639:       4A8D0413         LEA RAX, [RBX+R10]
+; 63D:       488BD8           MOV RBX, RAX
+; 640: L5:   4C39DB           CMP RBX, R11
+; 643:       7CCB             JL L4
+; 645:       EB94             JMP L1

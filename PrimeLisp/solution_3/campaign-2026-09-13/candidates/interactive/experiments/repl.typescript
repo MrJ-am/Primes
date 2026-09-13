@@ -1,0 +1,968 @@
+Script started on 2026-09-13 01:54:07-07:00 [COMMAND="exec 9>/tmp/primes-campaign-cpu.lock; date -u +LOCK_WAIT_%Y-%m-%dT%H:%M:%S.%NZ; flock -x 9; date -u +LOCK_ACQUIRED_%Y-%m-%dT%H:%M:%S.%NZ; PRIMES_CPU=0 ./run.sh repl" TERM="dumb" TTY="/dev/console" COLUMNS="80" LINES="24"]
+LOCK_WAIT_2026-09-13T08:54:07.078206539Z
+LOCK_ACQUIRED_2026-09-13T08:54:07.095449421Z
+* (defvar *cpu-lock* (open "/tmp/primes-campaign-cpu.lock" :direction :io :if-exists :append :if-does-not-exist :create))
+(defvar *cpu-wait-total* 0d0)
+(defun cpu-lock () (let ((start (get-internal-real-time))) (prime-bench::%flock (sb-sys:fd-stream-fd *cpu-lock*) 2) (let ((wait (/ (- (get-internal-real-time) start) (float internal-time-units-per-second 1d0)))) (incf *cpu-wait-total* wait) (format t "~&CPU ACQUIRED wait=~,6F total=~,6F utc=~D~%" wait *cpu-wait-total* (get-universal-time)))))
+(defun cpu-unlock () (prime-bench::%flock (sb-sys:fd-stream-fd *cpu-lock*) 8))
+(prime-bench::%flock 9 8)
+(cpu-lock)
+*CPU-LOCK*
+* *CPU-WAIT-TOTAL*
+* CPU-LOCK
+* CPU-UNLOCK
+* 0
+* CPU ACQUIRED wait=0.000000 total=0.000000 utc=3998278457
+NIL
+* (prime-bench:measure)
+(cpu-unlock)
+Candidate validated (including 78,498 primes through 1,000,000).
+echologie-cl-baseline;3883;5.003974;1;algorithm=base,faithful=yes,bits=1
+echologie-cl-baseline;3795;5.003978;1;algorithm=base,faithful=yes,bits=1
+echologie-cl-baseline;3933;5.003976;1;algorithm=base,faithful=yes,bits=1
+Median: 1288.688 us/sieve (776.0 sieves/s).
+Saved: /workspace/scratch/73f29dd8a4f8/primes-experiments/interactive/PrimeLisp/solution_3/results/3998278482-277986140.sexp
+(:UTC-UNIVERSAL-TIME 3998278482 :METHOD "interactive" :SBCL "2.6.8" :MACHINE
+ "Intel(R) Xeon(R) Platinum 8370C CPU @ 2.80GHz" :SYSTEM "6.18.44" :CPU "0"
+ :MODE "repl" :LABEL "echologie-cl-baseline" :TAGS
+ "algorithm=base,faithful=yes,bits=1" :LIMIT 1000000 :SOURCE-FILES-SHA256
+ "7980aa32cb2e628ddd4f05be678abf673446087da9bb8ec3e75a82e9fe858d02  /workspace/scratch/73f29dd8a4f8/primes-experiments/interactive/PrimeLisp/solution_3/sieve.lisp
+1206c525a19c95872a09b77e1ce652f5e7e4d941780a753c40c20e43b0002b7d  /workspace/scratch/73f29dd8a4f8/primes-experiments/interactive/PrimeLisp/solution_3/bench.lisp
+88ce9e36823b2386eb98d826c9d30f9bc194c424875a16172f6aa9fbb1644e8f  /workspace/scratch/73f29dd8a4f8/primes-experiments/interactive/PrimeLisp/solution_3/bootstrap.lisp
+"
+ :MEDIAN-MICROSECONDS-PER-SIEVE 1288.6876126706154d0 :SAMPLES
+ ((:PASSES 3883 :SECONDS 5.003974d0 :CPU-SECONDS 4.999623d0
+   :MICROSECONDS-PER-SIEVE 1288.6876126706154d0 :SIEVES-PER-SECOND
+   775.983248514081d0 :BYTES-CONSED 242628176 :GC-SECONDS 0.003645d0)
+  (:PASSES 3795 :SECONDS 5.003978d0 :CPU-SECONDS 4.999746d0
+   :MICROSECONDS-PER-SIEVE 1318.5712779973649d0 :SIEVES-PER-SECOND
+   758.396619649407d0 :BYTES-CONSED 237121184 :GC-SECONDS 0.003362d0)
+  (:PASSES 3933 :SECONDS 5.003976d0 :CPU-SECONDS 5.004637d0
+   :MICROSECONDS-PER-SIEVE 1272.3051106025935d0 :SIEVES-PER-SECOND
+   785.9749926858162d0 :BYTES-CONSED 245747040 :GC-SECONDS 0.00337d0)))
+* 0
+* (cpu-lock)
+CPU ACQUIRED wait=0.000000 total=0.000000 utc=3998278536
+NIL
+* (prime-bench:reload-candidate)
+(prime-bench:measure :seconds 1d0 :repeats 1)
+(cpu-unlock)
+; compiling file "/workspace/scratch/73f29dd8a4f8/primes-experiments/interactive/PrimeLisp/solution_3/sieve.lisp" (written 13 SEP 2026 01:55:35 AM):
+
+; file: /workspace/scratch/73f29dd8a4f8/primes-experiments/interactive/PrimeLisp/solution_3/sieve.lisp
+; in: DEFUN MARK-BIT
+;     (DEFUN PRIME-CANDIDATE::MARK-BIT
+;            (PRIME-CANDIDATE::BITS PRIME-CANDIDATE::INDEX)
+;       (DECLARE (TYPE PRIME-CANDIDATE::WORDS PRIME-CANDIDATE::BITS)
+;                (TYPE FIXNUM PRIME-CANDIDATE::INDEX))
+;       (LET ((PRIME-CANDIDATE::WORD (ASH PRIME-CANDIDATE::INDEX -6))
+;             (PRIME-CANDIDATE::MASK (THE # #)))
+;         (SETF (AREF PRIME-CANDIDATE::BITS PRIME-CANDIDATE::WORD)
+;                 (LOGIOR # PRIME-CANDIDATE::MASK))))
+; --> SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA 
+; ==>
+;   #'(SB-INT:NAMED-LAMBDA PRIME-CANDIDATE::MARK-BIT
+;         (PRIME-CANDIDATE::BITS PRIME-CANDIDATE::INDEX)
+;       (DECLARE (SB-C::TOP-LEVEL-FORM))
+;       (DECLARE (TYPE PRIME-CANDIDATE::WORDS PRIME-CANDIDATE::BITS)
+;                (TYPE FIXNUM PRIME-CANDIDATE::INDEX))
+;       (BLOCK PRIME-CANDIDATE::MARK-BIT
+;         (LET ((PRIME-CANDIDATE::WORD #) (PRIME-CANDIDATE::MASK #))
+;           (SETF # #))))
+; 
+; note: doing unsigned word to integer coercion (cost 20) to "<return value>"
+
+; in: DEFUN COUNT-PRIMES
+;     (+
+;      (IF (>= PRIME-CANDIDATE::LIMIT 2)
+;          1
+;          0)
+;      (- PRIME-CANDIDATE::NBITS
+;         (+
+;          (LOOP PRIME-CANDIDATE::FOR PRIME-CANDIDATE::I FIXNUM PRIME-CANDIDATE::BELOW PRIME-CANDIDATE::NWORDS
+;                PRIME-CANDIDATE::SUM (LOGCOUNT #) FIXNUM)
+;          (IF (ZEROP PRIME-CANDIDATE::TAIL)
+;              0
+;              (LOGCOUNT #)))))
+; 
+; note: doing signed word to integer coercion (cost 20), for:
+;       the first result of inline (signed-byte 64) arithmetic
+; 
+; compilation unit finished
+;   printed 2 notes
+
+
+; wrote /workspace/scratch/73f29dd8a4f8/primes-experiments/interactive/PrimeLisp/solution_3/.build/sieve.fasl
+; compilation finished in 0:00:00.040
+T
+* Candidate validated (including 78,498 primes through 1,000,000).
+echologie-cl-word-basic;496;1.007995;1;algorithm=base,faithful=yes,bits=1
+Median: 2032.248 us/sieve (492.1 sieves/s).
+Saved: /workspace/scratch/73f29dd8a4f8/primes-experiments/interactive/PrimeLisp/solution_3/results/3998278542-581869302.sexp
+(:UTC-UNIVERSAL-TIME 3998278542 :METHOD "interactive" :SBCL "2.6.8" :MACHINE
+ "Intel(R) Xeon(R) Platinum 8370C CPU @ 2.80GHz" :SYSTEM "6.18.44" :CPU "0"
+ :MODE "repl" :LABEL "echologie-cl-word-basic" :TAGS
+ "algorithm=base,faithful=yes,bits=1" :LIMIT 1000000 :SOURCE-FILES-SHA256
+ "596126f5acf6dea3ffcead209ea0b6137b145d5b2a0e5801bdf9336f02b6c32d  /workspace/scratch/73f29dd8a4f8/primes-experiments/interactive/PrimeLisp/solution_3/sieve.lisp
+1206c525a19c95872a09b77e1ce652f5e7e4d941780a753c40c20e43b0002b7d  /workspace/scratch/73f29dd8a4f8/primes-experiments/interactive/PrimeLisp/solution_3/bench.lisp
+88ce9e36823b2386eb98d826c9d30f9bc194c424875a16172f6aa9fbb1644e8f  /workspace/scratch/73f29dd8a4f8/primes-experiments/interactive/PrimeLisp/solution_3/bootstrap.lisp
+"
+ :MEDIAN-MICROSECONDS-PER-SIEVE 2032.2479838709678d0 :SAMPLES
+ ((:PASSES 496 :SECONDS 1.007995d0 :CPU-SECONDS 1.004585d0
+   :MICROSECONDS-PER-SIEVE 2032.2479838709678d0 :SIEVES-PER-SECOND
+   492.0659328667305d0 :BYTES-CONSED 30951360 :GC-SECONDS 0.0d0)))
+* 0
+* (cpu-lock)
+CPU ACQUIRED wait=0.000000 total=0.000000 utc=3998278549
+NIL
+* (with-open-file (out "experiments/01-word-basic-disassembly.txt" :direction :output :if-exists :supersede) (let ((*standard-output* out)) (disassemble 'prime-candidate:run-sieve)))
+(cpu-unlock)
+NIL
+* 0
+* (cpu-lock)
+CPU ACQUIRED wait=25.175873 total=25.175873 utc=3998278632
+NIL
+* (prime-bench:reload-candidate)
+(prime-bench:measure :seconds 1d0 :repeats 1)
+(cpu-unlock)
+; compiling file "/workspace/scratch/73f29dd8a4f8/primes-experiments/interactive/PrimeLisp/solution_3/sieve.lisp" (written 13 SEP 2026 01:57:00 AM):
+
+; file: /workspace/scratch/73f29dd8a4f8/primes-experiments/interactive/PrimeLisp/solution_3/sieve.lisp
+; in: DEFUN MARK-BIT
+;     (DEFUN PRIME-CANDIDATE::MARK-BIT
+;            (PRIME-CANDIDATE::BITS PRIME-CANDIDATE::INDEX)
+;       (DECLARE (TYPE PRIME-CANDIDATE::WORDS PRIME-CANDIDATE::BITS)
+;                (TYPE FIXNUM PRIME-CANDIDATE::INDEX))
+;       (LET ((PRIME-CANDIDATE::WORD (ASH PRIME-CANDIDATE::INDEX -6))
+;             (PRIME-CANDIDATE::MASK (THE # #)))
+;         (SETF (AREF PRIME-CANDIDATE::BITS PRIME-CANDIDATE::WORD)
+;                 (LOGIOR # PRIME-CANDIDATE::MASK))))
+; --> SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA 
+; ==>
+;   #'(SB-INT:NAMED-LAMBDA PRIME-CANDIDATE::MARK-BIT
+;         (PRIME-CANDIDATE::BITS PRIME-CANDIDATE::INDEX)
+;       (DECLARE (SB-C::TOP-LEVEL-FORM))
+;       (DECLARE (TYPE PRIME-CANDIDATE::WORDS PRIME-CANDIDATE::BITS)
+;                (TYPE FIXNUM PRIME-CANDIDATE::INDEX))
+;       (BLOCK PRIME-CANDIDATE::MARK-BIT
+;         (LET ((PRIME-CANDIDATE::WORD #) (PRIME-CANDIDATE::MASK #))
+;           (SETF # #))))
+; 
+; note: doing unsigned word to integer coercion (cost 20) to "<return value>"
+
+; 
+; caught ERROR:
+;   READ error during COMPILE-FILE:
+;   
+;     Comma not inside a backquote.
+;   
+;       Line: 65, Column: 10, File-Position: 3210
+;   
+;       Stream: #<SB-INT:FORM-TRACKING-STREAM for "file /workspace/scratch/73f29dd8a4f8/primes-experiments/interactive/PrimeLisp/solution_3/sieve.lisp" {1202D609E3}>
+; 
+; compilation unit aborted
+;   caught 1 fatal ERROR condition
+;   caught 1 ERROR condition
+;   printed 1 note
+
+; compilation aborted after 0:00:00.016
+
+debugger invoked on a SIMPLE-ERROR in thread
+#<THREAD tid=6 "main thread" RUNNING {1200038003}>:
+  Candidate compilation failed.
+
+Type HELP for debugger help, or (SB-EXT:EXIT) to exit from SBCL.
+
+restarts (invokable by number or by possibly-abbreviated name):
+  0: [ABORT] Exit debugger, returning to top level.
+
+(PRIME-BENCH:RELOAD-CANDIDATE)
+   source: (ERROR "Candidate compilation failed.")
+0] 0
+(cpu-unlock)
+* 0
+* (cpu-lock)
+CPU ACQUIRED wait=25.647880 total=50.823753 utc=3998278703
+NIL
+* (prime-bench:reload-candidate)
+(prime-bench:measure :seconds 1d0 :repeats 1)
+(with-open-file (out "experiments/02-dense3-disassembly.txt" :direction :output :if-exists :supersede) (let ((*standard-output* out)) (disassemble 'prime-candidate::dense-3)))
+(cpu-unlock)
+; compiling file "/workspace/scratch/73f29dd8a4f8/primes-experiments/interactive/PrimeLisp/solution_3/sieve.lisp" (written 13 SEP 2026 01:57:57 AM):
+
+; file: /workspace/scratch/73f29dd8a4f8/primes-experiments/interactive/PrimeLisp/solution_3/sieve.lisp
+; in: DEFUN MARK-BIT
+;     (DEFUN PRIME-CANDIDATE::MARK-BIT
+;            (PRIME-CANDIDATE::BITS PRIME-CANDIDATE::INDEX)
+;       (DECLARE (TYPE PRIME-CANDIDATE::WORDS PRIME-CANDIDATE::BITS)
+;                (TYPE FIXNUM PRIME-CANDIDATE::INDEX))
+;       (LET ((PRIME-CANDIDATE::WORD (ASH PRIME-CANDIDATE::INDEX -6))
+;             (PRIME-CANDIDATE::MASK (THE # #)))
+;         (SETF (AREF PRIME-CANDIDATE::BITS PRIME-CANDIDATE::WORD)
+;                 (LOGIOR # PRIME-CANDIDATE::MASK))))
+; --> SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA 
+; ==>
+;   #'(SB-INT:NAMED-LAMBDA PRIME-CANDIDATE::MARK-BIT
+;         (PRIME-CANDIDATE::BITS PRIME-CANDIDATE::INDEX)
+;       (DECLARE (SB-C::TOP-LEVEL-FORM))
+;       (DECLARE (TYPE PRIME-CANDIDATE::WORDS PRIME-CANDIDATE::BITS)
+;                (TYPE FIXNUM PRIME-CANDIDATE::INDEX))
+;       (BLOCK PRIME-CANDIDATE::MARK-BIT
+;         (LET ((PRIME-CANDIDATE::WORD #) (PRIME-CANDIDATE::MASK #))
+;           (SETF # #))))
+; 
+; note: doing unsigned word to integer coercion (cost 20) to "<return value>"
+
+; in: DEFMACRO DEFINE-DENSE-RESETTERS
+;     (FLOOR (FLOOR (* PRIME-CANDIDATE::P PRIME-CANDIDATE::P) 2)
+;            (* 64 PRIME-CANDIDATE::P))
+; 
+; note: unable to
+;   optimize
+; due to type uncertainty:
+;   The second argument is a (OR (INTEGER 192 192) (INTEGER 320)), not a FIXNUM.
+
+;     (LOOP PRIME-CANDIDATE::FOR PRIME-CANDIDATE::P PRIME-CANDIDATE::FROM 3 PRIME-CANDIDATE::TO PRIME-CANDIDATE::MAXIMUM PRIME-CANDIDATE::BY 2
+;           PRIME-CANDIDATE::FOR PRIME-CANDIDATE::NAME = ...)
+; --> LET LET LET LET SB-LOOP::WITH-LOOP-LIST-COLLECTION-HEAD LET* TAGBODY WHEN 
+; --> IF 
+; ==>
+;   (> PRIME-CANDIDATE::P #:LIM1)
+; 
+; note: forced to do GENERIC-> (cost 10)
+;       unable to do inline fixnum comparison (cost 4) because:
+;       The first argument is a (OR (INTEGER 3 3) (INTEGER 5)), not a FIXNUM.
+;       The second argument is a REAL, not a FIXNUM.
+
+;     (* PRIME-CANDIDATE::P PRIME-CANDIDATE::P)
+; 
+; note: forced to do GENERIC-* (cost 30)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 3 3) (INTEGER 5)), not a FIXNUM.
+;       The second argument is a (OR (INTEGER 3 3) (INTEGER 5)), not a FIXNUM.
+;       The result is a (VALUES (OR (INTEGER 9 9) (INTEGER 25)) &OPTIONAL), not a (VALUES
+;                                                                                  FIXNUM
+;                                                                                  &OPTIONAL).
+;       unable to do inline (unsigned-byte 64) arithmetic (cost 4) because:
+;       The first argument is a (OR (INTEGER 3 3) (INTEGER 5)), not a (UNSIGNED-BYTE
+;                                                                      64).
+;       The second argument is a (OR (INTEGER 3 3) (INTEGER 5)), not a (UNSIGNED-BYTE
+;                                                                       64).
+;       The result is a (VALUES (OR (INTEGER 9 9) (INTEGER 25)) &OPTIONAL), not a (VALUES
+;                                                                                  (UNSIGNED-BYTE
+;                                                                                   64)
+;                                                                                  &OPTIONAL).
+;       etc.
+
+;     (* 64 PRIME-CANDIDATE::P)
+; 
+; note: forced to do full call
+;       unable to do inline ASH (cost 2) because:
+;       The first argument is a (OR (INTEGER 3 3) (INTEGER 5)), not a FIXNUM.
+;       The result is a (VALUES (OR (INTEGER 192 192) (INTEGER 320)) &OPTIONAL), not a (VALUES
+;                                                                                       FIXNUM
+;                                                                                       &OPTIONAL).
+;       unable to do inline ASH (cost 3) because:
+;       The first argument is a (OR (INTEGER 3 3) (INTEGER 5)), not a FIXNUM.
+;       The result is a (VALUES (OR (INTEGER 192 192) (INTEGER 320)) &OPTIONAL), not a (VALUES
+;                                                                                       FIXNUM
+;                                                                                       &OPTIONAL).
+;       etc.
+
+;     (*
+;      (FLOOR (FLOOR (* PRIME-CANDIDATE::P PRIME-CANDIDATE::P) 2)
+;             (* 64 PRIME-CANDIDATE::P))
+;      PRIME-CANDIDATE::P)
+; 
+; note: forced to do GENERIC-* (cost 30)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a UNSIGNED-BYTE, not a FIXNUM.
+;       The second argument is a (OR (INTEGER 3 3) (INTEGER 5)), not a FIXNUM.
+;       The result is a (VALUES (OR (INTEGER 0 0) (INTEGER 3)) &OPTIONAL), not a (VALUES
+;                                                                                 FIXNUM
+;                                                                                 &OPTIONAL).
+;       unable to do inline (unsigned-byte 64) arithmetic (cost 4) because:
+;       The first argument is a UNSIGNED-BYTE, not a (UNSIGNED-BYTE 64).
+;       The second argument is a (OR (INTEGER 3 3) (INTEGER 5)), not a (UNSIGNED-BYTE
+;                                                                       64).
+;       The result is a (VALUES (OR (INTEGER 0 0) (INTEGER 3)) &OPTIONAL), not a (VALUES
+;                                                                                 (UNSIGNED-BYTE
+;                                                                                  64)
+;                                                                                 &OPTIONAL).
+;       etc.
+
+;     (LOOP PRIME-CANDIDATE::FOR PRIME-CANDIDATE::W PRIME-CANDIDATE::BELOW PRIME-CANDIDATE::P
+;           PRIME-CANDIDATE::FOR PRIME-CANDIDATE::MASKS = (LOOP PRIME-CANDIDATE::FOR PRIME-CANDIDATE::K PRIME-CANDIDATE::BELOW 64
+;                                                               PRIME-CANDIDATE::FOR BIT = (+
+;                                                                                           (FLOOR
+;                                                                                            PRIME-CANDIDATE::P
+;                                                                                            2)
+;                                                                                           (*
+;                                                                                            PRIME-CANDIDATE::K
+;                                                                                            PRIME-CANDIDATE::P))
+;                                                               WHEN (=
+;                                                                     PRIME-CANDIDATE::W
+;                                                                     (FLOOR BIT
+;                                                                            64))
+;                                                               PRIME-CANDIDATE::COLLECT ...)
+;           WHEN PRIME-CANDIDATE::MASKS
+;           PRIME-CANDIDATE::COLLECT ...)
+; --> LET LET SB-LOOP::WITH-LOOP-LIST-COLLECTION-HEAD LET* TAGBODY WHEN IF >= 
+; ==>
+;   1
+; 
+; note: forced to do GENERIC-< (cost 10)
+;       unable to do inline fixnum comparison (cost 4) because:
+;       The first argument is a UNSIGNED-BYTE, not a FIXNUM.
+;       The second argument is a (OR (INTEGER 3 3) (INTEGER 5)), not a FIXNUM.
+
+;     (LOOP PRIME-CANDIDATE::FOR PRIME-CANDIDATE::P PRIME-CANDIDATE::FROM 3 PRIME-CANDIDATE::TO PRIME-CANDIDATE::MAXIMUM PRIME-CANDIDATE::BY 2
+;           PRIME-CANDIDATE::FOR PRIME-CANDIDATE::NAME = ...)
+; --> LET LET LET LET SB-LOOP::WITH-LOOP-LIST-COLLECTION-HEAD LET* TAGBODY 
+; --> SB-LOOP::LOOP-DESETQ SETQ THE 
+; ==>
+;   (+ PRIME-CANDIDATE::P 2)
+; 
+; note: forced to do GENERIC-+ (cost 10)
+;       unable to do inline fixnum arithmetic (cost 1) because:
+;       The first argument is a (INTEGER 3), not a FIXNUM.
+;       The result is a (VALUES (INTEGER 5) &OPTIONAL), not a (VALUES FIXNUM
+;                                                                     &OPTIONAL).
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (INTEGER 3), not a FIXNUM.
+;       The result is a (VALUES (INTEGER 5) &OPTIONAL), not a (VALUES FIXNUM
+;                                                                     &OPTIONAL).
+;       etc.
+
+;     (* PRIME-CANDIDATE::K PRIME-CANDIDATE::P)
+; 
+; note: forced to do GENERIC-* (cost 30)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The second argument is a (INTEGER 3), not a FIXNUM.
+;       The result is a (VALUES (OR (INTEGER 0 0) (INTEGER 3)) &OPTIONAL), not a (VALUES
+;                                                                                 FIXNUM
+;                                                                                 &OPTIONAL).
+;       unable to do inline (unsigned-byte 64) arithmetic (cost 4) because:
+;       The second argument is a (INTEGER 3), not a (UNSIGNED-BYTE 64).
+;       The result is a (VALUES (OR (INTEGER 0 0) (INTEGER 3)) &OPTIONAL), not a (VALUES
+;                                                                                 (UNSIGNED-BYTE
+;                                                                                  64)
+;                                                                                 &OPTIONAL).
+;       etc.
+
+;     (+ (FLOOR PRIME-CANDIDATE::P 2) (* PRIME-CANDIDATE::K PRIME-CANDIDATE::P))
+; 
+; note: forced to do GENERIC-+ (cost 10)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (INTEGER 1), not a FIXNUM.
+;       The second argument is a (OR (INTEGER 0 0) (INTEGER 3)), not a FIXNUM.
+;       The result is a (VALUES (INTEGER 1) &OPTIONAL), not a (VALUES FIXNUM
+;                                                                     &OPTIONAL).
+;       unable to do inline (unsigned-byte 64) arithmetic (cost 4) because:
+;       The first argument is a (INTEGER 1), not a (UNSIGNED-BYTE 64).
+;       The second argument is a (OR (INTEGER 0 0) (INTEGER 3)), not a (UNSIGNED-BYTE
+;                                                                       64).
+;       The result is a (VALUES (INTEGER 1) &OPTIONAL), not a (VALUES
+;                                                              (UNSIGNED-BYTE 64)
+;                                                              &OPTIONAL).
+;       etc.
+
+;     (MOD BIT 64)
+; 
+; note: forced to do LOGAND-WORD-MASK/INTEGER-UNSIGNED-C (cost 10)
+;       unable to do inline fixnum arithmetic (cost 1) because:
+;       The first argument is a (INTEGER 1), not a FIXNUM.
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (INTEGER 1), not a FIXNUM.
+;       etc.
+
+;     (LOOP PRIME-CANDIDATE::FOR PRIME-CANDIDATE::W PRIME-CANDIDATE::BELOW PRIME-CANDIDATE::P
+;           PRIME-CANDIDATE::FOR PRIME-CANDIDATE::MASKS = (LOOP PRIME-CANDIDATE::FOR PRIME-CANDIDATE::K PRIME-CANDIDATE::BELOW 64
+;                                                               PRIME-CANDIDATE::FOR BIT = (+
+;                                                                                           (FLOOR
+;                                                                                            PRIME-CANDIDATE::P
+;                                                                                            2)
+;                                                                                           (*
+;                                                                                            PRIME-CANDIDATE::K
+;                                                                                            PRIME-CANDIDATE::P))
+;                                                               WHEN (=
+;                                                                     PRIME-CANDIDATE::W
+;                                                                     (FLOOR BIT
+;                                                                            64))
+;                                                               PRIME-CANDIDATE::COLLECT ...)
+;           WHEN PRIME-CANDIDATE::MASKS
+;           PRIME-CANDIDATE::COLLECT ...)
+; --> LET LET SB-LOOP::WITH-LOOP-LIST-COLLECTION-HEAD LET* TAGBODY 
+; --> SB-LOOP::LOOP-DESETQ SETQ THE 1+ 
+; ==>
+;   1
+; 
+; note: forced to do GENERIC-+ (cost 10)
+;       unable to do inline fixnum arithmetic (cost 1) because:
+;       The first argument is a UNSIGNED-BYTE, not a FIXNUM.
+;       The result is a (VALUES (INTEGER 1) &OPTIONAL), not a (VALUES FIXNUM
+;                                                                     &OPTIONAL).
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a UNSIGNED-BYTE, not a FIXNUM.
+;       The result is a (VALUES (INTEGER 1) &OPTIONAL), not a (VALUES FIXNUM
+;                                                                     &OPTIONAL).
+;       etc.
+
+; in: DEFMACRO DEFINE-DENSE-RESETTERS => DEFUN DENSE-RESET
+;     (LOOP PRIME-CANDIDATE::FOR PRIME-CANDIDATE::P PRIME-CANDIDATE::FROM 3 PRIME-CANDIDATE::TO PRIME-CANDIDATE::MAXIMUM PRIME-CANDIDATE::BY 2
+;           PRIME-CANDIDATE::COLLECT `(,PRIME-CANDIDATE::P
+;                                      (,(INTERN
+;                                         (FORMAT NIL "DENSE-~D"
+;                                                 PRIME-CANDIDATE::P))
+;                                       PRIME-CANDIDATE::BITS)))
+; --> LET SB-LOOP::WITH-LOOP-LIST-COLLECTION-HEAD LET* TAGBODY WHEN IF 
+; ==>
+;   (> PRIME-CANDIDATE::P #:LIM28)
+; 
+; note: forced to do GENERIC-> (cost 10)
+;       unable to do inline fixnum comparison (cost 4) because:
+;       The first argument is a (OR (INTEGER 3 3) (INTEGER 5 5) (INTEGER 7 7)
+;                                   (INTEGER 9 9) (INTEGER 11 11) (INTEGER 13 13)
+;                                   (INTEGER 15)), not a FIXNUM.
+;       The second argument is a REAL, not a FIXNUM.
+
+; --> LET SB-LOOP::WITH-LOOP-LIST-COLLECTION-HEAD LET* TAGBODY 
+; --> SB-LOOP::LOOP-DESETQ SETQ THE 
+; ==>
+;   (+ PRIME-CANDIDATE::P 2)
+; 
+; note: forced to do GENERIC-+ (cost 10)
+;       unable to do inline fixnum arithmetic (cost 1) because:
+;       The first argument is a (OR (INTEGER 3 3) (INTEGER 5 5) (INTEGER 7 7)
+;                                   (INTEGER 9 9) (INTEGER 11 11) (INTEGER 13 13)
+;                                   (INTEGER 15)), not a FIXNUM.
+;       The result is a (VALUES
+;                        (OR (INTEGER 5 5) (INTEGER 7 7) (INTEGER 9 9)
+;                            (INTEGER 11 11) (INTEGER 13 13) (INTEGER 15))
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 3 3) (INTEGER 5 5) (INTEGER 7 7)
+;                                   (INTEGER 9 9) (INTEGER 11 11) (INTEGER 13 13)
+;                                   (INTEGER 15)), not a FIXNUM.
+;       The result is a (VALUES
+;                        (OR (INTEGER 5 5) (INTEGER 7 7) (INTEGER 9 9)
+;                            (INTEGER 11 11) (INTEGER 13 13) (INTEGER 15))
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       etc.
+
+; in: DEFMACRO DEFINE-DENSE-RESETTERS
+;     (ASH 1 (MOD BIT 64))
+; 
+; note: doing unsigned word to integer coercion (cost 20), for:
+;       the first result of inline ASH
+
+;     `(DEFUN ,PRIME-CANDIDATE::NAME (PRIME-CANDIDATE::BITS)
+;        (DECLARE (TYPE PRIME-CANDIDATE::WORDS PRIME-CANDIDATE::BITS))
+;        (LET ((PRIME-CANDIDATE::BASE ,PRIME-CANDIDATE::START)
+;              (PRIME-CANDIDATE::END (LENGTH PRIME-CANDIDATE::BITS)))
+;          (DECLARE (TYPE FIXNUM PRIME-CANDIDATE::BASE PRIME-CANDIDATE::END))
+;          (LOOP PRIME-CANDIDATE::WHILE (<= PRIME-CANDIDATE::BASE
+;                                           (- PRIME-CANDIDATE::END
+;                                              ,PRIME-CANDIDATE::P))
+;                DO ,@PRIME-CANDIDATE::UPDATES (INCF PRIME-CANDIDATE::BASE
+;                                                    ,PRIME-CANDIDATE::P))
+;          ,@(LOOP PRIME-CANDIDATE::FOR PRIME-CANDIDATE::UPDATE PRIME-CANDIDATE::IN PRIME-CANDIDATE::UPDATES
+;                  PRIME-CANDIDATE::FOR PRIME-CANDIDATE::W = (THIRD (THIRD #))
+;                  PRIME-CANDIDATE::COLLECT `(WHEN (< # PRIME-CANDIDATE::END)
+;                                              ,PRIME-CANDIDATE::UPDATE))
+;          (SETF (AREF PRIME-CANDIDATE::BITS ,#) (LOGAND # ,#))
+;          NIL))
+; 
+; note: doing unsigned word to integer coercion (cost 20), for:
+;       the third argument of LIST
+
+; in: DEFUN COUNT-PRIMES
+;     (+
+;      (IF (>= PRIME-CANDIDATE::LIMIT 2)
+;          1
+;          0)
+;      (- PRIME-CANDIDATE::NBITS
+;         (+
+;          (LOOP PRIME-CANDIDATE::FOR PRIME-CANDIDATE::I FIXNUM PRIME-CANDIDATE::BELOW PRIME-CANDIDATE::NWORDS
+;                PRIME-CANDIDATE::SUM (LOGCOUNT #) FIXNUM)
+;          (IF (ZEROP PRIME-CANDIDATE::TAIL)
+;              0
+;              (LOGCOUNT #)))))
+; 
+; note: doing signed word to integer coercion (cost 20), for:
+;       the first result of inline (signed-byte 64) arithmetic
+; 
+; compilation unit finished
+;   printed 17 notes
+
+
+; wrote /workspace/scratch/73f29dd8a4f8/primes-experiments/interactive/PrimeLisp/solution_3/.build/sieve.fasl
+; compilation finished in 0:00:25.235
+T
+* Candidate validated (including 78,498 primes through 1,000,000).
+echologie-cl-dense129;985;1.003996;1;algorithm=base,faithful=yes,bits=1
+Median: 1019.285 us/sieve (981.1 sieves/s).
+Saved: /workspace/scratch/73f29dd8a4f8/primes-experiments/interactive/PrimeLisp/solution_3/results/3998278746-669121262.sexp
+(:UTC-UNIVERSAL-TIME 3998278746 :METHOD "interactive" :SBCL "2.6.8" :MACHINE
+ "Intel(R) Xeon(R) Platinum 8370C CPU @ 2.80GHz" :SYSTEM "6.18.44" :CPU "0"
+ :MODE "repl" :LABEL "echologie-cl-dense129" :TAGS
+ "algorithm=base,faithful=yes,bits=1" :LIMIT 1000000 :SOURCE-FILES-SHA256
+ "32fb2cf402b061f15aaff8075567ff3a701116803e7337ff77df4b9563f5edd5  /workspace/scratch/73f29dd8a4f8/primes-experiments/interactive/PrimeLisp/solution_3/sieve.lisp
+1206c525a19c95872a09b77e1ce652f5e7e4d941780a753c40c20e43b0002b7d  /workspace/scratch/73f29dd8a4f8/primes-experiments/interactive/PrimeLisp/solution_3/bench.lisp
+88ce9e36823b2386eb98d826c9d30f9bc194c424875a16172f6aa9fbb1644e8f  /workspace/scratch/73f29dd8a4f8/primes-experiments/interactive/PrimeLisp/solution_3/bootstrap.lisp
+"
+ :MEDIAN-MICROSECONDS-PER-SIEVE 1019.2852791878174d0 :SAMPLES
+ ((:PASSES 985 :SECONDS 1.003996d0 :CPU-SECONDS 1.001958d0
+   :MICROSECONDS-PER-SIEVE 1019.2852791878174d0 :SIEVES-PER-SECOND
+   981.0796058948441d0 :BYTES-CONSED 61503792 :GC-SECONDS 0.001081d0)))
+* NIL
+* 0
+* (cpu-lock)
+CPU ACQUIRED wait=0.000000 total=50.823753 utc=3998278788
+NIL
+* (handler-bind ((sb-ext:compiler-note #'muffle-warning)) (prime-bench:reload-candidate))
+(prime-bench:measure :seconds 1d0 :repeats 1)
+(with-open-file (out "experiments/03-dense3-disassembly.txt" :direction :output :if-exists :supersede) (let ((*standard-output* out)) (disassemble 'prime-candidate::dense-3)))
+(cpu-unlock)
+; compiling file "/workspace/scratch/73f29dd8a4f8/primes-experiments/interactive/PrimeLisp/solution_3/sieve.lisp" (written 13 SEP 2026 01:59:48 AM):
+
+; wrote /workspace/scratch/73f29dd8a4f8/primes-experiments/interactive/PrimeLisp/solution_3/.build/sieve.fasl
+; compilation finished in 0:00:25.923
+T
+* Candidate validated (including 78,498 primes through 1,000,000).
+echologie-cl-dense129-fold;1272;1.003995;1;algorithm=base,faithful=yes,bits=1
+Median: 789.304 us/sieve (1266.9 sieves/s).
+Saved: /workspace/scratch/73f29dd8a4f8/primes-experiments/interactive/PrimeLisp/solution_3/results/3998278822-365109113.sexp
+(:UTC-UNIVERSAL-TIME 3998278822 :METHOD "interactive" :SBCL "2.6.8" :MACHINE
+ "Intel(R) Xeon(R) Platinum 8370C CPU @ 2.80GHz" :SYSTEM "6.18.44" :CPU "0"
+ :MODE "repl" :LABEL "echologie-cl-dense129-fold" :TAGS
+ "algorithm=base,faithful=yes,bits=1" :LIMIT 1000000 :SOURCE-FILES-SHA256
+ "685594a50ec9dc2e3ed99d9b5e29a8d6d4537734550a42f183264bfd1f9a15f9  /workspace/scratch/73f29dd8a4f8/primes-experiments/interactive/PrimeLisp/solution_3/sieve.lisp
+1206c525a19c95872a09b77e1ce652f5e7e4d941780a753c40c20e43b0002b7d  /workspace/scratch/73f29dd8a4f8/primes-experiments/interactive/PrimeLisp/solution_3/bench.lisp
+88ce9e36823b2386eb98d826c9d30f9bc194c424875a16172f6aa9fbb1644e8f  /workspace/scratch/73f29dd8a4f8/primes-experiments/interactive/PrimeLisp/solution_3/bootstrap.lisp
+"
+ :MEDIAN-MICROSECONDS-PER-SIEVE 789.3042452830189d0 :SAMPLES
+ ((:PASSES 1272 :SECONDS 1.003995d0 :CPU-SECONDS 1.000379d0
+   :MICROSECONDS-PER-SIEVE 789.3042452830189d0 :SIEVES-PER-SECOND
+   1266.9385803714163d0 :BYTES-CONSED 79464128 :GC-SECONDS 9.8d-4)))
+* NIL
+* 0
+* (cpu-lock)
+CPU ACQUIRED wait=6.219977 total=57.043730 utc=3998278871
+NIL
+* (handler-bind ((sb-ext:compiler-note #'muffle-warning)) (load "experiments/04-sparse-delta.lisp"))
+(prime-bench:measure :seconds 1d0 :repeats 1)
+(with-open-file (out "experiments/04-sparse3-disassembly.txt" :direction :output :if-exists :supersede) (let ((*standard-output* out)) (disassemble 'prime-candidate::sparse-3)))
+(cpu-unlock)
+
+; file: /workspace/scratch/73f29dd8a4f8/primes-experiments/interactive/PrimeLisp/solution_3/experiments/04-sparse-delta.lisp
+; in: DEFUN RUN-SIEVE
+;     (PRIME-CANDIDATE::END (CEILING PRIME-CANDIDATE::LIMIT 2))
+; 
+; caught STYLE-WARNING:
+;   The variable END is defined but never used.
+; 
+; compilation unit finished
+;   caught 1 STYLE-WARNING condition
+WARNING: redefining PRIME-CANDIDATE:RUN-SIEVE in DEFUN
+T
+* Candidate validated (including 78,498 primes through 1,000,000).
+echologie-cl-hybrid129;1063;1.003996;1;algorithm=base,faithful=yes,bits=1
+Median: 944.493 us/sieve (1058.8 sieves/s).
+Saved: /workspace/scratch/73f29dd8a4f8/primes-experiments/interactive/PrimeLisp/solution_3/results/3998278894-545404204.sexp
+(:UTC-UNIVERSAL-TIME 3998278894 :METHOD "interactive" :SBCL "2.6.8" :MACHINE
+ "Intel(R) Xeon(R) Platinum 8370C CPU @ 2.80GHz" :SYSTEM "6.18.44" :CPU "0"
+ :MODE "repl" :LABEL "echologie-cl-hybrid129" :TAGS
+ "algorithm=base,faithful=yes,bits=1" :LIMIT 1000000 :SOURCE-FILES-SHA256
+ "1c536d77904bc43d97ce35a22c3ce08a68fe5c64ecbbb9a7b12cca626129eecc  /workspace/scratch/73f29dd8a4f8/primes-experiments/interactive/PrimeLisp/solution_3/sieve.lisp
+1206c525a19c95872a09b77e1ce652f5e7e4d941780a753c40c20e43b0002b7d  /workspace/scratch/73f29dd8a4f8/primes-experiments/interactive/PrimeLisp/solution_3/bench.lisp
+88ce9e36823b2386eb98d826c9d30f9bc194c424875a16172f6aa9fbb1644e8f  /workspace/scratch/73f29dd8a4f8/primes-experiments/interactive/PrimeLisp/solution_3/bootstrap.lisp
+"
+ :MEDIAN-MICROSECONDS-PER-SIEVE 944.4929444967075d0 :SAMPLES
+ ((:PASSES 1063 :SECONDS 1.003996d0 :CPU-SECONDS 1.001885d0
+   :MICROSECONDS-PER-SIEVE 944.4929444967075d0 :SIEVES-PER-SECOND
+   1058.7691584428621d0 :BYTES-CONSED 68703696 :GC-SECONDS 0.00114d0)))
+* NIL
+* 0
+* (cpu-lock)
+CPU ACQUIRED wait=0.000000 total=57.043730 utc=3998278929
+NIL
+* (handler-bind ((sb-ext:compiler-note #'muffle-warning)) (load "experiments/05-sparse-delta.lisp"))
+(prime-bench:measure)
+(with-open-file (out "experiments/05-sparse3-disassembly.txt" :direction :output :if-exists :supersede) (let ((*standard-output* out)) (disassemble 'prime-candidate::sparse-3)))
+(cpu-unlock)
+WARNING: redefining PRIME-CANDIDATE::DEFINE-SPARSE-RESETTERS in DEFMACRO
+WARNING: redefining PRIME-CANDIDATE::SPARSE-1 in DEFUN
+WARNING: redefining PRIME-CANDIDATE::SPARSE-3 in DEFUN
+WARNING: redefining PRIME-CANDIDATE::SPARSE-5 in DEFUN
+WARNING: redefining PRIME-CANDIDATE::SPARSE-7 in DEFUN
+WARNING: redefining PRIME-CANDIDATE::SPARSE-9 in DEFUN
+WARNING: redefining PRIME-CANDIDATE::SPARSE-11 in DEFUN
+WARNING: redefining PRIME-CANDIDATE::SPARSE-13 in DEFUN
+WARNING: redefining PRIME-CANDIDATE::SPARSE-15 in DEFUN
+WARNING: redefining PRIME-CANDIDATE::SPARSE-RESET in DEFUN
+
+; file: /workspace/scratch/73f29dd8a4f8/primes-experiments/interactive/PrimeLisp/solution_3/experiments/05-sparse-delta.lisp
+; in: DEFUN RUN-SIEVE
+;     (PRIME-CANDIDATE::END (CEILING PRIME-CANDIDATE::LIMIT 2))
+; 
+; caught STYLE-WARNING:
+;   The variable END is defined but never used.
+; 
+; compilation unit finished
+;   caught 1 STYLE-WARNING condition
+WARNING: redefining PRIME-CANDIDATE:RUN-SIEVE in DEFUN
+T
+* Candidate validated (including 78,498 primes through 1,000,000).
+echologie-cl-hybrid129-speed3;16132;5.003983;1;algorithm=base,faithful=yes,bits=1
+echologie-cl-hybrid129-speed3;15954;5.003981;1;algorithm=base,faithful=yes,bits=1
+echologie-cl-hybrid129-speed3;16525;5.003981;1;algorithm=base,faithful=yes,bits=1
+Median: 310.190 us/sieve (3223.8 sieves/s).
+Saved: /workspace/scratch/73f29dd8a4f8/primes-experiments/interactive/PrimeLisp/solution_3/results/3998278954-940029919.sexp
+(:UTC-UNIVERSAL-TIME 3998278954 :METHOD "interactive" :SBCL "2.6.8" :MACHINE
+ "Intel(R) Xeon(R) Platinum 8370C CPU @ 2.80GHz" :SYSTEM "6.18.44" :CPU "0"
+ :MODE "repl" :LABEL "echologie-cl-hybrid129-speed3" :TAGS
+ "algorithm=base,faithful=yes,bits=1" :LIMIT 1000000 :SOURCE-FILES-SHA256
+ "ce0215763e875ffcadf7e9829e7daea8f0332a5c449477a862b4b84e73399f51  /workspace/scratch/73f29dd8a4f8/primes-experiments/interactive/PrimeLisp/solution_3/sieve.lisp
+1206c525a19c95872a09b77e1ce652f5e7e4d941780a753c40c20e43b0002b7d  /workspace/scratch/73f29dd8a4f8/primes-experiments/interactive/PrimeLisp/solution_3/bench.lisp
+88ce9e36823b2386eb98d826c9d30f9bc194c424875a16172f6aa9fbb1644e8f  /workspace/scratch/73f29dd8a4f8/primes-experiments/interactive/PrimeLisp/solution_3/bootstrap.lisp
+"
+ :MEDIAN-MICROSECONDS-PER-SIEVE 310.1898710637243d0 :SAMPLES
+ ((:PASSES 16132 :SECONDS 5.003983d0 :CPU-SECONDS 4.999764d0
+   :MICROSECONDS-PER-SIEVE 310.1898710637243d0 :SIEVES-PER-SECOND
+   3223.8318955120353d0 :BYTES-CONSED 1043426544 :GC-SECONDS 0.023647d0)
+  (:PASSES 15954 :SECONDS 5.003981d0 :CPU-SECONDS 5.000972d0
+   :MICROSECONDS-PER-SIEVE 313.65055785382975d0 :SIEVES-PER-SECOND
+   3188.2615061887727d0 :BYTES-CONSED 1031913536 :GC-SECONDS 0.024496d0)
+  (:PASSES 16525 :SECONDS 5.003981d0 :CPU-SECONDS 5.000741d0
+   :MICROSECONDS-PER-SIEVE 302.8127685325265d0 :SIEVES-PER-SECOND
+   3302.3706524864906d0 :BYTES-CONSED 1068901424 :GC-SECONDS 0.024471d0)))
+* NIL
+* 0
+* (cpu-lock)
+CPU ACQUIRED wait=0.000000 total=57.043730 utc=3998279041
+NIL
+* (load "experiments/or-byte-vop.lisp")
+(let ((bits (make-array 1 :element-type '(unsigned-byte 64) :initial-element 0))) (prime-candidate::test-or-byte bits) (assert (= (aref bits 0) 4)) (describe bits))
+(disassemble 'prime-candidate::test-or-byte)
+(cpu-unlock)
+T
+* #(4)
+  [simple specialized vector]
+
+Element-type: (UNSIGNED-BYTE 64)
+Length: 1
+* ; disassembly for PRIME-CANDIDATE::TEST-OR-BYTE
+; Size: 30 bytes. Origin: #xB800BA6AC9                        ; PRIME-CANDIDATE::TEST-OR-BYTE
+; C9:       488BC7           MOV RAX, RDI
+; CC:       48FFC7           INC RDI
+; CF:       31C9             XOR ECX, ECX
+; D1:       800C0F04         OR BYTE PTR [RDI+RCX], 4
+; D5:       488D5D10         LEA RBX, [RBP+16]
+; D9:       31C9             XOR ECX, ECX
+; DB:       498BFC           MOV RDI, R12                     ; NIL
+; DE:       488BF7           MOV RSI, RDI
+; E1:       488BD7           MOV RDX, RDI
+; E4:       F9               STC
+; E5:       C9               LEAVE
+; E6:       C3               RET
+NIL
+* 0
+* (cpu-lock)
+CPU ACQUIRED wait=0.000000 total=57.043730 utc=3998279082
+NIL
+* (handler-bind ((sb-ext:compiler-note #'muffle-warning)) (load "experiments/06-sparse-delta.lisp"))
+(prime-bench:measure :seconds 1d0 :repeats 1)
+(with-open-file (out "experiments/06-sparse3-disassembly.txt" :direction :output :if-exists :supersede) (let ((*standard-output* out)) (disassemble 'prime-candidate::sparse-3)))
+(cpu-unlock)
+
+debugger invoked on a SB-C::INPUT-ERROR-IN-LOAD in thread
+#<THREAD tid=6 "main thread" RUNNING {1200038003}>:
+  READ error during LOAD:
+
+    Comma not inside a backquote.
+
+      Line: 33, Column: 14, File-Position: 1930
+
+      Stream: #<SB-INT:FORM-TRACKING-STREAM for "file /workspace/scratch/73f29dd8a4f8/primes-experiments/interactive/PrimeLisp/solution_3/experiments/06-sparse-delta.lisp" {12040A8833}>
+
+Type HELP for debugger help, or (SB-EXT:EXIT) to exit from SBCL.
+
+restarts (invokable by number or by possibly-abbreviated name):
+  0: [ABORT] Abort loading file "/workspace/scratch/73f29dd8a4f8/primes-experiments/interactive/PrimeLisp/solution_3/experiments/06-sparse-delta.lisp".
+  1:         Exit debugger, returning to top level.
+
+(SB-C:COMPILER-ERROR SB-C::INPUT-ERROR-IN-LOAD :CONDITION #<SB-INT:SIMPLE-READER-ERROR "Comma not inside a backquote." {12040B4763}> :STREAM #<SB-INT:FORM-TRACKING-STREAM for "file /workspace/scratch/73f29dd8a4f8/primes-experiments/interactive/PrimeLisp/solution_3/experiments/06-sparse-delta.lisp" {12040A8833}>)
+0] 1
+(cpu-unlock)
+* 0
+* (cpu-lock)
+CPU ACQUIRED wait=0.000000 total=57.043730 utc=3998279117
+NIL
+* (handler-bind ((sb-ext:compiler-note #'muffle-warning)) (load "experiments/06-sparse-delta.lisp"))
+(prime-bench:measure)
+(with-open-file (out "experiments/06-sparse3-disassembly.txt" :direction :output :if-exists :supersede) (let ((*standard-output* out)) (disassemble 'prime-candidate::sparse-3)))
+(cpu-unlock)
+WARNING: redefining PRIME-CANDIDATE::DEFINE-SPARSE-RESETTERS in DEFMACRO
+WARNING: redefining PRIME-CANDIDATE::SPARSE-1 in DEFUN
+WARNING: redefining PRIME-CANDIDATE::SPARSE-3 in DEFUN
+WARNING: redefining PRIME-CANDIDATE::SPARSE-5 in DEFUN
+WARNING: redefining PRIME-CANDIDATE::SPARSE-7 in DEFUN
+WARNING: redefining PRIME-CANDIDATE::SPARSE-9 in DEFUN
+WARNING: redefining PRIME-CANDIDATE::SPARSE-11 in DEFUN
+WARNING: redefining PRIME-CANDIDATE::SPARSE-13 in DEFUN
+WARNING: redefining PRIME-CANDIDATE::SPARSE-15 in DEFUN
+WARNING: redefining PRIME-CANDIDATE::SPARSE-RESET in DEFUN
+
+; file: /workspace/scratch/73f29dd8a4f8/primes-experiments/interactive/PrimeLisp/solution_3/experiments/06-sparse-delta.lisp
+; in: DEFUN RUN-SIEVE
+;     (PRIME-CANDIDATE::END (CEILING PRIME-CANDIDATE::LIMIT 2))
+; 
+; caught STYLE-WARNING:
+;   The variable END is defined but never used.
+; 
+; compilation unit finished
+;   caught 1 STYLE-WARNING condition
+WARNING: redefining PRIME-CANDIDATE:RUN-SIEVE in DEFUN
+T
+* Candidate validated (including 78,498 primes through 1,000,000).
+echologie-cl-hybrid129-vop;20594;5.003983;1;algorithm=base,faithful=yes,bits=1
+echologie-cl-hybrid129-vop;18856;5.003982;1;algorithm=base,faithful=yes,bits=1
+echologie-cl-hybrid129-vop;19850;5.003986;1;algorithm=base,faithful=yes,bits=1
+Median: 252.090 us/sieve (3966.8 sieves/s).
+Saved: /workspace/scratch/73f29dd8a4f8/primes-experiments/interactive/PrimeLisp/solution_3/results/3998279142-701693957.sexp
+(:UTC-UNIVERSAL-TIME 3998279142 :METHOD "interactive" :SBCL "2.6.8" :MACHINE
+ "Intel(R) Xeon(R) Platinum 8370C CPU @ 2.80GHz" :SYSTEM "6.18.44" :CPU "0"
+ :MODE "repl" :LABEL "echologie-cl-hybrid129-vop" :TAGS
+ "algorithm=base,faithful=yes,bits=1" :LIMIT 1000000 :SOURCE-FILES-SHA256
+ "d5341a2abce6fde6d00a6aa735fcabe933a59c35d18f1bd1416ed1fd7590d8b9  /workspace/scratch/73f29dd8a4f8/primes-experiments/interactive/PrimeLisp/solution_3/sieve.lisp
+1206c525a19c95872a09b77e1ce652f5e7e4d941780a753c40c20e43b0002b7d  /workspace/scratch/73f29dd8a4f8/primes-experiments/interactive/PrimeLisp/solution_3/bench.lisp
+88ce9e36823b2386eb98d826c9d30f9bc194c424875a16172f6aa9fbb1644e8f  /workspace/scratch/73f29dd8a4f8/primes-experiments/interactive/PrimeLisp/solution_3/bootstrap.lisp
+"
+ :MEDIAN-MICROSECONDS-PER-SIEVE 252.08997481108312d0 :SAMPLES
+ ((:PASSES 20594 :SECONDS 5.003983d0 :CPU-SECONDS 5.002819d0
+   :MICROSECONDS-PER-SIEVE 242.98256773817616d0 :SIEVES-PER-SECOND
+   4115.521575512947d0 :BYTES-CONSED 1332060320 :GC-SECONDS 0.032586d0)
+  (:PASSES 18856 :SECONDS 5.003982d0 :CPU-SECONDS 5.003541d0
+   :MICROSECONDS-PER-SIEVE 265.37876537972d0 :SIEVES-PER-SECOND
+   3768.199006311374d0 :BYTES-CONSED 1219642512 :GC-SECONDS 0.034025d0)
+  (:PASSES 19850 :SECONDS 5.003986d0 :CPU-SECONDS 5.000739d0
+   :MICROSECONDS-PER-SIEVE 252.08997481108312d0 :SIEVES-PER-SECOND
+   3966.837637035755d0 :BYTES-CONSED 1283976384 :GC-SECONDS 0.033346d0)))
+* NIL
+* 0
+* (cpu-lock)
+CPU ACQUIRED wait=0.000000 total=57.043730 utc=3998279315
+NIL
+* (handler-bind ((sb-ext:compiler-note #'muffle-warning)) (load "experiments/07-sparse-delta.lisp"))
+(prime-bench:measure :seconds 1d0 :repeats 1)
+(with-open-file (out "experiments/07-sparse3-disassembly.txt" :direction :output :if-exists :supersede) (let ((*standard-output* out)) (disassemble 'prime-candidate::sparse-3)))
+(cpu-unlock)
+WARNING: redefining PRIME-CANDIDATE::DEFINE-SPARSE-RESETTERS in DEFMACRO
+WARNING: redefining PRIME-CANDIDATE::SPARSE-1 in DEFUN
+WARNING: redefining PRIME-CANDIDATE::SPARSE-3 in DEFUN
+WARNING: redefining PRIME-CANDIDATE::SPARSE-5 in DEFUN
+WARNING: redefining PRIME-CANDIDATE::SPARSE-7 in DEFUN
+WARNING: redefining PRIME-CANDIDATE::SPARSE-9 in DEFUN
+WARNING: redefining PRIME-CANDIDATE::SPARSE-11 in DEFUN
+WARNING: redefining PRIME-CANDIDATE::SPARSE-13 in DEFUN
+WARNING: redefining PRIME-CANDIDATE::SPARSE-15 in DEFUN
+WARNING: redefining PRIME-CANDIDATE::SPARSE-RESET in DEFUN
+T
+* Candidate validated (including 78,498 primes through 1,000,000).
+echologie-cl-hybrid129-scaled;1773;1.003997;1;algorithm=base,faithful=yes,bits=1
+Median: 566.270 us/sieve (1765.9 sieves/s).
+Saved: /workspace/scratch/73f29dd8a4f8/primes-experiments/interactive/PrimeLisp/solution_3/results/3998279338-949333985.sexp
+(:UTC-UNIVERSAL-TIME 3998279338 :METHOD "interactive" :SBCL "2.6.8" :MACHINE
+ "Intel(R) Xeon(R) Platinum 8370C CPU @ 2.80GHz" :SYSTEM "6.18.44" :CPU "0"
+ :MODE "repl" :LABEL "echologie-cl-hybrid129-scaled" :TAGS
+ "algorithm=base,faithful=yes,bits=1" :LIMIT 1000000 :SOURCE-FILES-SHA256
+ "e5d1ba48b40b66f393ff1fadd34e6a14ae7d4b6fb8cfff5a7650bb595f387138  /workspace/scratch/73f29dd8a4f8/primes-experiments/interactive/PrimeLisp/solution_3/sieve.lisp
+1206c525a19c95872a09b77e1ce652f5e7e4d941780a753c40c20e43b0002b7d  /workspace/scratch/73f29dd8a4f8/primes-experiments/interactive/PrimeLisp/solution_3/bench.lisp
+88ce9e36823b2386eb98d826c9d30f9bc194c424875a16172f6aa9fbb1644e8f  /workspace/scratch/73f29dd8a4f8/primes-experiments/interactive/PrimeLisp/solution_3/bootstrap.lisp
+"
+ :MEDIAN-MICROSECONDS-PER-SIEVE 566.2701635645798d0 :SAMPLES
+ ((:PASSES 1773 :SECONDS 1.003997d0 :CPU-SECONDS 1.003878d0
+   :MICROSECONDS-PER-SIEVE 566.2701635645798d0 :SIEVES-PER-SECOND
+   1765.9415316978038d0 :BYTES-CONSED 114618960 :GC-SECONDS 0.003003d0)))
+* NIL
+* 0
+* (cpu-lock)
+CPU ACQUIRED wait=0.000000 total=57.043730 utc=3998279395
+NIL
+* (prime-bench:measure :seconds 2d0 :repeats 2)
+(require :sb-sprof)
+(sb-sprof:with-profiling (:max-samples 2000 :report :flat :loop nil) (dotimes (i 10000) (prime-bench::fresh-sieve 1000000)))
+(cpu-unlock)
+Candidate validated (including 78,498 primes through 1,000,000).
+echologie-cl-hybrid129-scaled;6659;2.003987;1;algorithm=base,faithful=yes,bits=1
+echologie-cl-hybrid129-scaled;6582;2.003985;1;algorithm=base,faithful=yes,bits=1
+Median: 302.704 us/sieve (3303.6 sieves/s).
+Saved: /workspace/scratch/73f29dd8a4f8/primes-experiments/interactive/PrimeLisp/solution_3/results/3998279406-568478650.sexp
+(:UTC-UNIVERSAL-TIME 3998279406 :METHOD "interactive" :SBCL "2.6.8" :MACHINE
+ "Intel(R) Xeon(R) Platinum 8370C CPU @ 2.80GHz" :SYSTEM "6.18.44" :CPU "0"
+ :MODE "repl" :LABEL "echologie-cl-hybrid129-scaled" :TAGS
+ "algorithm=base,faithful=yes,bits=1" :LIMIT 1000000 :SOURCE-FILES-SHA256
+ "e5d1ba48b40b66f393ff1fadd34e6a14ae7d4b6fb8cfff5a7650bb595f387138  /workspace/scratch/73f29dd8a4f8/primes-experiments/interactive/PrimeLisp/solution_3/sieve.lisp
+1206c525a19c95872a09b77e1ce652f5e7e4d941780a753c40c20e43b0002b7d  /workspace/scratch/73f29dd8a4f8/primes-experiments/interactive/PrimeLisp/solution_3/bench.lisp
+88ce9e36823b2386eb98d826c9d30f9bc194c424875a16172f6aa9fbb1644e8f  /workspace/scratch/73f29dd8a4f8/primes-experiments/interactive/PrimeLisp/solution_3/bootstrap.lisp
+"
+ :MEDIAN-MICROSECONDS-PER-SIEVE 302.70429212600874d0 :SAMPLES
+ ((:PASSES 6659 :SECONDS 2.003987d0 :CPU-SECONDS 2.001708d0
+   :MICROSECONDS-PER-SIEVE 300.9441357561195d0 :SIEVES-PER-SECOND
+   3322.8758469990075d0 :BYTES-CONSED 430659184 :GC-SECONDS 0.010878d0)
+  (:PASSES 6582 :SECONDS 2.003985d0 :CPU-SECONDS 1.99897d0
+   :MICROSECONDS-PER-SIEVE 304.46444849589795d0 :SIEVES-PER-SECOND
+   3284.455721973967d0 :BYTES-CONSED 425750032 :GC-SECONDS 0.010133d0)))
+* ("SB-SPROF")
+* 
+Number of samples:   227
+Sample interval:     0.01 seconds
+Total sampling time: 2.27 seconds
+Graph cycles:        0
+Sampled threads:
+   #<THREAD tid=11 "finalizer" RUNNING {120003A4F3}> (128/1048576 bytes, 1 hash buckets)
+   #<THREAD tid=6 "main thread" RUNNING {1200038003}> (26416/1048576 bytes, 154 hash buckets)
+
+           Self        Total        Cumul
+  Nr  Count     %  Count     %  Count     %    Calls  Function
+------------------------------------------------------------------------
+   1     17   7.5     17   7.5     17   7.5        -  PRIME-CANDIDATE::SPARSE-11
+   2     16   7.0     16   7.0     33  14.5        -  PRIME-CANDIDATE::SPARSE-15
+   3     13   5.7     13   5.7     46  20.3        -  PRIME-CANDIDATE::SPARSE-3
+   4     11   4.8     11   4.8     57  25.1        -  PRIME-CANDIDATE::SPARSE-9
+   5     11   4.8     11   4.8     68  30.0        -  PRIME-CANDIDATE::SPARSE-7
+   6      9   4.0      9   4.0     77  33.9        -  PRIME-CANDIDATE::SPARSE-1
+   7      9   4.0      9   4.0     86  37.9        -  PRIME-CANDIDATE::SPARSE-5
+   8      8   3.5      8   3.5     94  41.4        -  PRIME-CANDIDATE::SPARSE-13
+   9      7   3.1      7   3.1    101  44.5        -  PRIME-CANDIDATE::DENSE-17
+  10      7   3.1      7   3.1    108  47.6        -  PRIME-CANDIDATE::DENSE-11
+  11      5   2.2      5   2.2    113  49.8        -  PRIME-CANDIDATE::DENSE-13
+  12      5   2.2      5   2.2    118  52.0        -  PRIME-CANDIDATE::DENSE-29
+  13      5   2.2      5   2.2    123  54.2        -  PRIME-CANDIDATE::DENSE-47
+  14      5   2.2      5   2.2    128  56.4        -  PRIME-CANDIDATE::DENSE-3
+  15      4   1.8      4   1.8    132  58.1        -  PRIME-CANDIDATE::DENSE-59
+  16      4   1.8      4   1.8    136  59.9        -  PRIME-CANDIDATE::DENSE-5
+  17      4   1.8      4   1.8    140  61.7        -  PRIME-CANDIDATE::DENSE-37
+  18      4   1.8      4   1.8    144  63.4        -  PRIME-CANDIDATE::DENSE-23
+  19      4   1.8      4   1.8    148  65.2        -  PRIME-CANDIDATE::DENSE-43
+  20      4   1.8      4   1.8    152  67.0        -  PRIME-CANDIDATE::DENSE-73
+  21      3   1.3      3   1.3    155  68.3        -  PRIME-CANDIDATE::DENSE-41
+  22      3   1.3      3   1.3    158  69.6        -  PRIME-CANDIDATE::DENSE-61
+  23      3   1.3      3   1.3    161  70.9        -  PRIME-CANDIDATE::DENSE-107
+  24      3   1.3      3   1.3    164  72.2        -  PRIME-CANDIDATE::DENSE-79
+  25      3   1.3      3   1.3    167  73.6        -  PRIME-CANDIDATE::DENSE-19
+  26      2   0.9      2   0.9    169  74.4        -  PRIME-CANDIDATE::DENSE-103
+  27      2   0.9      2   0.9    171  75.3        -  PRIME-CANDIDATE::DENSE-31
+  28      2   0.9      2   0.9    173  76.2        -  PRIME-CANDIDATE::DENSE-67
+  29      2   0.9      2   0.9    175  77.1        -  PRIME-CANDIDATE::DENSE-127
+  30      2   0.9      2   0.9    177  78.0        -  PRIME-CANDIDATE::DENSE-97
+  31      2   0.9      2   0.9    179  78.9        -  PRIME-CANDIDATE::DENSE-101
+  32      2   0.9      2   0.9    181  79.7        -  PRIME-CANDIDATE::DENSE-71
+  33      2   0.9      2   0.9    183  80.6        -  ISQRT
+  34      1   0.4    190  83.7    184  81.1        -  PRIME-CANDIDATE:RUN-SIEVE
+  35      1   0.4      1   0.4    185  81.5        -  PRIME-CANDIDATE::DENSE-113
+  36      1   0.4      1   0.4    186  81.9        -  PRIME-CANDIDATE::DENSE-53
+  37      1   0.4      1   0.4    187  82.4        -  foreign function alloc
+  38      1   0.4      1   0.4    188  82.8        -  PRIME-CANDIDATE::DENSE-83
+  39      1   0.4      1   0.4    189  83.3        -  PRIME-CANDIDATE::DENSE-89
+  40      1   0.4      1   0.4    190  83.7        -  GENERIC--
+  41      1   0.4      1   0.4    191  84.1        -  PRIME-CANDIDATE::DENSE-7
+  42      0   0.0    227 100.0    191  84.1        -  foreign function call_into_lisp_
+  43      0   0.0    222  97.8    191  84.1        -  top level form
+  44      0   0.0    222  97.8    191  84.1        -  (FLET "G" :IN SB-C::%COMPILE-IN-LEXENV)
+  45      0   0.0    222  97.8    191  84.1        -  SB-C::%COMPILE-IN-LEXENV
+  46      0   0.0    222  97.8    191  84.1        -  SB-C:EVAL-WITH-COMPILE-IN-LEXENV
+  47      0   0.0    222  97.8    191  84.1        -  SB-IMPL::%SIMPLE-EVAL
+  48      0   0.0    222  97.8    191  84.1        -  SB-INT:SIMPLE-EVAL-IN-LEXENV
+  49      0   0.0    222  97.8    191  84.1        -  EVAL
+  50      0   0.0    222  97.8    191  84.1        -  INTERACTIVE-EVAL
+  51      0   0.0    222  97.8    191  84.1        -  SB-IMPL::REPL-FUN
+  52      0   0.0    222  97.8    191  84.1        -  (LAMBDA NIL :IN SB-IMPL::TOPLEVEL-REPL)
+  53      0   0.0    222  97.8    191  84.1        -  SB-IMPL::%WITH-REBOUND-IO-SYNTAX
+  54      0   0.0    222  97.8    191  84.1        -  SB-IMPL::TOPLEVEL-REPL
+  55      0   0.0    222  97.8    191  84.1        -  SB-IMPL::TOPLEVEL-INIT
+  56      0   0.0    222  97.8    191  84.1        -  (FLET SB-UNIX::BODY :IN SB-IMPL::START-LISP)
+  57      0   0.0    222  97.8    191  84.1        -  (FLET "WITHOUT-INTERRUPTS-BODY-3" :IN SB-IMPL::START-LISP)
+  58      0   0.0    222  97.8    191  84.1        -  SB-IMPL::%START-LISP
+  59      0   0.0     95  41.9    191  84.1        -  PRIME-CANDIDATE::SPARSE-RESET
+  60      0   0.0     32  14.1    191  84.1        -  PRIME-CANDIDATE:MAKE-SIEVE
+  61      0   0.0     32  14.1    191  84.1        -  PRIME-BENCH::FRESH-SIEVE
+  62      0   0.0     31  13.7    191  84.1        -  foreign function lisp_alloc
+  63      0   0.0     31  13.7    191  84.1        -  ALLOC-TRAMP
+  64      0   0.0      5   2.2    191  84.1        -  foreign function pthread_cond_wait
+  65      0   0.0      5   2.2    191  84.1        -  foreign function finalizer_thread_wait
+  66      0   0.0      5   2.2    191  84.1        -  (LAMBDA NIL :IN SB-IMPL::FINALIZER-THREAD-START)
+  67      0   0.0      5   2.2    191  84.1        -  (FLET SB-UNIX::BODY :IN SB-THREAD::RUN)
+  68      0   0.0      5   2.2    191  84.1        -  (FLET "WITHOUT-INTERRUPTS-BODY-" :IN SB-THREAD::RUN)
+  69      0   0.0      5   2.2    191  84.1        -  SB-THREAD::RUN
+  70      0   0.0      5   2.2    191  84.1        -  foreign function funcall1
+  71      0   0.0      5   2.2    191  84.1        -  foreign function new_thread_trampoline
+------------------------------------------------------------------------
+         36  15.9                                     elsewhere
+NIL
+* 0
+* (cpu-lock)
+CPU ACQUIRED wait=23.187894 total=80.231624 utc=3998279542
+NIL
+* (handler-bind ((sb-ext:compiler-note #'muffle-warning)) (load "experiments/08-sparse-delta.lisp"))
+(prime-bench:measure :seconds 1d0 :repeats 1)
+(with-open-file (out "experiments/08-sparse3-disassembly.txt" :direction :output :if-exists :supersede) (let ((*standard-output* out)) (disassemble 'prime-candidate::sparse-3)))
+(cpu-unlock)
+WARNING: redefining PRIME-CANDIDATE::DEFINE-SPARSE-RESETTERS in DEFMACRO
+WARNING: redefining PRIME-CANDIDATE::SPARSE-1 in DEFUN
+WARNING: redefining PRIME-CANDIDATE::SPARSE-3 in DEFUN
+WARNING: redefining PRIME-CANDIDATE::SPARSE-5 in DEFUN
+WARNING: redefining PRIME-CANDIDATE::SPARSE-7 in DEFUN
+WARNING: redefining PRIME-CANDIDATE::SPARSE-9 in DEFUN
+WARNING: redefining PRIME-CANDIDATE::SPARSE-11 in DEFUN
+WARNING: redefining PRIME-CANDIDATE::SPARSE-13 in DEFUN
+WARNING: redefining PRIME-CANDIDATE::SPARSE-15 in DEFUN
+WARNING: redefining PRIME-CANDIDATE::SPARSE-RESET in DEFUN
+T
+* CORRUPTION WARNING in SBCL pid 6 tid 6:
+Memory fault at 0x1240000000 (pc=0xb800bc16c8 [code 0xb800bc1540+0x188 ID 0x7a5d], fp=0x7ff404f0f700, sp=0x7ff404f0f6b8) tid 6
+The integrity of this image is possibly compromised.
+Continuing with fingers crossed.
+CORRUPTION WARNING in SBCL pid 6 tid 6:
+Memory fault at (nil) (pc=0xb80080a167 [code 0xb80080a080+0xE7 ID 0x4fd7], fp=0x7ff404f0e650, sp=0x7ff404f0e650) tid 6
+The integrity of this image is possibly compromised.
+Continuing with fingers crossed.
+CORRUPTION WARNING in SBCL pid 6 tid 6:
+Memory fault at (nil) (pc=0xb80080a167 [code 0xb80080a080+0xE7 ID 0x4fd7], fp=0x7ff404f0d5d0, sp=0x7ff404f0d5d0) tid 6
+The integrity of this image is possibly compromised.
+Continuing with fingers crossed.
+CORRUPTION WARNING in SBCL pid 6 tid 6:
+Memory fault at (nil) (pc=0xb80080a167 [code 0xb80080a080+0xE7 ID 0x4fd7], fp=0x7ff404f0c550, sp=0x7ff404f0c550) tid 6
+The integrity of this image is possibly compromised.
+Continuing with fingers crossed.
+CORRUPTION WARNING in SBCL pid 6 tid 6:
+Memory fault at (nil) (pc=0xb80080a167 [code 0xb80080a080+0xE7 ID 0x4fd7], fp=0x7ff404f0b4d0, sp=0x7ff404f0b4d0) tid 6
+The integrity of this image is possibly compromised.
+Continuing with fingers crossed.
+CORRUPTION WARNING in SBCL pid 6 tid 6:
+Memory fault at (nil) (pc=0xb80080a167 [code 0xb80080a080+0xE7 ID 0x4fd7], fp=0x7ff404f0a450, sp=0x7ff404f0a450) tid 6
+The integrity of this image is possibly compromised.
+Continuing with fingers crossed.
+CORRUPTION WARNING in SBCL pid 6 tid 6:
+Memory fault at (nil) (pc=0xb80080a167 [code 0xb80080a080+0xE7 ID 0x4fd7], fp=0x7ff404f093d0, sp=0x7ff404f093d0) tid 6
+The integrity of this image is possibly compromised.
+Continuing with fingers crossed.
+CORRUPTION WARNING in SBCL pid 6 tid 6:
+Memory fault at (nil) (pc=0xb80080a167 [code 0xb80080a080+0xE7 ID 0x4fd7], fp=0x7ff404f08350, sp=0x7ff404f08350) tid 6
+The integrity of this image is possibly compromised.
+Continuing with fingers crossed.
+CORRUPTION WARNING in SBCL pid 6 tid 6:
+Memory fault at (nil) (pc=0xb80080a167 [code 0xb80080a080+0xE7 ID 0x4fd7], fp=0x7ff404f072d0, sp=0x7ff404f072d0) tid 6
+The integrity of this image is possibly compromised.
+Continuing with fingers crossed.
+fatal error encountered in SBCL pid 6 tid 6:
+maximum interrupt nesting depth (8) exceeded
+
+Welcome to LDB, a low-level debugger for the Lisp runtime environment.
+ldb> unknown command: ``(with-open-file''
+ldb> unknown command: ``(cpu-unlock)''
+ldb> exit
+Argh! lossage_handler() returned, total confusion..
+
+Script done on 2026-09-13 02:13:06-07:00 [COMMAND_EXIT_CODE="1"]

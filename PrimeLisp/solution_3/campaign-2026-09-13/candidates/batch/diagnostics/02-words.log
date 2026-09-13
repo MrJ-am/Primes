@@ -1,0 +1,39 @@
+
+; file: /workspace/scratch/73f29dd8a4f8/primes-experiments/batch/PrimeLisp/solution_3/sieve.lisp
+; in: DEFUN MARK
+;     (DEFUN PRIME-CANDIDATE::MARK (PRIME-CANDIDATE::WORDS PRIME-CANDIDATE::INDEX)
+;       (DECLARE (TYPE PRIME-CANDIDATE::WORDS PRIME-CANDIDATE::WORDS)
+;                (TYPE FIXNUM PRIME-CANDIDATE::INDEX))
+;       (LET ((PRIME-CANDIDATE::WORD-INDEX (ASH PRIME-CANDIDATE::INDEX -6)))
+;         (SETF (AREF PRIME-CANDIDATE::WORDS PRIME-CANDIDATE::WORD-INDEX)
+;                 (LOGIOR # #))))
+; --> SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA 
+; ==>
+;   #'(SB-INT:NAMED-LAMBDA PRIME-CANDIDATE::MARK
+;         (PRIME-CANDIDATE::WORDS PRIME-CANDIDATE::INDEX)
+;       (DECLARE (SB-C::TOP-LEVEL-FORM))
+;       (DECLARE (TYPE PRIME-CANDIDATE::WORDS PRIME-CANDIDATE::WORDS)
+;                (TYPE FIXNUM PRIME-CANDIDATE::INDEX))
+;       (BLOCK PRIME-CANDIDATE::MARK
+;         (LET ((PRIME-CANDIDATE::WORD-INDEX #))
+;           (SETF # #))))
+; 
+; note: doing unsigned word to integer coercion (cost 20) to "<return value>"
+
+; in: DEFUN COUNT-PRIMES
+;     (+
+;      (IF (>= PRIME-CANDIDATE::LIMIT 2)
+;          1
+;          0)
+;      (- PRIME-CANDIDATE::SIZE PRIME-CANDIDATE::COMPOSITES))
+; 
+; note: doing signed word to integer coercion (cost 20), for:
+;       the first result of inline (signed-byte 64) arithmetic
+; 
+; compilation unit finished
+;   printed 2 notes
+Candidate validated (including 78,498 primes through 1,000,000).
+echologie-cl-batch-words;434;1.003996;1;algorithm=base,faithful=yes,bits=1
+echologie-cl-batch-words;429;1.003995;1;algorithm=base,faithful=yes,bits=1
+Median: 2326.835 us/sieve (429.8 sieves/s).
+Saved: /workspace/scratch/73f29dd8a4f8/primes-experiments/batch/PrimeLisp/solution_3/results/3998278534-277986140.sexp

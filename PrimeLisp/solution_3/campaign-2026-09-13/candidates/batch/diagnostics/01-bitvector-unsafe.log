@@ -1,0 +1,5 @@
+Candidate validated (including 78,498 primes through 1,000,000).
+echologie-cl-batch-bitvector-unsafe;521;1.003996;1;algorithm=base,faithful=yes,bits=1
+echologie-cl-batch-bitvector-unsafe;497;1.003995;1;algorithm=base,faithful=yes,bits=1
+Median: 1973.583 us/sieve (506.7 sieves/s).
+Saved: /workspace/scratch/73f29dd8a4f8/primes-experiments/batch/PrimeLisp/solution_3/results/3998278484-277986140.sexp

@@ -1,0 +1,47 @@
+; disassembly for PRIME-CANDIDATE::DENSE-3
+; Size: 178 bytes. Origin: #xB800BA3176                       ; PRIME-CANDIDATE::DENSE-3
+; 176:       488B5FF9         MOV RBX, [RDI-7]
+; 17A:       31D2             XOR EDX, EDX
+; 17C:       EB39             JMP L1
+; 17E:       6690             NOP
+; 180: L0:   488B4C9701       MOV RCX, [RDI+RDX*4+1]
+; 185:       480B0DBCFFFFFF   OR RCX, [RIP-68]                ; [#xB800BA3148] = #x2492492492492492
+; 18C:       48894C9701       MOV [RDI+RDX*4+1], RCX
+; 191:       488B4C9709       MOV RCX, [RDI+RDX*4+9]
+; 196:       480B0DB3FFFFFF   OR RCX, [RIP-77]                ; [#xB800BA3150] = #x9249249249249249
+; 19D:       48894C9709       MOV [RDI+RDX*4+9], RCX
+; 1A2:       488B4C9711       MOV RCX, [RDI+RDX*4+17]
+; 1A7:       480B0DAAFFFFFF   OR RCX, [RIP-86]                ; [#xB800BA3158] = #x4924924924924924
+; 1AE:       48894C9711       MOV [RDI+RDX*4+17], RCX
+; 1B3:       4883C206         ADD RDX, 6
+; 1B7: L1:   488D4BFA         LEA RCX, [RBX-6]
+; 1BB:       4839CA           CMP RDX, RCX
+; 1BE:       7EC0             JLE L0
+; 1C0:       4839DA           CMP RDX, RBX
+; 1C3:       7D11             JGE L2
+; 1C5:       488B4C9701       MOV RCX, [RDI+RDX*4+1]
+; 1CA:       480B0D77FFFFFF   OR RCX, [RIP-137]               ; [#xB800BA3148] = #x2492492492492492
+; 1D1:       48894C9701       MOV [RDI+RDX*4+1], RCX
+; 1D6: L2:   488D4A02         LEA RCX, [RDX+2]
+; 1DA:       4839D9           CMP RCX, RBX
+; 1DD:       7C32             JL L6
+; 1DF: L3:   488D4A04         LEA RCX, [RDX+4]
+; 1E3:       4839D9           CMP RCX, RBX
+; 1E6:       7C12             JL L5
+; 1E8: L4:   488B4F01         MOV RCX, [RDI+1]
+; 1EC:       4883E1FD         AND RCX, -3
+; 1F0:       48894F01         MOV [RDI+1], RCX
+; 1F4:       498BFC           MOV RDI, R12                    ; NIL
+; 1F7:       C9               LEAVE
+; 1F8:       F8               CLC
+; 1F9:       C3               RET
+; 1FA: L5:   488D4A04         LEA RCX, [RDX+4]
+; 1FE:       488B4C8F01       MOV RCX, [RDI+RCX*4+1]
+; 203:       480B0D4EFFFFFF   OR RCX, [RIP-178]               ; [#xB800BA3158] = #x4924924924924924
+; 20A:       48894C9711       MOV [RDI+RDX*4+17], RCX
+; 20F:       EBD7             JMP L4
+; 211: L6:   488D4A02         LEA RCX, [RDX+2]
+; 215:       488B4C8F01       MOV RCX, [RDI+RCX*4+1]
+; 21A:       480B0D2FFFFFFF   OR RCX, [RIP-209]               ; [#xB800BA3150] = #x9249249249249249
+; 221:       48894C9709       MOV [RDI+RDX*4+9], RCX
+; 226:       EBB7             JMP L3

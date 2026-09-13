@@ -1,0 +1,4 @@
+echologie-cl-batch-hybrid-final;20676;5.003970;1;algorithm=base,faithful=yes,bits=1
+Candidate validated (including 78,498 primes through 1,000,000).
+Median: 242.018 us/sieve (4131.9 sieves/s).
+Saved: /workspace/scratch/73f29dd8a4f8/primes-experiments/batch/PrimeLisp/solution_3/results/3998280499-277986140.sexp

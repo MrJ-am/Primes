@@ -1,0 +1,73 @@
+{
+  "seed_commit": "682c13d05b297a7e95c9d262bb13b389307ca242",
+  "requested_budget_active_minutes_per_method": 30,
+  "budget_excludes": "Only genuinely idle time waiting for the shared CPU lock; overlapping useful work is counted",
+  "starts_utc": {
+    "batch": "2026-09-13T08:52:55Z",
+    "interactive": "2026-09-13T08:53:35Z"
+  },
+  "target": {
+    "limit": 1000000,
+    "threads": 1,
+    "algorithm": "base",
+    "faithful": "yes",
+    "bits": 1
+  },
+  "metric": "median microseconds per sieve; smaller is better",
+  "sbcl_version": "2.6.8",
+  "cpu_affinity": [
+    0
+  ],
+  "system": "Linux-6.18.44-x86_64-with-glibc2.39",
+  "gate": "/tmp/primes-campaign-cpu.lock",
+  "rust_reference": "mike-barber_bit-unrolled-hybrid",
+  "rust_executed": false,
+  "protocol": "Independent agents with no inherited conversation; identical baseline, information, model and work budget. No sharing of optimization discoveries until both branches are frozen. Batch uses fresh SBCL processes; interactive uses a persistent native SBCL REPL. Final checks and comparison use fresh images.",
+  "budget_accounting": "Only genuinely idle wait time can be deducted; a blocked subprocess while reading, editing or reasoning does not stop the active-work clock. Both agents elected to keep their original wall-clock deadlines unless future genuine inactivity is explicitly recorded.",
+  "external_reference_sessions": [
+    9607,
+    9608
+  ],
+  "independent_verifier": "verify-final.lisp: full primality flags, counts, class instances, instance independence, boundary cases and sizes through 2,000,003; baseline passed.",
+  "completed_methods": {
+    "batch": {
+      "commit": "4f388ca8da495fa863c4b161f1aded5e25818fb8",
+      "frozen_utc": "2026-09-13T09:18:28Z",
+      "finished_utc": "2026-09-13T09:22:25Z",
+      "wall_seconds": 1770,
+      "lock_wait_seconds": 229.121882,
+      "idle_seconds_deducted": 0,
+      "own_final_median_us": 239.196,
+      "sieve_sha256": "6f4dac70f83f8b75766044220c14bbdaae92c5e62794d9a265689dd7d7b23929",
+      "archived_files": 94
+    },
+    "interactive": {
+      "commit": "e46f2d7d0e9e5d2f266d50f220ce9afc31418082",
+      "code_commit": "6279330a591ef90293d18dfd6345136ed6d618aa",
+      "frozen_utc": "2026-09-13T09:20:12Z",
+      "finished_utc": "2026-09-13T09:22:52Z",
+      "wall_seconds": 1757,
+      "lock_wait_seconds": 80.287948,
+      "idle_seconds_deducted": 0,
+      "own_final_median_us": 242.57,
+      "persistent_images": 2,
+      "restarts": 1,
+      "sieve_sha256": "c51f1976f446a6e3826b47174385afb733384183a1724489583867c2ab0f9def",
+      "archived_files": 85
+    }
+  },
+  "independent_validation": {
+    "passed": [
+      "batch",
+      "interactive"
+    ],
+    "sizes_per_candidate": 47,
+    "largest_limit": 2000003,
+    "full_primality_flags": true,
+    "instance_independence": true
+  },
+  "selected_candidate": "interactive",
+  "selection_basis": "Smallest median in the fixed final comparison; 2.1% observed time advantage, overlapping sample ranges; no conclusive superiority of a development method.",
+  "report_generated_utc": "2026-09-13T09:31:33.736603+00:00",
+  "final_comparison_observed_complete_utc": "2026-09-13T09:29:04Z"
+}

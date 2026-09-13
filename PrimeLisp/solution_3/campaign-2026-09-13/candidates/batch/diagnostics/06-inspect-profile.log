@@ -1,0 +1,404 @@
+; disassembly for PRIME-CANDIDATE::DENSE-3
+; Size: 232 bytes. Origin: #xB800BA4C96                       ; PRIME-CANDIDATE::DENSE-3
+; C96:       488B5FF9         MOV RBX, [RDI-7]
+; C9A:       31D2             XOR EDX, EDX
+; C9C:       EB52             JMP L1
+; C9E:       6690             NOP
+; CA0: L0:   488B4C9701       MOV RCX, [RDI+RDX*4+1]
+; CA5:       480B0D34FFFFFF   OR RCX, [RIP-204]               ; [#xB800BA4BE0] = #x2492492492492492
+; CAC:       48894C9701       MOV [RDI+RDX*4+1], RCX
+; CB1:       488D4A02         LEA RCX, [RDX+2]
+; CB5:       488B4C8F01       MOV RCX, [RDI+RCX*4+1]
+; CBA:       480B0D6FFFFFFF   OR RCX, [RIP-145]               ; [#xB800BA4C30] = #x1249249249249249
+; CC1:       490B4C24E9       OR RCX, [R12-23]                ; [#x5200000FFF80] = #x8000000000000000
+; CC6:       48894C9709       MOV [RDI+RDX*4+9], RCX
+; CCB:       488D4A04         LEA RCX, [RDX+4]
+; CCF:       488B4C8F01       MOV RCX, [RDI+RCX*4+1]
+; CD4:       4881C924499224   OR RCX, 613566756
+; CDB:       490B4C24D1       OR RCX, [R12-47]                ; [#x5200000FFF68] = #x100000000
+; CE0:       480B0D91FFFFFF   OR RCX, [RIP-111]               ; [#xB800BA4C78] = #x4924924800000000
+; CE7:       48894C9711       MOV [RDI+RDX*4+17], RCX
+; CEC:       4883C206         ADD RDX, 6
+; CF0: L1:   488D4A06         LEA RCX, [RDX+6]
+; CF4:       4839D9           CMP RCX, RBX
+; CF7:       7EA7             JLE L0
+; CF9:       4839DA           CMP RDX, RBX
+; CFC:       7D11             JGE L2
+; CFE:       488B4C9701       MOV RCX, [RDI+RDX*4+1]
+; D03:       480B0DD6FEFFFF   OR RCX, [RIP-298]               ; [#xB800BA4BE0] = #x2492492492492492
+; D0A:       48894C9701       MOV [RDI+RDX*4+1], RCX
+; D0F: L2:   488D4A02         LEA RCX, [RDX+2]
+; D13:       4839D9           CMP RCX, RBX
+; D16:       7C4A             JL L6
+; D18: L3:   488D4A04         LEA RCX, [RDX+4]
+; D1C:       4839D9           CMP RCX, RBX
+; D1F:       7C1E             JL L5
+; D21: L4:   488B4F01         MOV RCX, [RDI+1]
+; D25:       4883E1FD         AND RCX, -3
+; D29:       48894F01         MOV [RDI+1], RCX
+; D2D:       488D5D10         LEA RBX, [RBP+16]
+; D31:       31C9             XOR ECX, ECX
+; D33:       498BFC           MOV RDI, R12                    ; NIL
+; D36:       488BF7           MOV RSI, RDI
+; D39:       488BD7           MOV RDX, RDI
+; D3C:       F9               STC
+; D3D:       C9               LEAVE
+; D3E:       C3               RET
+; D3F: L5:   488D4A04         LEA RCX, [RDX+4]
+; D43:       488B4C8F01       MOV RCX, [RDI+RCX*4+1]
+; D48:       4881C924499224   OR RCX, 613566756
+; D4F:       490B4C24D1       OR RCX, [R12-47]                ; [#x5200000FFF68] = #x100000000
+; D54:       480B0D1DFFFFFF   OR RCX, [RIP-227]               ; [#xB800BA4C78] = #x4924924800000000
+; D5B:       48894C9711       MOV [RDI+RDX*4+17], RCX
+; D60:       EBBF             JMP L4
+; D62: L6:   488D4A02         LEA RCX, [RDX+2]
+; D66:       488B4C8F01       MOV RCX, [RDI+RCX*4+1]
+; D6B:       480B0DBEFEFFFF   OR RCX, [RIP-322]               ; [#xB800BA4C30] = #x1249249249249249
+; D72:       490B4C24E9       OR RCX, [R12-23]                ; [#x5200000FFF80] = #x8000000000000000
+; D77:       48894C9709       MOV [RDI+RDX*4+9], RCX
+; D7C:       EB9A             JMP L3
+; disassembly for PRIME-CANDIDATE::SPARSE-3
+; Size: 858 bytes. Origin: #xB800BDFCFA                       ; PRIME-CANDIDATE::SPARSE-3
+; DFCFA:       498BD9           MOV RBX, R9
+; DFCFD:       49D1F9           SAR R9, 1
+; DFD00:       4983E1FE         AND R9, -2
+; DFD04:       488BCB           MOV RCX, RBX
+; DFD07:       48D1F9           SAR RCX, 1
+; DFD0A:       480FAFCB         IMUL RCX, RBX
+; DFD0E:       48D1F9           SAR RCX, 1
+; DFD11:       4883E1FE         AND RCX, -2
+; DFD15:       488D34DD00000000 LEA RSI, [RBX*8]
+; DFD1D:       488BC1           MOV RAX, RCX
+; DFD20:       4899             CQO
+; DFD22:       48F7FE           IDIV RSI
+; DFD25:       488D0C00         LEA RCX, [RAX+RAX]
+; DFD29:       488BF3           MOV RSI, RBX
+; DFD2C:       48D1FE           SAR RSI, 1
+; DFD2F:       48D1F9           SAR RCX, 1
+; DFD32:       488BC6           MOV RAX, RSI
+; DFD35:       48F7E1           MUL RCX
+; DFD38:       488BF0           MOV RSI, RAX
+; DFD3B:       488BCE           MOV RCX, RSI
+; DFD3E:       488B57F9         MOV RDX, [RDI-7]
+; DFD42:       48C1E203         SHL RDX, 3
+; DFD46:       498BF1           MOV RSI, R9
+; DFD49:       48C1FE03         SAR RSI, 3
+; DFD4D:       48D1FE           SAR RSI, 1
+; DFD50:       488975F8         MOV [RBP-8], RSI
+; DFD54:       498D0419         LEA RAX, [R9+RBX]
+; DFD58:       48C1F803         SAR RAX, 3
+; DFD5C:       48D1F8           SAR RAX, 1
+; DFD5F:       488945F0         MOV [RBP-16], RAX
+; DFD63:       488D341B         LEA RSI, [RBX+RBX]
+; DFD67:       498D0431         LEA RAX, [R9+RSI]
+; DFD6B:       48C1F803         SAR RAX, 3
+; DFD6F:       48D1F8           SAR RAX, 1
+; DFD72:       488945E8         MOV [RBP-24], RAX
+; DFD76:       488D045B         LEA RAX, [RBX+RBX*2]
+; DFD7A:       4D8D3C01         LEA R15, [R9+RAX]
+; DFD7E:       49C1FF03         SAR R15, 3
+; DFD82:       49D1FF           SAR R15, 1
+; DFD85:       488D349D00000000 LEA RSI, [RBX*4]
+; DFD8D:       4D8D3431         LEA R14, [R9+RSI]
+; DFD91:       49C1FE03         SAR R14, 3
+; DFD95:       49D1FE           SAR R14, 1
+; DFD98:       488D049B         LEA RAX, [RBX+RBX*4]
+; DFD9C:       4D8D1C01         LEA R11, [R9+RAX]
+; DFDA0:       49C1FB03         SAR R11, 3
+; DFDA4:       49D1FB           SAR R11, 1
+; DFDA7:       486BC306         IMUL RAX, RBX, 6
+; DFDAB:       4D8D1401         LEA R10, [R9+RAX]
+; DFDAF:       49C1FA03         SAR R10, 3
+; DFDB3:       49D1FA           SAR R10, 1
+; DFDB6:       486BC307         IMUL RAX, RBX, 7
+; DFDBA:       4901C1           ADD R9, RAX
+; DFDBD:       49C1F903         SAR R9, 3
+; DFDC1:       49D1F9           SAR R9, 1
+; DFDC4:       488BC7           MOV RAX, RDI
+; DFDC7:       488945E0         MOV [RBP-32], RAX
+; DFDCB:       48FFC7           INC RDI
+; DFDCE:       EB6A             JMP L1
+; DFDD0: L0:   4839D0           CMP RAX, RDX
+; DFDD3:       0F8F8D000000     JG L4
+; DFDD9:       488B75F8         MOV RSI, [RBP-8]
+; DFDDD:       488D0431         LEA RAX, [RCX+RSI]
+; DFDE1:       800C0702         OR BYTE PTR [RDI+RAX], 2
+; DFDE5:       488B45F0         MOV RAX, [RBP-16]
+; DFDE9:       4801C8           ADD RAX, RCX
+; DFDEC:       800C0710         OR BYTE PTR [RDI+RAX], 16
+; DFDF0:       488B45E8         MOV RAX, [RBP-24]
+; DFDF4:       4801C8           ADD RAX, RCX
+; DFDF7:       800C0780         OR BYTE PTR [RDI+RAX], -128
+; DFDFB:       498BC7           MOV RAX, R15
+; DFDFE:       4801C8           ADD RAX, RCX
+; DFE01:       800C0704         OR BYTE PTR [RDI+RAX], 4
+; DFE05:       498BC6           MOV RAX, R14
+; DFE08:       4801C8           ADD RAX, RCX
+; DFE0B:       800C0720         OR BYTE PTR [RDI+RAX], 32
+; DFE0F:       498BC3           MOV RAX, R11
+; DFE12:       4801C8           ADD RAX, RCX
+; DFE15:       800C0701         OR BYTE PTR [RDI+RAX], 1
+; DFE19:       498BC2           MOV RAX, R10
+; DFE1C:       4801C8           ADD RAX, RCX
+; DFE1F:       800C0708         OR BYTE PTR [RDI+RAX], 8
+; DFE23:       498BC1           MOV RAX, R9
+; DFE26:       4801C8           ADD RAX, RCX
+; DFE29:       800C0740         OR BYTE PTR [RDI+RAX], 64
+; DFE2D:       488BF3           MOV RSI, RBX
+; DFE30:       48D1FE           SAR RSI, 1
+; DFE33:       488D040E         LEA RAX, [RSI+RCX]
+; DFE37:       488BC8           MOV RCX, RAX
+; DFE3A: L1:   488BF3           MOV RSI, RBX
+; DFE3D:       48D1FE           SAR RSI, 1
+; DFE40:       488BC1           MOV RAX, RCX
+; DFE43:       4801F0           ADD RAX, RSI
+; DFE46:       7211             JB L2
+; DFE48:       780F             JS L2
+; DFE4A:       48D1E0           SHL RAX, 1
+; DFE4D:       710F             JNO L3
+; DFE4F:       48D1E8           SHR RAX, 1
+; DFE52:       E8492942FF       CALL #xB8000027A0             ; SB-VM::ALLOC-SIGNED-BIGNUM-IN-RAX
+; DFE57:       EB05             JMP L3
+; DFE59: L2:   E8822542FF       CALL #xB8000023E0             ; SB-VM::TWO-WORD-BIGNUM-TO-RAX
+; DFE5E: L3:   A801             TEST AL, 1
+; DFE60:       0F846AFFFFFF     JE L0
+; DFE66: L4:   488B75F8         MOV RSI, [RBP-8]
+; DFE6A:       488BC1           MOV RAX, RCX
+; DFE6D:       4801F0           ADD RAX, RSI
+; DFE70:       7211             JB L5
+; DFE72:       780F             JS L5
+; DFE74:       48D1E0           SHL RAX, 1
+; DFE77:       710F             JNO L6
+; DFE79:       48D1E8           SHR RAX, 1
+; DFE7C:       E81F2942FF       CALL #xB8000027A0             ; SB-VM::ALLOC-SIGNED-BIGNUM-IN-RAX
+; DFE81:       EB05             JMP L6
+; DFE83: L5:   E8582542FF       CALL #xB8000023E0             ; SB-VM::TWO-WORD-BIGNUM-TO-RAX
+; DFE88: L6:   A801             TEST AL, 1
+; DFE8A:       0F84AA010000     JE L36
+; DFE90: L7:   488B45F0         MOV RAX, [RBP-16]
+; DFE94:       4801C8           ADD RAX, RCX
+; DFE97:       7211             JB L8
+; DFE99:       780F             JS L8
+; DFE9B:       48D1E0           SHL RAX, 1
+; DFE9E:       710F             JNO L9
+; DFEA0:       48D1E8           SHR RAX, 1
+; DFEA3:       E8F82842FF       CALL #xB8000027A0             ; SB-VM::ALLOC-SIGNED-BIGNUM-IN-RAX
+; DFEA8:       EB05             JMP L9
+; DFEAA: L8:   E8312542FF       CALL #xB8000023E0             ; SB-VM::TWO-WORD-BIGNUM-TO-RAX
+; DFEAF: L9:   A801             TEST AL, 1
+; DFEB1:       0F846A010000     JE L35
+; DFEB7: L10:  488B45E8         MOV RAX, [RBP-24]
+; DFEBB:       4801C8           ADD RAX, RCX
+; DFEBE:       7211             JB L11
+; DFEC0:       780F             JS L11
+; DFEC2:       48D1E0           SHL RAX, 1
+; DFEC5:       710F             JNO L12
+; DFEC7:       48D1E8           SHR RAX, 1
+; DFECA:       E8D12842FF       CALL #xB8000027A0             ; SB-VM::ALLOC-SIGNED-BIGNUM-IN-RAX
+; DFECF:       EB05             JMP L12
+; DFED1: L11:  E80A2542FF       CALL #xB8000023E0             ; SB-VM::TWO-WORD-BIGNUM-TO-RAX
+; DFED6: L12:  A801             TEST AL, 1
+; DFED8:       0F842A010000     JE L34
+; DFEDE: L13:  498BC7           MOV RAX, R15
+; DFEE1:       4801C8           ADD RAX, RCX
+; DFEE4:       7211             JB L14
+; DFEE6:       780F             JS L14
+; DFEE8:       48D1E0           SHL RAX, 1
+; DFEEB:       710F             JNO L15
+; DFEED:       48D1E8           SHR RAX, 1
+; DFEF0:       E8AB2842FF       CALL #xB8000027A0             ; SB-VM::ALLOC-SIGNED-BIGNUM-IN-RAX
+; DFEF5:       EB05             JMP L15
+; DFEF7: L14:  E8E42442FF       CALL #xB8000023E0             ; SB-VM::TWO-WORD-BIGNUM-TO-RAX
+; DFEFC: L15:  A801             TEST AL, 1
+; DFEFE:       0F84EC000000     JE L33
+; DFF04: L16:  498BC6           MOV RAX, R14
+; DFF07:       4801C8           ADD RAX, RCX
+; DFF0A:       7211             JB L17
+; DFF0C:       780F             JS L17
+; DFF0E:       48D1E0           SHL RAX, 1
+; DFF11:       710F             JNO L18
+; DFF13:       48D1E8           SHR RAX, 1
+; DFF16:       E8852842FF       CALL #xB8000027A0             ; SB-VM::ALLOC-SIGNED-BIGNUM-IN-RAX
+; DFF1B:       EB05             JMP L18
+; DFF1D: L17:  E8BE2442FF       CALL #xB8000023E0             ; SB-VM::TWO-WORD-BIGNUM-TO-RAX
+; DFF22: L18:  A801             TEST AL, 1
+; DFF24:       0F84AE000000     JE L32
+; DFF2A: L19:  498BC3           MOV RAX, R11
+; DFF2D:       4801C8           ADD RAX, RCX
+; DFF30:       7211             JB L20
+; DFF32:       780F             JS L20
+; DFF34:       48D1E0           SHL RAX, 1
+; DFF37:       710F             JNO L21
+; DFF39:       48D1E8           SHR RAX, 1
+; DFF3C:       E85F2842FF       CALL #xB8000027A0             ; SB-VM::ALLOC-SIGNED-BIGNUM-IN-RAX
+; DFF41:       EB05             JMP L21
+; DFF43: L20:  E8982442FF       CALL #xB8000023E0             ; SB-VM::TWO-WORD-BIGNUM-TO-RAX
+; DFF48: L21:  A801             TEST AL, 1
+; DFF4A:       7478             JE L31
+; DFF4C: L22:  498BC2           MOV RAX, R10
+; DFF4F:       4801C8           ADD RAX, RCX
+; DFF52:       7211             JB L23
+; DFF54:       780F             JS L23
+; DFF56:       48D1E0           SHL RAX, 1
+; DFF59:       710F             JNO L24
+; DFF5B:       48D1E8           SHR RAX, 1
+; DFF5E:       E83D2842FF       CALL #xB8000027A0             ; SB-VM::ALLOC-SIGNED-BIGNUM-IN-RAX
+; DFF63:       EB05             JMP L24
+; DFF65: L23:  E8762442FF       CALL #xB8000023E0             ; SB-VM::TWO-WORD-BIGNUM-TO-RAX
+; DFF6A: L24:  A801             TEST AL, 1
+; DFF6C:       7445             JE L30
+; DFF6E: L25:  498BC1           MOV RAX, R9
+; DFF71:       4801C8           ADD RAX, RCX
+; DFF74:       7211             JB L26
+; DFF76:       780F             JS L26
+; DFF78:       48D1E0           SHL RAX, 1
+; DFF7B:       710F             JNO L27
+; DFF7D:       48D1E8           SHR RAX, 1
+; DFF80:       E81B2842FF       CALL #xB8000027A0             ; SB-VM::ALLOC-SIGNED-BIGNUM-IN-RAX
+; DFF85:       EB05             JMP L27
+; DFF87: L26:  E8542442FF       CALL #xB8000023E0             ; SB-VM::TWO-WORD-BIGNUM-TO-RAX
+; DFF8C: L27:  A801             TEST AL, 1
+; DFF8E:       7412             JE L29
+; DFF90: L28:  488D5D10         LEA RBX, [RBP+16]
+; DFF94:       31C9             XOR ECX, ECX
+; DFF96:       498BFC           MOV RDI, R12                  ; NIL
+; DFF99:       488BF7           MOV RSI, RDI
+; DFF9C:       488BD7           MOV RDX, RDI
+; DFF9F:       F9               STC
+; DFFA0:       C9               LEAVE
+; DFFA1:       C3               RET
+; DFFA2: L29:  4839D0           CMP RAX, RDX
+; DFFA5:       7DE9             JGE L28
+; DFFA7:       498BC1           MOV RAX, R9
+; DFFAA:       4801C8           ADD RAX, RCX
+; DFFAD:       800C0740         OR BYTE PTR [RDI+RAX], 64
+; DFFB1:       EBDD             JMP L28
+; DFFB3: L30:  4839D0           CMP RAX, RDX
+; DFFB6:       7DB6             JGE L25
+; DFFB8:       498BC2           MOV RAX, R10
+; DFFBB:       4801C8           ADD RAX, RCX
+; DFFBE:       800C0708         OR BYTE PTR [RDI+RAX], 8
+; DFFC2:       EBAA             JMP L25
+; DFFC4: L31:  4839D0           CMP RAX, RDX
+; DFFC7:       7D83             JGE L22
+; DFFC9:       498BC3           MOV RAX, R11
+; DFFCC:       4801C8           ADD RAX, RCX
+; DFFCF:       800C0701         OR BYTE PTR [RDI+RAX], 1
+; DFFD3:       E974FFFFFF       JMP L22
+; DFFD8: L32:  4839D0           CMP RAX, RDX
+; DFFDB:       0F8D49FFFFFF     JGE L19
+; DFFE1:       498BC6           MOV RAX, R14
+; DFFE4:       4801C8           ADD RAX, RCX
+; DFFE7:       800C0720         OR BYTE PTR [RDI+RAX], 32
+; DFFEB:       E93AFFFFFF       JMP L19
+; DFFF0: L33:  4839D0           CMP RAX, RDX
+; DFFF3:       0F8D0BFFFFFF     JGE L16
+; DFFF9:       498BC7           MOV RAX, R15
+; DFFFC:       4801C8           ADD RAX, RCX
+; DFFFF:       800C0704         OR BYTE PTR [RDI+RAX], 4
+; E0003:       E9FCFEFFFF       JMP L16
+; E0008: L34:  4839D0           CMP RAX, RDX
+; E000B:       0F8DCDFEFFFF     JGE L13
+; E0011:       488B45E8         MOV RAX, [RBP-24]
+; E0015:       4801C8           ADD RAX, RCX
+; E0018:       800C0780         OR BYTE PTR [RDI+RAX], -128
+; E001C:       E9BDFEFFFF       JMP L13
+; E0021: L35:  4839D0           CMP RAX, RDX
+; E0024:       0F8D8DFEFFFF     JGE L10
+; E002A:       488B45F0         MOV RAX, [RBP-16]
+; E002E:       4801C8           ADD RAX, RCX
+; E0031:       800C0710         OR BYTE PTR [RDI+RAX], 16
+; E0035:       E97DFEFFFF       JMP L10
+; E003A: L36:  4839D0           CMP RAX, RDX
+; E003D:       0F8D4DFEFFFF     JGE L7
+; E0043:       488B75F8         MOV RSI, [RBP-8]
+; E0047:       488D0431         LEA RAX, [RCX+RSI]
+; E004B:       800C0702         OR BYTE PTR [RDI+RAX], 2
+; E004F:       E93CFEFFFF       JMP L7
+
+Number of samples:   798
+Sample interval:     0.001 seconds
+Total sampling time: 0.79800004 seconds
+Graph cycles:        0
+Sampled threads:
+   #<THREAD tid=6 "finalizer" RUNNING {120003A513}> (128/1048576 bytes, 1 hash buckets)
+   #<THREAD tid=5 "main thread" RUNNING {1200038003}> (80168/1048576 bytes, 415 hash buckets)
+
+           Self        Total        Cumul
+  Nr  Count     %  Count     %  Count     %    Calls  Function
+------------------------------------------------------------------------
+   1    184  23.1    184  23.1    184  23.1        -  PRIME-CANDIDATE::DENSE-3
+   2     44   5.5     44   5.5    228  28.6        -  PRIME-CANDIDATE::SPARSE-5
+   3     39   4.9     39   4.9    267  33.5        -  PRIME-CANDIDATE::SPARSE-11
+   4     39   4.9     39   4.9    306  38.3        -  PRIME-CANDIDATE::SPARSE-7
+   5     37   4.6     37   4.6    343  43.0        -  PRIME-CANDIDATE::SPARSE-15
+   6     36   4.5     36   4.5    379  47.5        -  PRIME-CANDIDATE::SPARSE-3
+   7     33   4.1     33   4.1    412  51.6        -  PRIME-CANDIDATE::SPARSE-1
+   8     33   4.1     33   4.1    445  55.8        -  PRIME-CANDIDATE::SPARSE-13
+   9     27   3.4     27   3.4    472  59.1        -  PRIME-CANDIDATE::SPARSE-9
+  10     23   2.9    762  95.5    495  62.0        -  PRIME-CANDIDATE:RUN-SIEVE
+  11     17   2.1     17   2.1    512  64.2        -  PRIME-CANDIDATE::DENSE-13
+  12     15   1.9     15   1.9    527  66.0        -  PRIME-CANDIDATE::DENSE-11
+  13     15   1.9     15   1.9    542  67.9        -  PRIME-CANDIDATE::DENSE-29
+  14     14   1.8     14   1.8    556  69.7        -  PRIME-CANDIDATE::DENSE-37
+  15     14   1.8     14   1.8    570  71.4        -  PRIME-CANDIDATE::DENSE-5
+  16     13   1.6     13   1.6    583  73.1        -  PRIME-CANDIDATE::DENSE-61
+  17     13   1.6     13   1.6    596  74.7        -  PRIME-CANDIDATE::DENSE-23
+  18     13   1.6     13   1.6    609  76.3        -  PRIME-CANDIDATE::DENSE-47
+  19     13   1.6     13   1.6    622  77.9        -  PRIME-CANDIDATE::DENSE-19
+  20     12   1.5     12   1.5    634  79.4        -  PRIME-CANDIDATE::DENSE-53
+  21     11   1.4     11   1.4    645  80.8        -  PRIME-CANDIDATE::DENSE-59
+  22     10   1.3     10   1.3    655  82.1        -  PRIME-CANDIDATE::DENSE-73
+  23     10   1.3     10   1.3    665  83.3        -  PRIME-CANDIDATE::DENSE-113
+  24     10   1.3     10   1.3    675  84.6        -  PRIME-CANDIDATE::DENSE-7
+  25      9   1.1      9   1.1    684  85.7        -  PRIME-CANDIDATE::DENSE-43
+  26      8   1.0      8   1.0    692  86.7        -  PRIME-CANDIDATE::DENSE-31
+  27      8   1.0      8   1.0    700  87.7        -  PRIME-CANDIDATE::DENSE-71
+  28      7   0.9      7   0.9    707  88.6        -  PRIME-CANDIDATE::DENSE-67
+  29      6   0.8      6   0.8    713  89.3        -  PRIME-CANDIDATE::DENSE-41
+  30      6   0.8      6   0.8    719  90.1        -  PRIME-CANDIDATE::DENSE-103
+  31      6   0.8      6   0.8    725  90.9        -  PRIME-CANDIDATE::DENSE-17
+  32      6   0.8      6   0.8    731  91.6        -  PRIME-CANDIDATE::DENSE-97
+  33      6   0.8      6   0.8    737  92.4        -  PRIME-CANDIDATE::DENSE-109
+  34      5   0.6      5   0.6    742  93.0        -  PRIME-CANDIDATE::DENSE-107
+  35      5   0.6      5   0.6    747  93.6        -  PRIME-CANDIDATE::DENSE-127
+  36      4   0.5     24   3.0    751  94.1        -  PRIME-CANDIDATE:MAKE-SIEVE
+  37      4   0.5      4   0.5    755  94.6        -  PRIME-CANDIDATE::DENSE-79
+  38      4   0.5      4   0.5    759  95.1        -  PRIME-CANDIDATE::DENSE-89
+  39      4   0.5      4   0.5    763  95.6        -  PRIME-CANDIDATE::DENSE-101
+  40      4   0.5      4   0.5    767  96.1        -  PRIME-CANDIDATE::DENSE-83
+  41      2   0.3      2   0.3    769  96.4        -  FPR-RESTORE
+  42      1   0.1      1   0.1    770  96.5        -  foreign function alloc
+  43      1   0.1      1   0.1    771  96.6        -  (MAKE-INSTANCE PRIME-CANDIDATE::SIEVE-STATE)
+  44      0   0.0    798 100.0    771  96.6        -  foreign function call_into_lisp_
+  45      0   0.0    788  98.7    771  96.6        -  top level form
+  46      0   0.0    788  98.7    771  96.6        -  (FLET "G" :IN SB-C::%COMPILE-IN-LEXENV)
+  47      0   0.0    788  98.7    771  96.6        -  SB-C::%COMPILE-IN-LEXENV
+  48      0   0.0    788  98.7    771  96.6        -  SB-C:EVAL-WITH-COMPILE-IN-LEXENV
+  49      0   0.0    788  98.7    771  96.6        -  SB-IMPL::%SIMPLE-EVAL
+  50      0   0.0    788  98.7    771  96.6        -  SB-INT:SIMPLE-EVAL-IN-LEXENV
+  51      0   0.0    788  98.7    771  96.6        -  EVAL-TLF
+  52      0   0.0    788  98.7    771  96.6        -  (LABELS SB-FASL::EVAL-FORM :IN SB-INT:LOAD-AS-SOURCE)
+  53      0   0.0    788  98.7    771  96.6        -  (LAMBDA (SB-KERNEL:FORM &KEY :CURRENT-INDEX &ALLOW-OTHER-KEYS) :IN SB-INT:LOAD-AS-SOURCE)
+  54      0   0.0    788  98.7    771  96.6        -  SB-C::%DO-FORMS-FROM-INFO
+  55      0   0.0    788  98.7    771  96.6        -  SB-INT:LOAD-AS-SOURCE
+  56      0   0.0    788  98.7    771  96.6        -  (LABELS SB-FASL::LOAD-STREAM-1 :IN LOAD)
+  57      0   0.0    788  98.7    771  96.6        -  SB-FASL::CALL-WITH-LOAD-BINDINGS
+  58      0   0.0    788  98.7    771  96.6        -  LOAD
+  59      0   0.0    788  98.7    771  96.6        -  SB-IMPL::PROCESS-EVAL/LOAD-OPTIONS
+  60      0   0.0    788  98.7    771  96.6        -  SB-IMPL::TOPLEVEL-INIT
+  61      0   0.0    788  98.7    771  96.6        -  (FLET SB-UNIX::BODY :IN SB-IMPL::START-LISP)
+  62      0   0.0    788  98.7    771  96.6        -  (FLET "WITHOUT-INTERRUPTS-BODY-3" :IN SB-IMPL::START-LISP)
+  63      0   0.0    788  98.7    771  96.6        -  SB-IMPL::%START-LISP
+  64      0   0.0     17   2.1    771  96.6        -  foreign function lisp_alloc
+  65      0   0.0     17   2.1    771  96.6        -  ALLOC-TRAMP
+  66      0   0.0     10   1.3    771  96.6        -  foreign function pthread_cond_wait
+  67      0   0.0     10   1.3    771  96.6        -  foreign function finalizer_thread_wait
+  68      0   0.0     10   1.3    771  96.6        -  (LAMBDA NIL :IN SB-IMPL::FINALIZER-THREAD-START)
+  69      0   0.0     10   1.3    771  96.6        -  (FLET SB-UNIX::BODY :IN SB-THREAD::RUN)
+  70      0   0.0     10   1.3    771  96.6        -  (FLET "WITHOUT-INTERRUPTS-BODY-" :IN SB-THREAD::RUN)
+  71      0   0.0     10   1.3    771  96.6        -  SB-THREAD::RUN
+  72      0   0.0     10   1.3    771  96.6        -  foreign function funcall1
+  73      0   0.0     10   1.3    771  96.6        -  foreign function new_thread_trampoline
+------------------------------------------------------------------------
+         27   3.4                                     elsewhere

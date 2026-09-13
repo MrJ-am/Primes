@@ -1,0 +1,3384 @@
+
+; file: /workspace/scratch/73f29dd8a4f8/primes-experiments/batch/PrimeLisp/solution_3/sieve.lisp
+; in: DEFUN MARK
+;     (DEFUN PRIME-CANDIDATE::MARK (PRIME-CANDIDATE::WORDS PRIME-CANDIDATE::INDEX)
+;       (DECLARE (TYPE PRIME-CANDIDATE::WORDS PRIME-CANDIDATE::WORDS)
+;                (TYPE FIXNUM PRIME-CANDIDATE::INDEX))
+;       (LET ((PRIME-CANDIDATE::WORD-INDEX (ASH PRIME-CANDIDATE::INDEX -6)))
+;         (SETF (AREF PRIME-CANDIDATE::WORDS PRIME-CANDIDATE::WORD-INDEX)
+;                 (LOGIOR # #))))
+; --> SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA 
+; ==>
+;   #'(SB-INT:NAMED-LAMBDA PRIME-CANDIDATE::MARK
+;         (PRIME-CANDIDATE::WORDS PRIME-CANDIDATE::INDEX)
+;       (DECLARE (SB-C::TOP-LEVEL-FORM))
+;       (DECLARE (TYPE PRIME-CANDIDATE::WORDS PRIME-CANDIDATE::WORDS)
+;                (TYPE FIXNUM PRIME-CANDIDATE::INDEX))
+;       (BLOCK PRIME-CANDIDATE::MARK
+;         (LET ((PRIME-CANDIDATE::WORD-INDEX #))
+;           (SETF # #))))
+; 
+; note: doing unsigned word to integer coercion (cost 20) to "<return value>"
+
+; in: DEFMACRO DEFINE-DENSE-RESETTERS
+;     (LOOP PRIME-CANDIDATE::FOR PRIME-CANDIDATE::FACTOR PRIME-CANDIDATE::FROM 3 PRIME-CANDIDATE::TO PRIME-CANDIDATE::MAXIMUM PRIME-CANDIDATE::BY 2
+;           PRIME-CANDIDATE::FOR PRIME-CANDIDATE::NAME = ...)
+; --> LET LET LET SB-LOOP::WITH-LOOP-LIST-COLLECTION-HEAD LET* TAGBODY WHEN IF 
+; ==>
+;   (> PRIME-CANDIDATE::FACTOR #:LIM1)
+; 
+; note: forced to do GENERIC-> (cost 10)
+;       unable to do inline fixnum comparison (cost 4) because:
+;       The second argument is a REAL, not a FIXNUM.
+
+;     (* PRIME-CANDIDATE::FACTOR PRIME-CANDIDATE::FACTOR)
+; 
+; note: forced to do */UNSIGNED=>INTEGER (cost 10)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The result is a (VALUES
+;                        (OR (INTEGER 9 9) (INTEGER 25 25) (INTEGER 49 49)
+;                            (INTEGER 81 81) (INTEGER 121 121)
+;                            (INTEGER 169 309485009821380253096869889))
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       unable to do inline (unsigned-byte 64) arithmetic (cost 4) because:
+;       The result is a (VALUES
+;                        (OR (INTEGER 9 9) (INTEGER 25 25) (INTEGER 49 49)
+;                            (INTEGER 81 81) (INTEGER 121 121)
+;                            (INTEGER 169 309485009821380253096869889))
+;                        &OPTIONAL), not a (VALUES (UNSIGNED-BYTE 64) &OPTIONAL).
+;       etc.
+
+;     (* PRIME-CANDIDATE::FACTOR
+;        (FLOOR (FLOOR (* PRIME-CANDIDATE::FACTOR PRIME-CANDIDATE::FACTOR) 2)
+;               (* 64 PRIME-CANDIDATE::FACTOR)))
+; 
+; note: forced to do GENERIC-* (cost 30)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The second argument is a (MOD 805950546409844409106433), not a FIXNUM.
+;       The result is a (VALUES
+;                        (OR (INTEGER 0 0)
+;                            (INTEGER 3 14178431955041520495946504659632390144))
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       unable to do inline (unsigned-byte 64) arithmetic (cost 4) because:
+;       The second argument is a (MOD 805950546409844409106433), not a (UNSIGNED-BYTE
+;                                                                       64).
+;       The result is a (VALUES
+;                        (OR (INTEGER 0 0)
+;                            (INTEGER 3 14178431955041520495946504659632390144))
+;                        &OPTIONAL), not a (VALUES (UNSIGNED-BYTE 64) &OPTIONAL).
+;       etc.
+
+; in: DEFMACRO DEFINE-DENSE-RESETTERS => DEFUN ,NAME
+;     (LOOP PRIME-CANDIDATE::FOR PRIME-CANDIDATE::MASKS PRIME-CANDIDATE::ACROSS PRIME-CANDIDATE::GROUPS
+;           PRIME-CANDIDATE::FOR PRIME-CANDIDATE::I PRIME-CANDIDATE::FROM 0
+;           WHEN PRIME-CANDIDATE::MASKS
+;           PRIME-CANDIDATE::COLLECT ...)
+; 
+; note: forced to do GENERIC-+ (cost 10)
+;       unable to do inline fixnum arithmetic (cost 1) because:
+;       The first argument is a UNSIGNED-BYTE, not a FIXNUM.
+;       The result is a (VALUES (INTEGER 1) &OPTIONAL), not a (VALUES FIXNUM
+;                                                                     &OPTIONAL).
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a UNSIGNED-BYTE, not a FIXNUM.
+;       The result is a (VALUES (INTEGER 1) &OPTIONAL), not a (VALUES FIXNUM
+;                                                                     &OPTIONAL).
+;       etc.
+; 
+; note: forced to do GENERIC-+ (cost 10)
+;       unable to do inline fixnum arithmetic (cost 1) because:
+;       The first argument is a UNSIGNED-BYTE, not a FIXNUM.
+;       The result is a (VALUES (INTEGER 1) &OPTIONAL), not a (VALUES FIXNUM
+;                                                                     &OPTIONAL).
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a UNSIGNED-BYTE, not a FIXNUM.
+;       The result is a (VALUES (INTEGER 1) &OPTIONAL), not a (VALUES FIXNUM
+;                                                                     &OPTIONAL).
+;       etc.
+
+; in: DEFMACRO DEFINE-DENSE-RESETTERS
+;     (ASH 1 (MOD PRIME-CANDIDATE::INDEX 64))
+; 
+; note: doing unsigned word to integer coercion (cost 20), for:
+;       the first result of inline ASH
+
+;     `(DEFUN ,PRIME-CANDIDATE::NAME (PRIME-CANDIDATE::WORDS)
+;        (DECLARE (TYPE PRIME-CANDIDATE::WORDS PRIME-CANDIDATE::WORDS))
+;        (LET ((PRIME-CANDIDATE::BASE ,PRIME-CANDIDATE::FIRST-WORD)
+;              (PRIME-CANDIDATE::END (LENGTH PRIME-CANDIDATE::WORDS)))
+;          (DECLARE (TYPE FIXNUM PRIME-CANDIDATE::BASE PRIME-CANDIDATE::END))
+;          (LOOP PRIME-CANDIDATE::WHILE (<=
+;                                        (+ PRIME-CANDIDATE::BASE
+;                                           ,PRIME-CANDIDATE::FACTOR)
+;                                        PRIME-CANDIDATE::END)
+;                DO ,@(LOOP PRIME-CANDIDATE::FOR PRIME-CANDIDATE::MASKS PRIME-CANDIDATE::ACROSS PRIME-CANDIDATE::GROUPS
+;                           PRIME-CANDIDATE::FOR PRIME-CANDIDATE::I PRIME-CANDIDATE::FROM 0
+;                           WHEN PRIME-CANDIDATE::MASKS
+;                           PRIME-CANDIDATE::COLLECT ...) (INCF
+;                                                          PRIME-CANDIDATE::BASE
+;                                                          ,PRIME-CANDIDATE::FACTOR))
+;          ,@(LOOP PRIME-CANDIDATE::FOR PRIME-CANDIDATE::MASKS PRIME-CANDIDATE::ACROSS PRIME-CANDIDATE::GROUPS
+;                  PRIME-CANDIDATE::FOR PRIME-CANDIDATE::I PRIME-CANDIDATE::FROM 0
+;                  WHEN PRIME-CANDIDATE::MASKS
+;                  PRIME-CANDIDATE::COLLECT ...)
+;          (SETF (AREF PRIME-CANDIDATE::WORDS ,#) (LOGANDC2 # ,#)))
+;        (VALUES))
+; 
+; note: doing unsigned word to integer coercion (cost 20), for:
+;       the third argument of LIST
+
+; in: DEFMACRO DEFINE-SPARSE-RESETTERS => DEFUN ,NAME
+;     (LOOP PRIME-CANDIDATE::FOR PRIME-CANDIDATE::INDEX PRIME-CANDIDATE::IN PRIME-CANDIDATE::INDICES
+;           PRIME-CANDIDATE::FOR PRIME-CANDIDATE::I PRIME-CANDIDATE::FROM 0
+;           PRIME-CANDIDATE::COLLECT `(,PRIME-CANDIDATE::INDEX
+;                                      (ASH
+;                                       (+ PRIME-CANDIDATE::HALF
+;                                          (* ,PRIME-CANDIDATE::I
+;                                             PRIME-CANDIDATE::FACTOR))
+;                                       -3)))
+; 
+; note: forced to do GENERIC-+ (cost 10)
+;       unable to do inline fixnum arithmetic (cost 1) because:
+;       The first argument is a UNSIGNED-BYTE, not a FIXNUM.
+;       The result is a (VALUES (INTEGER 1) &OPTIONAL), not a (VALUES FIXNUM
+;                                                                     &OPTIONAL).
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a UNSIGNED-BYTE, not a FIXNUM.
+;       The result is a (VALUES (INTEGER 1) &OPTIONAL), not a (VALUES FIXNUM
+;                                                                     &OPTIONAL).
+;       etc.
+
+;     (LOOP PRIME-CANDIDATE::FOR PRIME-CANDIDATE::INDEX PRIME-CANDIDATE::IN PRIME-CANDIDATE::INDICES
+;           PRIME-CANDIDATE::FOR PRIME-CANDIDATE::I PRIME-CANDIDATE::FROM 0
+;           PRIME-CANDIDATE::FOR PRIME-CANDIDATE::MASK = ...)
+; 
+; note: forced to do GENERIC-+ (cost 10)
+;       unable to do inline fixnum arithmetic (cost 1) because:
+;       The first argument is a UNSIGNED-BYTE, not a FIXNUM.
+;       The result is a (VALUES (INTEGER 1) &OPTIONAL), not a (VALUES FIXNUM
+;                                                                     &OPTIONAL).
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a UNSIGNED-BYTE, not a FIXNUM.
+;       The result is a (VALUES (INTEGER 1) &OPTIONAL), not a (VALUES FIXNUM
+;                                                                     &OPTIONAL).
+;       etc.
+; 
+; note: forced to do GENERIC-+ (cost 10)
+;       unable to do inline fixnum arithmetic (cost 1) because:
+;       The first argument is a UNSIGNED-BYTE, not a FIXNUM.
+;       The result is a (VALUES (INTEGER 1) &OPTIONAL), not a (VALUES FIXNUM
+;                                                                     &OPTIONAL).
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a UNSIGNED-BYTE, not a FIXNUM.
+;       The result is a (VALUES (INTEGER 1) &OPTIONAL), not a (VALUES FIXNUM
+;                                                                     &OPTIONAL).
+;       etc.
+
+; in: DEFINE-SPARSE-RESETTERS
+;     (PRIME-CANDIDATE::DEFINE-SPARSE-RESETTERS)
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* SB-SYS:WITH-PINNED-OBJECTS FLET #:WITH-PINNED-OBJECTS-THUNK65 
+; --> BLOCK PROGN LET LOOP BLOCK TAGBODY UNLESS IF <= 
+; ==>
+;   (+ PRIME-CANDIDATE::BASE PRIME-CANDIDATE::FACTOR)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (INTEGER 3 18446744075857035262) &OPTIONAL), not a (VALUES
+;                                                                                   FIXNUM
+;                                                                                   &OPTIONAL).
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* SB-SYS:WITH-PINNED-OBJECTS FLET #:WITH-PINNED-OBJECTS-THUNK65 
+; --> BLOCK PROGN LET LOOP BLOCK TAGBODY PROGN PRIME-CANDIDATE::%OR-BYTE 
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX0)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (MOD 18446744073843769343) &OPTIONAL), not a (VALUES
+;                                                                             FIXNUM
+;                                                                             &OPTIONAL).
+
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX1)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (MOD 18446744074112204799) &OPTIONAL), not a (VALUES
+;                                                                             FIXNUM
+;                                                                             &OPTIONAL).
+
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX2)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (MOD 18446744074380640255) &OPTIONAL), not a (VALUES
+;                                                                             FIXNUM
+;                                                                             &OPTIONAL).
+
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX3)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (INTEGER 1 18446744074649075710) &OPTIONAL), not a (VALUES
+;                                                                                   FIXNUM
+;                                                                                   &OPTIONAL).
+
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX4)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (INTEGER 1 18446744074917511166) &OPTIONAL), not a (VALUES
+;                                                                                   FIXNUM
+;                                                                                   &OPTIONAL).
+
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX5)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (INTEGER 2 18446744075185946622) &OPTIONAL), not a (VALUES
+;                                                                                   FIXNUM
+;                                                                                   &OPTIONAL).
+
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX6)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (INTEGER 2 18446744075454382078) &OPTIONAL), not a (VALUES
+;                                                                                   FIXNUM
+;                                                                                   &OPTIONAL).
+
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX7)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (INTEGER 2 18446744075722817534) &OPTIONAL), not a (VALUES
+;                                                                                   FIXNUM
+;                                                                                   &OPTIONAL).
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* SB-SYS:WITH-PINNED-OBJECTS FLET #:WITH-PINNED-OBJECTS-THUNK65 
+; --> BLOCK PROGN LET WHEN IF < 
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX0)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (MOD 18446744073843769343) &OPTIONAL), not a (VALUES
+;                                                                             FIXNUM
+;                                                                             &OPTIONAL).
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* SB-SYS:WITH-PINNED-OBJECTS FLET #:WITH-PINNED-OBJECTS-THUNK65 
+; --> BLOCK PROGN LET WHEN IF PRIME-CANDIDATE::%OR-BYTE 
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX0)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (MOD 18446744073843769343) &OPTIONAL), not a (VALUES
+;                                                                             FIXNUM
+;                                                                             &OPTIONAL).
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* SB-SYS:WITH-PINNED-OBJECTS FLET #:WITH-PINNED-OBJECTS-THUNK65 
+; --> BLOCK PROGN LET WHEN IF < 
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX1)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (MOD 18446744074112204799) &OPTIONAL), not a (VALUES
+;                                                                             FIXNUM
+;                                                                             &OPTIONAL).
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* SB-SYS:WITH-PINNED-OBJECTS FLET #:WITH-PINNED-OBJECTS-THUNK65 
+; --> BLOCK PROGN LET WHEN IF PRIME-CANDIDATE::%OR-BYTE 
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX1)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (MOD 18446744074112204799) &OPTIONAL), not a (VALUES
+;                                                                             FIXNUM
+;                                                                             &OPTIONAL).
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* SB-SYS:WITH-PINNED-OBJECTS FLET #:WITH-PINNED-OBJECTS-THUNK65 
+; --> BLOCK PROGN LET WHEN IF < 
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX2)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (MOD 18446744074380640255) &OPTIONAL), not a (VALUES
+;                                                                             FIXNUM
+;                                                                             &OPTIONAL).
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* SB-SYS:WITH-PINNED-OBJECTS FLET #:WITH-PINNED-OBJECTS-THUNK65 
+; --> BLOCK PROGN LET WHEN IF PRIME-CANDIDATE::%OR-BYTE 
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX2)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (MOD 18446744074380640255) &OPTIONAL), not a (VALUES
+;                                                                             FIXNUM
+;                                                                             &OPTIONAL).
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* SB-SYS:WITH-PINNED-OBJECTS FLET #:WITH-PINNED-OBJECTS-THUNK65 
+; --> BLOCK PROGN LET WHEN IF < 
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX3)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (INTEGER 1 18446744074649075710) &OPTIONAL), not a (VALUES
+;                                                                                   FIXNUM
+;                                                                                   &OPTIONAL).
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* SB-SYS:WITH-PINNED-OBJECTS FLET #:WITH-PINNED-OBJECTS-THUNK65 
+; --> BLOCK PROGN LET WHEN IF PRIME-CANDIDATE::%OR-BYTE 
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX3)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (INTEGER 1 18446744074649075710) &OPTIONAL), not a (VALUES
+;                                                                                   FIXNUM
+;                                                                                   &OPTIONAL).
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* SB-SYS:WITH-PINNED-OBJECTS FLET #:WITH-PINNED-OBJECTS-THUNK65 
+; --> BLOCK PROGN LET WHEN IF < 
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX4)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (INTEGER 1 18446744074917511166) &OPTIONAL), not a (VALUES
+;                                                                                   FIXNUM
+;                                                                                   &OPTIONAL).
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* SB-SYS:WITH-PINNED-OBJECTS FLET #:WITH-PINNED-OBJECTS-THUNK65 
+; --> BLOCK PROGN LET WHEN IF PRIME-CANDIDATE::%OR-BYTE 
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX4)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (INTEGER 1 18446744074917511166) &OPTIONAL), not a (VALUES
+;                                                                                   FIXNUM
+;                                                                                   &OPTIONAL).
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* SB-SYS:WITH-PINNED-OBJECTS FLET #:WITH-PINNED-OBJECTS-THUNK65 
+; --> BLOCK PROGN LET WHEN IF < 
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX5)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (INTEGER 2 18446744075185946622) &OPTIONAL), not a (VALUES
+;                                                                                   FIXNUM
+;                                                                                   &OPTIONAL).
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* SB-SYS:WITH-PINNED-OBJECTS FLET #:WITH-PINNED-OBJECTS-THUNK65 
+; --> BLOCK PROGN LET WHEN IF PRIME-CANDIDATE::%OR-BYTE 
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX5)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (INTEGER 2 18446744075185946622) &OPTIONAL), not a (VALUES
+;                                                                                   FIXNUM
+;                                                                                   &OPTIONAL).
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* SB-SYS:WITH-PINNED-OBJECTS FLET #:WITH-PINNED-OBJECTS-THUNK65 
+; --> BLOCK PROGN LET WHEN IF < 
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX6)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (INTEGER 2 18446744075454382078) &OPTIONAL), not a (VALUES
+;                                                                                   FIXNUM
+;                                                                                   &OPTIONAL).
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* SB-SYS:WITH-PINNED-OBJECTS FLET #:WITH-PINNED-OBJECTS-THUNK65 
+; --> BLOCK PROGN LET WHEN IF PRIME-CANDIDATE::%OR-BYTE 
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX6)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (INTEGER 2 18446744075454382078) &OPTIONAL), not a (VALUES
+;                                                                                   FIXNUM
+;                                                                                   &OPTIONAL).
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* SB-SYS:WITH-PINNED-OBJECTS FLET #:WITH-PINNED-OBJECTS-THUNK65 
+; --> BLOCK PROGN LET WHEN IF < 
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX7)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (INTEGER 2 18446744075722817534) &OPTIONAL), not a (VALUES
+;                                                                                   FIXNUM
+;                                                                                   &OPTIONAL).
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* SB-SYS:WITH-PINNED-OBJECTS FLET #:WITH-PINNED-OBJECTS-THUNK65 
+; --> BLOCK PROGN LET WHEN IF PRIME-CANDIDATE::%OR-BYTE 
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX7)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (INTEGER 2 18446744075722817534) &OPTIONAL), not a (VALUES
+;                                                                                   FIXNUM
+;                                                                                   &OPTIONAL).
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* SB-SYS:WITH-PINNED-OBJECTS FLET #:WITH-PINNED-OBJECTS-THUNK65 
+; --> BLOCK PROGN 
+; ==>
+;   (LET ((PRIME-CANDIDATE::SAP (SB-SYS:VECTOR-SAP PRIME-CANDIDATE::WORDS)))
+;     (DECLARE (TYPE SYSTEM-AREA-POINTER PRIME-CANDIDATE::SAP))
+;     (LOOP PRIME-CANDIDATE::WHILE (<=
+;                                   (+ PRIME-CANDIDATE::BASE
+;                                      PRIME-CANDIDATE::FACTOR)
+;                                   PRIME-CANDIDATE::END)
+;           DO (PRIME-CANDIDATE::%OR-BYTE PRIME-CANDIDATE::SAP
+;               (+ PRIME-CANDIDATE::BASE #:INDEX0) 1) (PRIME-CANDIDATE::%OR-BYTE
+;                                                      PRIME-CANDIDATE::SAP
+;                                                      (+ PRIME-CANDIDATE::BASE
+;                                                         #:INDEX1)
+;                                                      2) (PRIME-CANDIDATE::%OR-BYTE
+;                                                          PRIME-CANDIDATE::SAP
+;                                                          (+
+;                                                           PRIME-CANDIDATE::BASE
+;                                                           #:INDEX2)
+;                                                          4) (PRIME-CANDIDATE::%OR-BYTE
+;                                                              PRIME-CANDIDATE::SAP
+;                                                              (+
+;                                                               PRIME-CANDIDATE::BASE
+;                                                               #:INDEX3)
+;                                                              8) (PRIME-CANDIDATE::%OR-BYTE
+;                                                                  PRIME-CANDIDATE::SAP
+;                                                                  (+
+;                                                                   PRIME-CANDIDATE::BASE
+;                                                                   #:INDEX4)
+;                                                                  16) (PRIME-CANDIDATE::%OR-BYTE
+;                                                                       PRIME-CANDIDATE::SAP
+;                                                                       (+
+;                                                                        PRIME-CANDIDATE::BASE
+;                                                                        #:INDEX5)
+;                                                                       32) (PRIME-CANDIDATE::%OR-BYTE
+;                                                                            PRIME-CANDIDATE::SAP
+;                                                                            (+
+;                                                                             PRIME-CANDIDATE::BASE
+;                                                                             #:INDEX6)
+;                                                                            64) (PRIME-CANDIDATE::%OR-BYTE
+;                                                                                 PRIME-CANDIDATE::SAP
+;                                                                                 (+
+;                                                                                  PRIME-CANDIDATE::BASE
+;                                                                                  #:INDEX7)
+;                                                                                 128) ...)
+;     (WHEN (< (+ PRIME-CANDIDATE::BASE #:INDEX0) PRIME-CANDIDATE::END)
+;       (PRIME-CANDIDATE::%OR-BYTE PRIME-CANDIDATE::SAP
+;        (+ PRIME-CANDIDATE::BASE #:INDEX0) 1))
+;     (WHEN (< (+ PRIME-CANDIDATE::BASE #:INDEX1) PRIME-CANDIDATE::END)
+;       (PRIME-CANDIDATE::%OR-BYTE PRIME-CANDIDATE::SAP
+;        (+ PRIME-CANDIDATE::BASE #:INDEX1) 2))
+;     (WHEN (< (+ PRIME-CANDIDATE::BASE #:INDEX2) PRIME-CANDIDATE::END)
+;       (PRIME-CANDIDATE::%OR-BYTE PRIME-CANDIDATE::SAP
+;        (+ PRIME-CANDIDATE::BASE #:INDEX2) 4))
+;     (WHEN (< (+ PRIME-CANDIDATE::BASE #:INDEX3) PRIME-CANDIDATE::END)
+;       (PRIME-CANDIDATE::%OR-BYTE PRIME-CANDIDATE::SAP
+;        (+ PRIME-CANDIDATE::BASE #:INDEX3) 8))
+;     (WHEN (< (+ PRIME-CANDIDATE::BASE #:INDEX4) PRIME-CANDIDATE::END)
+;       (PRIME-CANDIDATE::%OR-BYTE PRIME-CANDIDATE::SAP
+;        (+ PRIME-CANDIDATE::BASE #:INDEX4) 16))
+;     (WHEN (< (+ PRIME-CANDIDATE::BASE #:INDEX5) PRIME-CANDIDATE::END)
+;       (PRIME-CANDIDATE::%OR-BYTE PRIME-CANDIDATE::SAP
+;        (+ PRIME-CANDIDATE::BASE #:INDEX5) 32))
+;     (WHEN (< (+ PRIME-CANDIDATE::BASE #:INDEX6) PRIME-CANDIDATE::END)
+;       (PRIME-CANDIDATE::%OR-BYTE PRIME-CANDIDATE::SAP
+;        (+ PRIME-CANDIDATE::BASE #:INDEX6) 64))
+;     (WHEN (< (+ PRIME-CANDIDATE::BASE #:INDEX7) PRIME-CANDIDATE::END)
+;       (PRIME-CANDIDATE::%OR-BYTE PRIME-CANDIDATE::SAP
+;        (+ PRIME-CANDIDATE::BASE #:INDEX7) 128)))
+; 
+; note: doing SAP to pointer coercion (cost 20) to SAP
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* SB-SYS:WITH-PINNED-OBJECTS FLET #:WITH-PINNED-OBJECTS-THUNK70 
+; --> BLOCK PROGN LET LOOP BLOCK TAGBODY UNLESS IF <= 
+; ==>
+;   (+ PRIME-CANDIDATE::BASE PRIME-CANDIDATE::FACTOR)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (INTEGER 3 18446744075857035262) &OPTIONAL), not a (VALUES
+;                                                                                   FIXNUM
+;                                                                                   &OPTIONAL).
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* SB-SYS:WITH-PINNED-OBJECTS FLET #:WITH-PINNED-OBJECTS-THUNK70 
+; --> BLOCK PROGN LET LOOP BLOCK TAGBODY PROGN PRIME-CANDIDATE::%OR-BYTE 
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX8)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (MOD 18446744073843769343) &OPTIONAL), not a (VALUES
+;                                                                             FIXNUM
+;                                                                             &OPTIONAL).
+
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX9)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (MOD 18446744074112204799) &OPTIONAL), not a (VALUES
+;                                                                             FIXNUM
+;                                                                             &OPTIONAL).
+
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX10)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (MOD 18446744074380640255) &OPTIONAL), not a (VALUES
+;                                                                             FIXNUM
+;                                                                             &OPTIONAL).
+
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX11)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (INTEGER 1 18446744074649075710) &OPTIONAL), not a (VALUES
+;                                                                                   FIXNUM
+;                                                                                   &OPTIONAL).
+
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX12)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (INTEGER 1 18446744074917511166) &OPTIONAL), not a (VALUES
+;                                                                                   FIXNUM
+;                                                                                   &OPTIONAL).
+
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX13)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (INTEGER 2 18446744075185946622) &OPTIONAL), not a (VALUES
+;                                                                                   FIXNUM
+;                                                                                   &OPTIONAL).
+
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX14)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (INTEGER 2 18446744075454382078) &OPTIONAL), not a (VALUES
+;                                                                                   FIXNUM
+;                                                                                   &OPTIONAL).
+
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX15)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (INTEGER 2 18446744075722817534) &OPTIONAL), not a (VALUES
+;                                                                                   FIXNUM
+;                                                                                   &OPTIONAL).
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* SB-SYS:WITH-PINNED-OBJECTS FLET #:WITH-PINNED-OBJECTS-THUNK70 
+; --> BLOCK PROGN LET WHEN IF < 
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX8)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (MOD 18446744073843769343) &OPTIONAL), not a (VALUES
+;                                                                             FIXNUM
+;                                                                             &OPTIONAL).
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* SB-SYS:WITH-PINNED-OBJECTS FLET #:WITH-PINNED-OBJECTS-THUNK70 
+; --> BLOCK PROGN LET WHEN IF PRIME-CANDIDATE::%OR-BYTE 
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX8)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (MOD 18446744073843769343) &OPTIONAL), not a (VALUES
+;                                                                             FIXNUM
+;                                                                             &OPTIONAL).
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* SB-SYS:WITH-PINNED-OBJECTS FLET #:WITH-PINNED-OBJECTS-THUNK70 
+; --> BLOCK PROGN LET WHEN IF < 
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX9)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (MOD 18446744074112204799) &OPTIONAL), not a (VALUES
+;                                                                             FIXNUM
+;                                                                             &OPTIONAL).
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* SB-SYS:WITH-PINNED-OBJECTS FLET #:WITH-PINNED-OBJECTS-THUNK70 
+; --> BLOCK PROGN LET WHEN IF PRIME-CANDIDATE::%OR-BYTE 
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX9)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (MOD 18446744074112204799) &OPTIONAL), not a (VALUES
+;                                                                             FIXNUM
+;                                                                             &OPTIONAL).
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* SB-SYS:WITH-PINNED-OBJECTS FLET #:WITH-PINNED-OBJECTS-THUNK70 
+; --> BLOCK PROGN LET WHEN IF < 
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX10)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (MOD 18446744074380640255) &OPTIONAL), not a (VALUES
+;                                                                             FIXNUM
+;                                                                             &OPTIONAL).
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* SB-SYS:WITH-PINNED-OBJECTS FLET #:WITH-PINNED-OBJECTS-THUNK70 
+; --> BLOCK PROGN LET WHEN IF PRIME-CANDIDATE::%OR-BYTE 
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX10)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (MOD 18446744074380640255) &OPTIONAL), not a (VALUES
+;                                                                             FIXNUM
+;                                                                             &OPTIONAL).
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* SB-SYS:WITH-PINNED-OBJECTS FLET #:WITH-PINNED-OBJECTS-THUNK70 
+; --> BLOCK PROGN LET WHEN IF < 
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX11)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (INTEGER 1 18446744074649075710) &OPTIONAL), not a (VALUES
+;                                                                                   FIXNUM
+;                                                                                   &OPTIONAL).
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* SB-SYS:WITH-PINNED-OBJECTS FLET #:WITH-PINNED-OBJECTS-THUNK70 
+; --> BLOCK PROGN LET WHEN IF PRIME-CANDIDATE::%OR-BYTE 
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX11)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (INTEGER 1 18446744074649075710) &OPTIONAL), not a (VALUES
+;                                                                                   FIXNUM
+;                                                                                   &OPTIONAL).
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* SB-SYS:WITH-PINNED-OBJECTS FLET #:WITH-PINNED-OBJECTS-THUNK70 
+; --> BLOCK PROGN LET WHEN IF < 
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX12)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (INTEGER 1 18446744074917511166) &OPTIONAL), not a (VALUES
+;                                                                                   FIXNUM
+;                                                                                   &OPTIONAL).
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* SB-SYS:WITH-PINNED-OBJECTS FLET #:WITH-PINNED-OBJECTS-THUNK70 
+; --> BLOCK PROGN LET WHEN IF PRIME-CANDIDATE::%OR-BYTE 
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX12)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (INTEGER 1 18446744074917511166) &OPTIONAL), not a (VALUES
+;                                                                                   FIXNUM
+;                                                                                   &OPTIONAL).
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* SB-SYS:WITH-PINNED-OBJECTS FLET #:WITH-PINNED-OBJECTS-THUNK70 
+; --> BLOCK PROGN LET WHEN IF < 
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX13)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (INTEGER 2 18446744075185946622) &OPTIONAL), not a (VALUES
+;                                                                                   FIXNUM
+;                                                                                   &OPTIONAL).
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* SB-SYS:WITH-PINNED-OBJECTS FLET #:WITH-PINNED-OBJECTS-THUNK70 
+; --> BLOCK PROGN LET WHEN IF PRIME-CANDIDATE::%OR-BYTE 
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX13)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (INTEGER 2 18446744075185946622) &OPTIONAL), not a (VALUES
+;                                                                                   FIXNUM
+;                                                                                   &OPTIONAL).
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* SB-SYS:WITH-PINNED-OBJECTS FLET #:WITH-PINNED-OBJECTS-THUNK70 
+; --> BLOCK PROGN LET WHEN IF < 
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX14)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (INTEGER 2 18446744075454382078) &OPTIONAL), not a (VALUES
+;                                                                                   FIXNUM
+;                                                                                   &OPTIONAL).
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* SB-SYS:WITH-PINNED-OBJECTS FLET #:WITH-PINNED-OBJECTS-THUNK70 
+; --> BLOCK PROGN LET WHEN IF PRIME-CANDIDATE::%OR-BYTE 
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX14)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (INTEGER 2 18446744075454382078) &OPTIONAL), not a (VALUES
+;                                                                                   FIXNUM
+;                                                                                   &OPTIONAL).
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* SB-SYS:WITH-PINNED-OBJECTS FLET #:WITH-PINNED-OBJECTS-THUNK70 
+; --> BLOCK PROGN LET WHEN IF < 
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX15)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (INTEGER 2 18446744075722817534) &OPTIONAL), not a (VALUES
+;                                                                                   FIXNUM
+;                                                                                   &OPTIONAL).
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* SB-SYS:WITH-PINNED-OBJECTS FLET #:WITH-PINNED-OBJECTS-THUNK70 
+; --> BLOCK PROGN LET WHEN IF PRIME-CANDIDATE::%OR-BYTE 
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX15)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (INTEGER 2 18446744075722817534) &OPTIONAL), not a (VALUES
+;                                                                                   FIXNUM
+;                                                                                   &OPTIONAL).
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* SB-SYS:WITH-PINNED-OBJECTS FLET #:WITH-PINNED-OBJECTS-THUNK70 
+; --> BLOCK PROGN 
+; ==>
+;   (LET ((PRIME-CANDIDATE::SAP (SB-SYS:VECTOR-SAP PRIME-CANDIDATE::WORDS)))
+;     (DECLARE (TYPE SYSTEM-AREA-POINTER PRIME-CANDIDATE::SAP))
+;     (LOOP PRIME-CANDIDATE::WHILE (<=
+;                                   (+ PRIME-CANDIDATE::BASE
+;                                      PRIME-CANDIDATE::FACTOR)
+;                                   PRIME-CANDIDATE::END)
+;           DO (PRIME-CANDIDATE::%OR-BYTE PRIME-CANDIDATE::SAP
+;               (+ PRIME-CANDIDATE::BASE #:INDEX8) 2) (PRIME-CANDIDATE::%OR-BYTE
+;                                                      PRIME-CANDIDATE::SAP
+;                                                      (+ PRIME-CANDIDATE::BASE
+;                                                         #:INDEX9)
+;                                                      16) (PRIME-CANDIDATE::%OR-BYTE
+;                                                           PRIME-CANDIDATE::SAP
+;                                                           (+
+;                                                            PRIME-CANDIDATE::BASE
+;                                                            #:INDEX10)
+;                                                           128) (PRIME-CANDIDATE::%OR-BYTE
+;                                                                 PRIME-CANDIDATE::SAP
+;                                                                 (+
+;                                                                  PRIME-CANDIDATE::BASE
+;                                                                  #:INDEX11)
+;                                                                 4) (PRIME-CANDIDATE::%OR-BYTE
+;                                                                     PRIME-CANDIDATE::SAP
+;                                                                     (+
+;                                                                      PRIME-CANDIDATE::BASE
+;                                                                      #:INDEX12)
+;                                                                     32) (PRIME-CANDIDATE::%OR-BYTE
+;                                                                          PRIME-CANDIDATE::SAP
+;                                                                          (+
+;                                                                           PRIME-CANDIDATE::BASE
+;                                                                           #:INDEX13)
+;                                                                          1) (PRIME-CANDIDATE::%OR-BYTE
+;                                                                              PRIME-CANDIDATE::SAP
+;                                                                              (+
+;                                                                               PRIME-CANDIDATE::BASE
+;                                                                               #:INDEX14)
+;                                                                              8) (PRIME-CANDIDATE::%OR-BYTE
+;                                                                                  PRIME-CANDIDATE::SAP
+;                                                                                  (+
+;                                                                                   PRIME-CANDIDATE::BASE
+;                                                                                   #:INDEX15)
+;                                                                                  64) ...)
+;     (WHEN (< (+ PRIME-CANDIDATE::BASE #:INDEX8) PRIME-CANDIDATE::END)
+;       (PRIME-CANDIDATE::%OR-BYTE PRIME-CANDIDATE::SAP
+;        (+ PRIME-CANDIDATE::BASE #:INDEX8) 2))
+;     (WHEN (< (+ PRIME-CANDIDATE::BASE #:INDEX9) PRIME-CANDIDATE::END)
+;       (PRIME-CANDIDATE::%OR-BYTE PRIME-CANDIDATE::SAP
+;        (+ PRIME-CANDIDATE::BASE #:INDEX9) 16))
+;     (WHEN (< (+ PRIME-CANDIDATE::BASE #:INDEX10) PRIME-CANDIDATE::END)
+;       (PRIME-CANDIDATE::%OR-BYTE PRIME-CANDIDATE::SAP
+;        (+ PRIME-CANDIDATE::BASE #:INDEX10) 128))
+;     (WHEN (< (+ PRIME-CANDIDATE::BASE #:INDEX11) PRIME-CANDIDATE::END)
+;       (PRIME-CANDIDATE::%OR-BYTE PRIME-CANDIDATE::SAP
+;        (+ PRIME-CANDIDATE::BASE #:INDEX11) 4))
+;     (WHEN (< (+ PRIME-CANDIDATE::BASE #:INDEX12) PRIME-CANDIDATE::END)
+;       (PRIME-CANDIDATE::%OR-BYTE PRIME-CANDIDATE::SAP
+;        (+ PRIME-CANDIDATE::BASE #:INDEX12) 32))
+;     (WHEN (< (+ PRIME-CANDIDATE::BASE #:INDEX13) PRIME-CANDIDATE::END)
+;       (PRIME-CANDIDATE::%OR-BYTE PRIME-CANDIDATE::SAP
+;        (+ PRIME-CANDIDATE::BASE #:INDEX13) 1))
+;     (WHEN (< (+ PRIME-CANDIDATE::BASE #:INDEX14) PRIME-CANDIDATE::END)
+;       (PRIME-CANDIDATE::%OR-BYTE PRIME-CANDIDATE::SAP
+;        (+ PRIME-CANDIDATE::BASE #:INDEX14) 8))
+;     (WHEN (< (+ PRIME-CANDIDATE::BASE #:INDEX15) PRIME-CANDIDATE::END)
+;       (PRIME-CANDIDATE::%OR-BYTE PRIME-CANDIDATE::SAP
+;        (+ PRIME-CANDIDATE::BASE #:INDEX15) 64)))
+; 
+; note: doing SAP to pointer coercion (cost 20) to SAP
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* SB-SYS:WITH-PINNED-OBJECTS FLET #:WITH-PINNED-OBJECTS-THUNK75 
+; --> BLOCK PROGN LET LOOP BLOCK TAGBODY UNLESS IF <= 
+; ==>
+;   (+ PRIME-CANDIDATE::BASE PRIME-CANDIDATE::FACTOR)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (INTEGER 3 18446744075857035262) &OPTIONAL), not a (VALUES
+;                                                                                   FIXNUM
+;                                                                                   &OPTIONAL).
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* SB-SYS:WITH-PINNED-OBJECTS FLET #:WITH-PINNED-OBJECTS-THUNK75 
+; --> BLOCK PROGN LET LOOP BLOCK TAGBODY PROGN PRIME-CANDIDATE::%OR-BYTE 
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX16)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (MOD 18446744073843769343) &OPTIONAL), not a (VALUES
+;                                                                             FIXNUM
+;                                                                             &OPTIONAL).
+
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX17)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (MOD 18446744074112204799) &OPTIONAL), not a (VALUES
+;                                                                             FIXNUM
+;                                                                             &OPTIONAL).
+
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX18)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (MOD 18446744074380640255) &OPTIONAL), not a (VALUES
+;                                                                             FIXNUM
+;                                                                             &OPTIONAL).
+
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX19)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (INTEGER 1 18446744074649075710) &OPTIONAL), not a (VALUES
+;                                                                                   FIXNUM
+;                                                                                   &OPTIONAL).
+
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX20)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (INTEGER 1 18446744074917511166) &OPTIONAL), not a (VALUES
+;                                                                                   FIXNUM
+;                                                                                   &OPTIONAL).
+
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX21)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (INTEGER 2 18446744075185946622) &OPTIONAL), not a (VALUES
+;                                                                                   FIXNUM
+;                                                                                   &OPTIONAL).
+
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX22)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (INTEGER 2 18446744075454382078) &OPTIONAL), not a (VALUES
+;                                                                                   FIXNUM
+;                                                                                   &OPTIONAL).
+
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX23)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (INTEGER 2 18446744075722817534) &OPTIONAL), not a (VALUES
+;                                                                                   FIXNUM
+;                                                                                   &OPTIONAL).
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* SB-SYS:WITH-PINNED-OBJECTS FLET #:WITH-PINNED-OBJECTS-THUNK75 
+; --> BLOCK PROGN LET WHEN IF < 
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX16)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (MOD 18446744073843769343) &OPTIONAL), not a (VALUES
+;                                                                             FIXNUM
+;                                                                             &OPTIONAL).
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* SB-SYS:WITH-PINNED-OBJECTS FLET #:WITH-PINNED-OBJECTS-THUNK75 
+; --> BLOCK PROGN LET WHEN IF PRIME-CANDIDATE::%OR-BYTE 
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX16)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (MOD 18446744073843769343) &OPTIONAL), not a (VALUES
+;                                                                             FIXNUM
+;                                                                             &OPTIONAL).
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* SB-SYS:WITH-PINNED-OBJECTS FLET #:WITH-PINNED-OBJECTS-THUNK75 
+; --> BLOCK PROGN LET WHEN IF < 
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX17)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (MOD 18446744074112204799) &OPTIONAL), not a (VALUES
+;                                                                             FIXNUM
+;                                                                             &OPTIONAL).
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* SB-SYS:WITH-PINNED-OBJECTS FLET #:WITH-PINNED-OBJECTS-THUNK75 
+; --> BLOCK PROGN LET WHEN IF PRIME-CANDIDATE::%OR-BYTE 
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX17)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (MOD 18446744074112204799) &OPTIONAL), not a (VALUES
+;                                                                             FIXNUM
+;                                                                             &OPTIONAL).
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* SB-SYS:WITH-PINNED-OBJECTS FLET #:WITH-PINNED-OBJECTS-THUNK75 
+; --> BLOCK PROGN LET WHEN IF < 
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX18)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (MOD 18446744074380640255) &OPTIONAL), not a (VALUES
+;                                                                             FIXNUM
+;                                                                             &OPTIONAL).
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* SB-SYS:WITH-PINNED-OBJECTS FLET #:WITH-PINNED-OBJECTS-THUNK75 
+; --> BLOCK PROGN LET WHEN IF PRIME-CANDIDATE::%OR-BYTE 
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX18)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (MOD 18446744074380640255) &OPTIONAL), not a (VALUES
+;                                                                             FIXNUM
+;                                                                             &OPTIONAL).
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* SB-SYS:WITH-PINNED-OBJECTS FLET #:WITH-PINNED-OBJECTS-THUNK75 
+; --> BLOCK PROGN LET WHEN IF < 
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX19)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (INTEGER 1 18446744074649075710) &OPTIONAL), not a (VALUES
+;                                                                                   FIXNUM
+;                                                                                   &OPTIONAL).
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* SB-SYS:WITH-PINNED-OBJECTS FLET #:WITH-PINNED-OBJECTS-THUNK75 
+; --> BLOCK PROGN LET WHEN IF PRIME-CANDIDATE::%OR-BYTE 
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX19)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (INTEGER 1 18446744074649075710) &OPTIONAL), not a (VALUES
+;                                                                                   FIXNUM
+;                                                                                   &OPTIONAL).
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* SB-SYS:WITH-PINNED-OBJECTS FLET #:WITH-PINNED-OBJECTS-THUNK75 
+; --> BLOCK PROGN LET WHEN IF < 
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX20)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (INTEGER 1 18446744074917511166) &OPTIONAL), not a (VALUES
+;                                                                                   FIXNUM
+;                                                                                   &OPTIONAL).
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* SB-SYS:WITH-PINNED-OBJECTS FLET #:WITH-PINNED-OBJECTS-THUNK75 
+; --> BLOCK PROGN LET WHEN IF PRIME-CANDIDATE::%OR-BYTE 
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX20)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (INTEGER 1 18446744074917511166) &OPTIONAL), not a (VALUES
+;                                                                                   FIXNUM
+;                                                                                   &OPTIONAL).
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* SB-SYS:WITH-PINNED-OBJECTS FLET #:WITH-PINNED-OBJECTS-THUNK75 
+; --> BLOCK PROGN LET WHEN IF < 
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX21)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (INTEGER 2 18446744075185946622) &OPTIONAL), not a (VALUES
+;                                                                                   FIXNUM
+;                                                                                   &OPTIONAL).
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* SB-SYS:WITH-PINNED-OBJECTS FLET #:WITH-PINNED-OBJECTS-THUNK75 
+; --> BLOCK PROGN LET WHEN IF PRIME-CANDIDATE::%OR-BYTE 
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX21)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (INTEGER 2 18446744075185946622) &OPTIONAL), not a (VALUES
+;                                                                                   FIXNUM
+;                                                                                   &OPTIONAL).
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* SB-SYS:WITH-PINNED-OBJECTS FLET #:WITH-PINNED-OBJECTS-THUNK75 
+; --> BLOCK PROGN LET WHEN IF < 
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX22)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (INTEGER 2 18446744075454382078) &OPTIONAL), not a (VALUES
+;                                                                                   FIXNUM
+;                                                                                   &OPTIONAL).
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* SB-SYS:WITH-PINNED-OBJECTS FLET #:WITH-PINNED-OBJECTS-THUNK75 
+; --> BLOCK PROGN LET WHEN IF PRIME-CANDIDATE::%OR-BYTE 
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX22)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (INTEGER 2 18446744075454382078) &OPTIONAL), not a (VALUES
+;                                                                                   FIXNUM
+;                                                                                   &OPTIONAL).
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* SB-SYS:WITH-PINNED-OBJECTS FLET #:WITH-PINNED-OBJECTS-THUNK75 
+; --> BLOCK PROGN LET WHEN IF < 
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX23)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (INTEGER 2 18446744075722817534) &OPTIONAL), not a (VALUES
+;                                                                                   FIXNUM
+;                                                                                   &OPTIONAL).
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* SB-SYS:WITH-PINNED-OBJECTS FLET #:WITH-PINNED-OBJECTS-THUNK75 
+; --> BLOCK PROGN LET WHEN IF PRIME-CANDIDATE::%OR-BYTE 
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX23)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (INTEGER 2 18446744075722817534) &OPTIONAL), not a (VALUES
+;                                                                                   FIXNUM
+;                                                                                   &OPTIONAL).
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* SB-SYS:WITH-PINNED-OBJECTS FLET #:WITH-PINNED-OBJECTS-THUNK75 
+; --> BLOCK PROGN 
+; ==>
+;   (LET ((PRIME-CANDIDATE::SAP (SB-SYS:VECTOR-SAP PRIME-CANDIDATE::WORDS)))
+;     (DECLARE (TYPE SYSTEM-AREA-POINTER PRIME-CANDIDATE::SAP))
+;     (LOOP PRIME-CANDIDATE::WHILE (<=
+;                                   (+ PRIME-CANDIDATE::BASE
+;                                      PRIME-CANDIDATE::FACTOR)
+;                                   PRIME-CANDIDATE::END)
+;           DO (PRIME-CANDIDATE::%OR-BYTE PRIME-CANDIDATE::SAP
+;               (+ PRIME-CANDIDATE::BASE #:INDEX16) 4) (PRIME-CANDIDATE::%OR-BYTE
+;                                                       PRIME-CANDIDATE::SAP
+;                                                       (+ PRIME-CANDIDATE::BASE
+;                                                          #:INDEX17)
+;                                                       128) (PRIME-CANDIDATE::%OR-BYTE
+;                                                             PRIME-CANDIDATE::SAP
+;                                                             (+
+;                                                              PRIME-CANDIDATE::BASE
+;                                                              #:INDEX18)
+;                                                             16) (PRIME-CANDIDATE::%OR-BYTE
+;                                                                  PRIME-CANDIDATE::SAP
+;                                                                  (+
+;                                                                   PRIME-CANDIDATE::BASE
+;                                                                   #:INDEX19)
+;                                                                  2) (PRIME-CANDIDATE::%OR-BYTE
+;                                                                      PRIME-CANDIDATE::SAP
+;                                                                      (+
+;                                                                       PRIME-CANDIDATE::BASE
+;                                                                       #:INDEX20)
+;                                                                      64) (PRIME-CANDIDATE::%OR-BYTE
+;                                                                           PRIME-CANDIDATE::SAP
+;                                                                           (+
+;                                                                            PRIME-CANDIDATE::BASE
+;                                                                            #:INDEX21)
+;                                                                           8) (PRIME-CANDIDATE::%OR-BYTE
+;                                                                               PRIME-CANDIDATE::SAP
+;                                                                               (+
+;                                                                                PRIME-CANDIDATE::BASE
+;                                                                                #:INDEX22)
+;                                                                               1) (PRIME-CANDIDATE::%OR-BYTE
+;                                                                                   PRIME-CANDIDATE::SAP
+;                                                                                   (+
+;                                                                                    PRIME-CANDIDATE::BASE
+;                                                                                    #:INDEX23)
+;                                                                                   32) ...)
+;     (WHEN (< (+ PRIME-CANDIDATE::BASE #:INDEX16) PRIME-CANDIDATE::END)
+;       (PRIME-CANDIDATE::%OR-BYTE PRIME-CANDIDATE::SAP
+;        (+ PRIME-CANDIDATE::BASE #:INDEX16) 4))
+;     (WHEN (< (+ PRIME-CANDIDATE::BASE #:INDEX17) PRIME-CANDIDATE::END)
+;       (PRIME-CANDIDATE::%OR-BYTE PRIME-CANDIDATE::SAP
+;        (+ PRIME-CANDIDATE::BASE #:INDEX17) 128))
+;     (WHEN (< (+ PRIME-CANDIDATE::BASE #:INDEX18) PRIME-CANDIDATE::END)
+;       (PRIME-CANDIDATE::%OR-BYTE PRIME-CANDIDATE::SAP
+;        (+ PRIME-CANDIDATE::BASE #:INDEX18) 16))
+;     (WHEN (< (+ PRIME-CANDIDATE::BASE #:INDEX19) PRIME-CANDIDATE::END)
+;       (PRIME-CANDIDATE::%OR-BYTE PRIME-CANDIDATE::SAP
+;        (+ PRIME-CANDIDATE::BASE #:INDEX19) 2))
+;     (WHEN (< (+ PRIME-CANDIDATE::BASE #:INDEX20) PRIME-CANDIDATE::END)
+;       (PRIME-CANDIDATE::%OR-BYTE PRIME-CANDIDATE::SAP
+;        (+ PRIME-CANDIDATE::BASE #:INDEX20) 64))
+;     (WHEN (< (+ PRIME-CANDIDATE::BASE #:INDEX21) PRIME-CANDIDATE::END)
+;       (PRIME-CANDIDATE::%OR-BYTE PRIME-CANDIDATE::SAP
+;        (+ PRIME-CANDIDATE::BASE #:INDEX21) 8))
+;     (WHEN (< (+ PRIME-CANDIDATE::BASE #:INDEX22) PRIME-CANDIDATE::END)
+;       (PRIME-CANDIDATE::%OR-BYTE PRIME-CANDIDATE::SAP
+;        (+ PRIME-CANDIDATE::BASE #:INDEX22) 1))
+;     (WHEN (< (+ PRIME-CANDIDATE::BASE #:INDEX23) PRIME-CANDIDATE::END)
+;       (PRIME-CANDIDATE::%OR-BYTE PRIME-CANDIDATE::SAP
+;        (+ PRIME-CANDIDATE::BASE #:INDEX23) 32)))
+; 
+; note: doing SAP to pointer coercion (cost 20) to SAP
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* SB-SYS:WITH-PINNED-OBJECTS FLET #:WITH-PINNED-OBJECTS-THUNK80 
+; --> BLOCK PROGN LET LOOP BLOCK TAGBODY UNLESS IF <= 
+; ==>
+;   (+ PRIME-CANDIDATE::BASE PRIME-CANDIDATE::FACTOR)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (INTEGER 3 18446744075857035262) &OPTIONAL), not a (VALUES
+;                                                                                   FIXNUM
+;                                                                                   &OPTIONAL).
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* SB-SYS:WITH-PINNED-OBJECTS FLET #:WITH-PINNED-OBJECTS-THUNK80 
+; --> BLOCK PROGN LET LOOP BLOCK TAGBODY PROGN PRIME-CANDIDATE::%OR-BYTE 
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX24)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (MOD 18446744073843769343) &OPTIONAL), not a (VALUES
+;                                                                             FIXNUM
+;                                                                             &OPTIONAL).
+
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX25)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (MOD 18446744074112204799) &OPTIONAL), not a (VALUES
+;                                                                             FIXNUM
+;                                                                             &OPTIONAL).
+
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX26)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (MOD 18446744074380640255) &OPTIONAL), not a (VALUES
+;                                                                             FIXNUM
+;                                                                             &OPTIONAL).
+
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX27)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (INTEGER 1 18446744074649075710) &OPTIONAL), not a (VALUES
+;                                                                                   FIXNUM
+;                                                                                   &OPTIONAL).
+
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX28)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (INTEGER 1 18446744074917511166) &OPTIONAL), not a (VALUES
+;                                                                                   FIXNUM
+;                                                                                   &OPTIONAL).
+
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX29)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (INTEGER 2 18446744075185946622) &OPTIONAL), not a (VALUES
+;                                                                                   FIXNUM
+;                                                                                   &OPTIONAL).
+
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX30)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (INTEGER 2 18446744075454382078) &OPTIONAL), not a (VALUES
+;                                                                                   FIXNUM
+;                                                                                   &OPTIONAL).
+
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX31)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (INTEGER 2 18446744075722817534) &OPTIONAL), not a (VALUES
+;                                                                                   FIXNUM
+;                                                                                   &OPTIONAL).
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* SB-SYS:WITH-PINNED-OBJECTS FLET #:WITH-PINNED-OBJECTS-THUNK80 
+; --> BLOCK PROGN LET WHEN IF < 
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX24)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (MOD 18446744073843769343) &OPTIONAL), not a (VALUES
+;                                                                             FIXNUM
+;                                                                             &OPTIONAL).
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* SB-SYS:WITH-PINNED-OBJECTS FLET #:WITH-PINNED-OBJECTS-THUNK80 
+; --> BLOCK PROGN LET WHEN IF PRIME-CANDIDATE::%OR-BYTE 
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX24)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (MOD 18446744073843769343) &OPTIONAL), not a (VALUES
+;                                                                             FIXNUM
+;                                                                             &OPTIONAL).
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* SB-SYS:WITH-PINNED-OBJECTS FLET #:WITH-PINNED-OBJECTS-THUNK80 
+; --> BLOCK PROGN LET WHEN IF < 
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX25)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (MOD 18446744074112204799) &OPTIONAL), not a (VALUES
+;                                                                             FIXNUM
+;                                                                             &OPTIONAL).
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* SB-SYS:WITH-PINNED-OBJECTS FLET #:WITH-PINNED-OBJECTS-THUNK80 
+; --> BLOCK PROGN LET WHEN IF PRIME-CANDIDATE::%OR-BYTE 
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX25)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (MOD 18446744074112204799) &OPTIONAL), not a (VALUES
+;                                                                             FIXNUM
+;                                                                             &OPTIONAL).
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* SB-SYS:WITH-PINNED-OBJECTS FLET #:WITH-PINNED-OBJECTS-THUNK80 
+; --> BLOCK PROGN LET WHEN IF < 
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX26)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (MOD 18446744074380640255) &OPTIONAL), not a (VALUES
+;                                                                             FIXNUM
+;                                                                             &OPTIONAL).
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* SB-SYS:WITH-PINNED-OBJECTS FLET #:WITH-PINNED-OBJECTS-THUNK80 
+; --> BLOCK PROGN LET WHEN IF PRIME-CANDIDATE::%OR-BYTE 
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX26)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (MOD 18446744074380640255) &OPTIONAL), not a (VALUES
+;                                                                             FIXNUM
+;                                                                             &OPTIONAL).
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* SB-SYS:WITH-PINNED-OBJECTS FLET #:WITH-PINNED-OBJECTS-THUNK80 
+; --> BLOCK PROGN LET WHEN IF < 
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX27)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (INTEGER 1 18446744074649075710) &OPTIONAL), not a (VALUES
+;                                                                                   FIXNUM
+;                                                                                   &OPTIONAL).
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* SB-SYS:WITH-PINNED-OBJECTS FLET #:WITH-PINNED-OBJECTS-THUNK80 
+; --> BLOCK PROGN LET WHEN IF PRIME-CANDIDATE::%OR-BYTE 
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX27)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (INTEGER 1 18446744074649075710) &OPTIONAL), not a (VALUES
+;                                                                                   FIXNUM
+;                                                                                   &OPTIONAL).
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* SB-SYS:WITH-PINNED-OBJECTS FLET #:WITH-PINNED-OBJECTS-THUNK80 
+; --> BLOCK PROGN LET WHEN IF < 
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX28)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (INTEGER 1 18446744074917511166) &OPTIONAL), not a (VALUES
+;                                                                                   FIXNUM
+;                                                                                   &OPTIONAL).
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* SB-SYS:WITH-PINNED-OBJECTS FLET #:WITH-PINNED-OBJECTS-THUNK80 
+; --> BLOCK PROGN LET WHEN IF PRIME-CANDIDATE::%OR-BYTE 
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX28)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (INTEGER 1 18446744074917511166) &OPTIONAL), not a (VALUES
+;                                                                                   FIXNUM
+;                                                                                   &OPTIONAL).
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* SB-SYS:WITH-PINNED-OBJECTS FLET #:WITH-PINNED-OBJECTS-THUNK80 
+; --> BLOCK PROGN LET WHEN IF < 
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX29)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (INTEGER 2 18446744075185946622) &OPTIONAL), not a (VALUES
+;                                                                                   FIXNUM
+;                                                                                   &OPTIONAL).
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* SB-SYS:WITH-PINNED-OBJECTS FLET #:WITH-PINNED-OBJECTS-THUNK80 
+; --> BLOCK PROGN LET WHEN IF PRIME-CANDIDATE::%OR-BYTE 
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX29)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (INTEGER 2 18446744075185946622) &OPTIONAL), not a (VALUES
+;                                                                                   FIXNUM
+;                                                                                   &OPTIONAL).
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* SB-SYS:WITH-PINNED-OBJECTS FLET #:WITH-PINNED-OBJECTS-THUNK80 
+; --> BLOCK PROGN LET WHEN IF < 
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX30)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (INTEGER 2 18446744075454382078) &OPTIONAL), not a (VALUES
+;                                                                                   FIXNUM
+;                                                                                   &OPTIONAL).
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* SB-SYS:WITH-PINNED-OBJECTS FLET #:WITH-PINNED-OBJECTS-THUNK80 
+; --> BLOCK PROGN LET WHEN IF PRIME-CANDIDATE::%OR-BYTE 
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX30)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (INTEGER 2 18446744075454382078) &OPTIONAL), not a (VALUES
+;                                                                                   FIXNUM
+;                                                                                   &OPTIONAL).
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* SB-SYS:WITH-PINNED-OBJECTS FLET #:WITH-PINNED-OBJECTS-THUNK80 
+; --> BLOCK PROGN LET WHEN IF < 
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX31)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (INTEGER 2 18446744075722817534) &OPTIONAL), not a (VALUES
+;                                                                                   FIXNUM
+;                                                                                   &OPTIONAL).
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* SB-SYS:WITH-PINNED-OBJECTS FLET #:WITH-PINNED-OBJECTS-THUNK80 
+; --> BLOCK PROGN LET WHEN IF PRIME-CANDIDATE::%OR-BYTE 
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX31)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (INTEGER 2 18446744075722817534) &OPTIONAL), not a (VALUES
+;                                                                                   FIXNUM
+;                                                                                   &OPTIONAL).
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* SB-SYS:WITH-PINNED-OBJECTS FLET #:WITH-PINNED-OBJECTS-THUNK80 
+; --> BLOCK PROGN 
+; ==>
+;   (LET ((PRIME-CANDIDATE::SAP (SB-SYS:VECTOR-SAP PRIME-CANDIDATE::WORDS)))
+;     (DECLARE (TYPE SYSTEM-AREA-POINTER PRIME-CANDIDATE::SAP))
+;     (LOOP PRIME-CANDIDATE::WHILE (<=
+;                                   (+ PRIME-CANDIDATE::BASE
+;                                      PRIME-CANDIDATE::FACTOR)
+;                                   PRIME-CANDIDATE::END)
+;           DO (PRIME-CANDIDATE::%OR-BYTE PRIME-CANDIDATE::SAP
+;               (+ PRIME-CANDIDATE::BASE #:INDEX24) 8) (PRIME-CANDIDATE::%OR-BYTE
+;                                                       PRIME-CANDIDATE::SAP
+;                                                       (+ PRIME-CANDIDATE::BASE
+;                                                          #:INDEX25)
+;                                                       4) (PRIME-CANDIDATE::%OR-BYTE
+;                                                           PRIME-CANDIDATE::SAP
+;                                                           (+
+;                                                            PRIME-CANDIDATE::BASE
+;                                                            #:INDEX26)
+;                                                           2) (PRIME-CANDIDATE::%OR-BYTE
+;                                                               PRIME-CANDIDATE::SAP
+;                                                               (+
+;                                                                PRIME-CANDIDATE::BASE
+;                                                                #:INDEX27)
+;                                                               1) (PRIME-CANDIDATE::%OR-BYTE
+;                                                                   PRIME-CANDIDATE::SAP
+;                                                                   (+
+;                                                                    PRIME-CANDIDATE::BASE
+;                                                                    #:INDEX28)
+;                                                                   128) (PRIME-CANDIDATE::%OR-BYTE
+;                                                                         PRIME-CANDIDATE::SAP
+;                                                                         (+
+;                                                                          PRIME-CANDIDATE::BASE
+;                                                                          #:INDEX29)
+;                                                                         64) (PRIME-CANDIDATE::%OR-BYTE
+;                                                                              PRIME-CANDIDATE::SAP
+;                                                                              (+
+;                                                                               PRIME-CANDIDATE::BASE
+;                                                                               #:INDEX30)
+;                                                                              32) (PRIME-CANDIDATE::%OR-BYTE
+;                                                                                   PRIME-CANDIDATE::SAP
+;                                                                                   (+
+;                                                                                    PRIME-CANDIDATE::BASE
+;                                                                                    #:INDEX31)
+;                                                                                   16) ...)
+;     (WHEN (< (+ PRIME-CANDIDATE::BASE #:INDEX24) PRIME-CANDIDATE::END)
+;       (PRIME-CANDIDATE::%OR-BYTE PRIME-CANDIDATE::SAP
+;        (+ PRIME-CANDIDATE::BASE #:INDEX24) 8))
+;     (WHEN (< (+ PRIME-CANDIDATE::BASE #:INDEX25) PRIME-CANDIDATE::END)
+;       (PRIME-CANDIDATE::%OR-BYTE PRIME-CANDIDATE::SAP
+;        (+ PRIME-CANDIDATE::BASE #:INDEX25) 4))
+;     (WHEN (< (+ PRIME-CANDIDATE::BASE #:INDEX26) PRIME-CANDIDATE::END)
+;       (PRIME-CANDIDATE::%OR-BYTE PRIME-CANDIDATE::SAP
+;        (+ PRIME-CANDIDATE::BASE #:INDEX26) 2))
+;     (WHEN (< (+ PRIME-CANDIDATE::BASE #:INDEX27) PRIME-CANDIDATE::END)
+;       (PRIME-CANDIDATE::%OR-BYTE PRIME-CANDIDATE::SAP
+;        (+ PRIME-CANDIDATE::BASE #:INDEX27) 1))
+;     (WHEN (< (+ PRIME-CANDIDATE::BASE #:INDEX28) PRIME-CANDIDATE::END)
+;       (PRIME-CANDIDATE::%OR-BYTE PRIME-CANDIDATE::SAP
+;        (+ PRIME-CANDIDATE::BASE #:INDEX28) 128))
+;     (WHEN (< (+ PRIME-CANDIDATE::BASE #:INDEX29) PRIME-CANDIDATE::END)
+;       (PRIME-CANDIDATE::%OR-BYTE PRIME-CANDIDATE::SAP
+;        (+ PRIME-CANDIDATE::BASE #:INDEX29) 64))
+;     (WHEN (< (+ PRIME-CANDIDATE::BASE #:INDEX30) PRIME-CANDIDATE::END)
+;       (PRIME-CANDIDATE::%OR-BYTE PRIME-CANDIDATE::SAP
+;        (+ PRIME-CANDIDATE::BASE #:INDEX30) 32))
+;     (WHEN (< (+ PRIME-CANDIDATE::BASE #:INDEX31) PRIME-CANDIDATE::END)
+;       (PRIME-CANDIDATE::%OR-BYTE PRIME-CANDIDATE::SAP
+;        (+ PRIME-CANDIDATE::BASE #:INDEX31) 16)))
+; 
+; note: doing SAP to pointer coercion (cost 20) to SAP
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* SB-SYS:WITH-PINNED-OBJECTS FLET #:WITH-PINNED-OBJECTS-THUNK85 
+; --> BLOCK PROGN LET LOOP BLOCK TAGBODY UNLESS IF <= 
+; ==>
+;   (+ PRIME-CANDIDATE::BASE PRIME-CANDIDATE::FACTOR)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (INTEGER 3 18446744075857035262) &OPTIONAL), not a (VALUES
+;                                                                                   FIXNUM
+;                                                                                   &OPTIONAL).
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* SB-SYS:WITH-PINNED-OBJECTS FLET #:WITH-PINNED-OBJECTS-THUNK85 
+; --> BLOCK PROGN LET LOOP BLOCK TAGBODY PROGN PRIME-CANDIDATE::%OR-BYTE 
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX32)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (MOD 18446744073843769343) &OPTIONAL), not a (VALUES
+;                                                                             FIXNUM
+;                                                                             &OPTIONAL).
+
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX33)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (MOD 18446744074112204799) &OPTIONAL), not a (VALUES
+;                                                                             FIXNUM
+;                                                                             &OPTIONAL).
+
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX34)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (MOD 18446744074380640255) &OPTIONAL), not a (VALUES
+;                                                                             FIXNUM
+;                                                                             &OPTIONAL).
+
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX35)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (INTEGER 1 18446744074649075710) &OPTIONAL), not a (VALUES
+;                                                                                   FIXNUM
+;                                                                                   &OPTIONAL).
+
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX36)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (INTEGER 1 18446744074917511166) &OPTIONAL), not a (VALUES
+;                                                                                   FIXNUM
+;                                                                                   &OPTIONAL).
+
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX37)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (INTEGER 2 18446744075185946622) &OPTIONAL), not a (VALUES
+;                                                                                   FIXNUM
+;                                                                                   &OPTIONAL).
+
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX38)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (INTEGER 2 18446744075454382078) &OPTIONAL), not a (VALUES
+;                                                                                   FIXNUM
+;                                                                                   &OPTIONAL).
+
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX39)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (INTEGER 2 18446744075722817534) &OPTIONAL), not a (VALUES
+;                                                                                   FIXNUM
+;                                                                                   &OPTIONAL).
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* SB-SYS:WITH-PINNED-OBJECTS FLET #:WITH-PINNED-OBJECTS-THUNK85 
+; --> BLOCK PROGN LET WHEN IF < 
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX32)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (MOD 18446744073843769343) &OPTIONAL), not a (VALUES
+;                                                                             FIXNUM
+;                                                                             &OPTIONAL).
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* SB-SYS:WITH-PINNED-OBJECTS FLET #:WITH-PINNED-OBJECTS-THUNK85 
+; --> BLOCK PROGN LET WHEN IF PRIME-CANDIDATE::%OR-BYTE 
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX32)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (MOD 18446744073843769343) &OPTIONAL), not a (VALUES
+;                                                                             FIXNUM
+;                                                                             &OPTIONAL).
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* SB-SYS:WITH-PINNED-OBJECTS FLET #:WITH-PINNED-OBJECTS-THUNK85 
+; --> BLOCK PROGN LET WHEN IF < 
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX33)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (MOD 18446744074112204799) &OPTIONAL), not a (VALUES
+;                                                                             FIXNUM
+;                                                                             &OPTIONAL).
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* SB-SYS:WITH-PINNED-OBJECTS FLET #:WITH-PINNED-OBJECTS-THUNK85 
+; --> BLOCK PROGN LET WHEN IF PRIME-CANDIDATE::%OR-BYTE 
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX33)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (MOD 18446744074112204799) &OPTIONAL), not a (VALUES
+;                                                                             FIXNUM
+;                                                                             &OPTIONAL).
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* SB-SYS:WITH-PINNED-OBJECTS FLET #:WITH-PINNED-OBJECTS-THUNK85 
+; --> BLOCK PROGN LET WHEN IF < 
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX34)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (MOD 18446744074380640255) &OPTIONAL), not a (VALUES
+;                                                                             FIXNUM
+;                                                                             &OPTIONAL).
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* SB-SYS:WITH-PINNED-OBJECTS FLET #:WITH-PINNED-OBJECTS-THUNK85 
+; --> BLOCK PROGN LET WHEN IF PRIME-CANDIDATE::%OR-BYTE 
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX34)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (MOD 18446744074380640255) &OPTIONAL), not a (VALUES
+;                                                                             FIXNUM
+;                                                                             &OPTIONAL).
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* SB-SYS:WITH-PINNED-OBJECTS FLET #:WITH-PINNED-OBJECTS-THUNK85 
+; --> BLOCK PROGN LET WHEN IF < 
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX35)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (INTEGER 1 18446744074649075710) &OPTIONAL), not a (VALUES
+;                                                                                   FIXNUM
+;                                                                                   &OPTIONAL).
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* SB-SYS:WITH-PINNED-OBJECTS FLET #:WITH-PINNED-OBJECTS-THUNK85 
+; --> BLOCK PROGN LET WHEN IF PRIME-CANDIDATE::%OR-BYTE 
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX35)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (INTEGER 1 18446744074649075710) &OPTIONAL), not a (VALUES
+;                                                                                   FIXNUM
+;                                                                                   &OPTIONAL).
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* SB-SYS:WITH-PINNED-OBJECTS FLET #:WITH-PINNED-OBJECTS-THUNK85 
+; --> BLOCK PROGN LET WHEN IF < 
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX36)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (INTEGER 1 18446744074917511166) &OPTIONAL), not a (VALUES
+;                                                                                   FIXNUM
+;                                                                                   &OPTIONAL).
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* SB-SYS:WITH-PINNED-OBJECTS FLET #:WITH-PINNED-OBJECTS-THUNK85 
+; --> BLOCK PROGN LET WHEN IF PRIME-CANDIDATE::%OR-BYTE 
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX36)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (INTEGER 1 18446744074917511166) &OPTIONAL), not a (VALUES
+;                                                                                   FIXNUM
+;                                                                                   &OPTIONAL).
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* SB-SYS:WITH-PINNED-OBJECTS FLET #:WITH-PINNED-OBJECTS-THUNK85 
+; --> BLOCK PROGN LET WHEN IF < 
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX37)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (INTEGER 2 18446744075185946622) &OPTIONAL), not a (VALUES
+;                                                                                   FIXNUM
+;                                                                                   &OPTIONAL).
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* SB-SYS:WITH-PINNED-OBJECTS FLET #:WITH-PINNED-OBJECTS-THUNK85 
+; --> BLOCK PROGN LET WHEN IF PRIME-CANDIDATE::%OR-BYTE 
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX37)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (INTEGER 2 18446744075185946622) &OPTIONAL), not a (VALUES
+;                                                                                   FIXNUM
+;                                                                                   &OPTIONAL).
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* SB-SYS:WITH-PINNED-OBJECTS FLET #:WITH-PINNED-OBJECTS-THUNK85 
+; --> BLOCK PROGN LET WHEN IF < 
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX38)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (INTEGER 2 18446744075454382078) &OPTIONAL), not a (VALUES
+;                                                                                   FIXNUM
+;                                                                                   &OPTIONAL).
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* SB-SYS:WITH-PINNED-OBJECTS FLET #:WITH-PINNED-OBJECTS-THUNK85 
+; --> BLOCK PROGN LET WHEN IF PRIME-CANDIDATE::%OR-BYTE 
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX38)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (INTEGER 2 18446744075454382078) &OPTIONAL), not a (VALUES
+;                                                                                   FIXNUM
+;                                                                                   &OPTIONAL).
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* SB-SYS:WITH-PINNED-OBJECTS FLET #:WITH-PINNED-OBJECTS-THUNK85 
+; --> BLOCK PROGN LET WHEN IF < 
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX39)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (INTEGER 2 18446744075722817534) &OPTIONAL), not a (VALUES
+;                                                                                   FIXNUM
+;                                                                                   &OPTIONAL).
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* SB-SYS:WITH-PINNED-OBJECTS FLET #:WITH-PINNED-OBJECTS-THUNK85 
+; --> BLOCK PROGN LET WHEN IF PRIME-CANDIDATE::%OR-BYTE 
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX39)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (INTEGER 2 18446744075722817534) &OPTIONAL), not a (VALUES
+;                                                                                   FIXNUM
+;                                                                                   &OPTIONAL).
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* SB-SYS:WITH-PINNED-OBJECTS FLET #:WITH-PINNED-OBJECTS-THUNK85 
+; --> BLOCK PROGN 
+; ==>
+;   (LET ((PRIME-CANDIDATE::SAP (SB-SYS:VECTOR-SAP PRIME-CANDIDATE::WORDS)))
+;     (DECLARE (TYPE SYSTEM-AREA-POINTER PRIME-CANDIDATE::SAP))
+;     (LOOP PRIME-CANDIDATE::WHILE (<=
+;                                   (+ PRIME-CANDIDATE::BASE
+;                                      PRIME-CANDIDATE::FACTOR)
+;                                   PRIME-CANDIDATE::END)
+;           DO (PRIME-CANDIDATE::%OR-BYTE PRIME-CANDIDATE::SAP
+;               (+ PRIME-CANDIDATE::BASE #:INDEX32)
+;               16) (PRIME-CANDIDATE::%OR-BYTE PRIME-CANDIDATE::SAP
+;                    (+ PRIME-CANDIDATE::BASE #:INDEX33)
+;                    32) (PRIME-CANDIDATE::%OR-BYTE PRIME-CANDIDATE::SAP
+;                         (+ PRIME-CANDIDATE::BASE #:INDEX34)
+;                         64) (PRIME-CANDIDATE::%OR-BYTE PRIME-CANDIDATE::SAP
+;                              (+ PRIME-CANDIDATE::BASE #:INDEX35)
+;                              128) (PRIME-CANDIDATE::%OR-BYTE
+;                                    PRIME-CANDIDATE::SAP
+;                                    (+ PRIME-CANDIDATE::BASE #:INDEX36)
+;                                    1) (PRIME-CANDIDATE::%OR-BYTE
+;                                        PRIME-CANDIDATE::SAP
+;                                        (+ PRIME-CANDIDATE::BASE #:INDEX37)
+;                                        2) (PRIME-CANDIDATE::%OR-BYTE
+;                                            PRIME-CANDIDATE::SAP
+;                                            (+ PRIME-CANDIDATE::BASE #:INDEX38)
+;                                            4) (PRIME-CANDIDATE::%OR-BYTE
+;                                                PRIME-CANDIDATE::SAP
+;                                                (+ PRIME-CANDIDATE::BASE
+;                                                   #:INDEX39)
+;                                                8) ...)
+;     (WHEN (< (+ PRIME-CANDIDATE::BASE #:INDEX32) PRIME-CANDIDATE::END)
+;       (PRIME-CANDIDATE::%OR-BYTE PRIME-CANDIDATE::SAP
+;        (+ PRIME-CANDIDATE::BASE #:INDEX32) 16))
+;     (WHEN (< (+ PRIME-CANDIDATE::BASE #:INDEX33) PRIME-CANDIDATE::END)
+;       (PRIME-CANDIDATE::%OR-BYTE PRIME-CANDIDATE::SAP
+;        (+ PRIME-CANDIDATE::BASE #:INDEX33) 32))
+;     (WHEN (< (+ PRIME-CANDIDATE::BASE #:INDEX34) PRIME-CANDIDATE::END)
+;       (PRIME-CANDIDATE::%OR-BYTE PRIME-CANDIDATE::SAP
+;        (+ PRIME-CANDIDATE::BASE #:INDEX34) 64))
+;     (WHEN (< (+ PRIME-CANDIDATE::BASE #:INDEX35) PRIME-CANDIDATE::END)
+;       (PRIME-CANDIDATE::%OR-BYTE PRIME-CANDIDATE::SAP
+;        (+ PRIME-CANDIDATE::BASE #:INDEX35) 128))
+;     (WHEN (< (+ PRIME-CANDIDATE::BASE #:INDEX36) PRIME-CANDIDATE::END)
+;       (PRIME-CANDIDATE::%OR-BYTE PRIME-CANDIDATE::SAP
+;        (+ PRIME-CANDIDATE::BASE #:INDEX36) 1))
+;     (WHEN (< (+ PRIME-CANDIDATE::BASE #:INDEX37) PRIME-CANDIDATE::END)
+;       (PRIME-CANDIDATE::%OR-BYTE PRIME-CANDIDATE::SAP
+;        (+ PRIME-CANDIDATE::BASE #:INDEX37) 2))
+;     (WHEN (< (+ PRIME-CANDIDATE::BASE #:INDEX38) PRIME-CANDIDATE::END)
+;       (PRIME-CANDIDATE::%OR-BYTE PRIME-CANDIDATE::SAP
+;        (+ PRIME-CANDIDATE::BASE #:INDEX38) 4))
+;     (WHEN (< (+ PRIME-CANDIDATE::BASE #:INDEX39) PRIME-CANDIDATE::END)
+;       (PRIME-CANDIDATE::%OR-BYTE PRIME-CANDIDATE::SAP
+;        (+ PRIME-CANDIDATE::BASE #:INDEX39) 8)))
+; 
+; note: doing SAP to pointer coercion (cost 20) to SAP
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* SB-SYS:WITH-PINNED-OBJECTS FLET #:WITH-PINNED-OBJECTS-THUNK90 
+; --> BLOCK PROGN LET LOOP BLOCK TAGBODY UNLESS IF <= 
+; ==>
+;   (+ PRIME-CANDIDATE::BASE PRIME-CANDIDATE::FACTOR)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (INTEGER 3 18446744075857035262) &OPTIONAL), not a (VALUES
+;                                                                                   FIXNUM
+;                                                                                   &OPTIONAL).
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* SB-SYS:WITH-PINNED-OBJECTS FLET #:WITH-PINNED-OBJECTS-THUNK90 
+; --> BLOCK PROGN LET LOOP BLOCK TAGBODY PROGN PRIME-CANDIDATE::%OR-BYTE 
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX40)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (MOD 18446744073843769343) &OPTIONAL), not a (VALUES
+;                                                                             FIXNUM
+;                                                                             &OPTIONAL).
+
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX41)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (MOD 18446744074112204799) &OPTIONAL), not a (VALUES
+;                                                                             FIXNUM
+;                                                                             &OPTIONAL).
+
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX42)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (MOD 18446744074380640255) &OPTIONAL), not a (VALUES
+;                                                                             FIXNUM
+;                                                                             &OPTIONAL).
+
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX43)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (INTEGER 1 18446744074649075710) &OPTIONAL), not a (VALUES
+;                                                                                   FIXNUM
+;                                                                                   &OPTIONAL).
+
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX44)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (INTEGER 1 18446744074917511166) &OPTIONAL), not a (VALUES
+;                                                                                   FIXNUM
+;                                                                                   &OPTIONAL).
+
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX45)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (INTEGER 2 18446744075185946622) &OPTIONAL), not a (VALUES
+;                                                                                   FIXNUM
+;                                                                                   &OPTIONAL).
+
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX46)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (INTEGER 2 18446744075454382078) &OPTIONAL), not a (VALUES
+;                                                                                   FIXNUM
+;                                                                                   &OPTIONAL).
+
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX47)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (INTEGER 2 18446744075722817534) &OPTIONAL), not a (VALUES
+;                                                                                   FIXNUM
+;                                                                                   &OPTIONAL).
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* SB-SYS:WITH-PINNED-OBJECTS FLET #:WITH-PINNED-OBJECTS-THUNK90 
+; --> BLOCK PROGN LET WHEN IF < 
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX40)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (MOD 18446744073843769343) &OPTIONAL), not a (VALUES
+;                                                                             FIXNUM
+;                                                                             &OPTIONAL).
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* SB-SYS:WITH-PINNED-OBJECTS FLET #:WITH-PINNED-OBJECTS-THUNK90 
+; --> BLOCK PROGN LET WHEN IF PRIME-CANDIDATE::%OR-BYTE 
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX40)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (MOD 18446744073843769343) &OPTIONAL), not a (VALUES
+;                                                                             FIXNUM
+;                                                                             &OPTIONAL).
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* SB-SYS:WITH-PINNED-OBJECTS FLET #:WITH-PINNED-OBJECTS-THUNK90 
+; --> BLOCK PROGN LET WHEN IF < 
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX41)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (MOD 18446744074112204799) &OPTIONAL), not a (VALUES
+;                                                                             FIXNUM
+;                                                                             &OPTIONAL).
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* SB-SYS:WITH-PINNED-OBJECTS FLET #:WITH-PINNED-OBJECTS-THUNK90 
+; --> BLOCK PROGN LET WHEN IF PRIME-CANDIDATE::%OR-BYTE 
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX41)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (MOD 18446744074112204799) &OPTIONAL), not a (VALUES
+;                                                                             FIXNUM
+;                                                                             &OPTIONAL).
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* SB-SYS:WITH-PINNED-OBJECTS FLET #:WITH-PINNED-OBJECTS-THUNK90 
+; --> BLOCK PROGN LET WHEN IF < 
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX42)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (MOD 18446744074380640255) &OPTIONAL), not a (VALUES
+;                                                                             FIXNUM
+;                                                                             &OPTIONAL).
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* SB-SYS:WITH-PINNED-OBJECTS FLET #:WITH-PINNED-OBJECTS-THUNK90 
+; --> BLOCK PROGN LET WHEN IF PRIME-CANDIDATE::%OR-BYTE 
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX42)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (MOD 18446744074380640255) &OPTIONAL), not a (VALUES
+;                                                                             FIXNUM
+;                                                                             &OPTIONAL).
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* SB-SYS:WITH-PINNED-OBJECTS FLET #:WITH-PINNED-OBJECTS-THUNK90 
+; --> BLOCK PROGN LET WHEN IF < 
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX43)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (INTEGER 1 18446744074649075710) &OPTIONAL), not a (VALUES
+;                                                                                   FIXNUM
+;                                                                                   &OPTIONAL).
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* SB-SYS:WITH-PINNED-OBJECTS FLET #:WITH-PINNED-OBJECTS-THUNK90 
+; --> BLOCK PROGN LET WHEN IF PRIME-CANDIDATE::%OR-BYTE 
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX43)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (INTEGER 1 18446744074649075710) &OPTIONAL), not a (VALUES
+;                                                                                   FIXNUM
+;                                                                                   &OPTIONAL).
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* SB-SYS:WITH-PINNED-OBJECTS FLET #:WITH-PINNED-OBJECTS-THUNK90 
+; --> BLOCK PROGN LET WHEN IF < 
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX44)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (INTEGER 1 18446744074917511166) &OPTIONAL), not a (VALUES
+;                                                                                   FIXNUM
+;                                                                                   &OPTIONAL).
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* SB-SYS:WITH-PINNED-OBJECTS FLET #:WITH-PINNED-OBJECTS-THUNK90 
+; --> BLOCK PROGN LET WHEN IF PRIME-CANDIDATE::%OR-BYTE 
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX44)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (INTEGER 1 18446744074917511166) &OPTIONAL), not a (VALUES
+;                                                                                   FIXNUM
+;                                                                                   &OPTIONAL).
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* SB-SYS:WITH-PINNED-OBJECTS FLET #:WITH-PINNED-OBJECTS-THUNK90 
+; --> BLOCK PROGN LET WHEN IF < 
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX45)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (INTEGER 2 18446744075185946622) &OPTIONAL), not a (VALUES
+;                                                                                   FIXNUM
+;                                                                                   &OPTIONAL).
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* SB-SYS:WITH-PINNED-OBJECTS FLET #:WITH-PINNED-OBJECTS-THUNK90 
+; --> BLOCK PROGN LET WHEN IF PRIME-CANDIDATE::%OR-BYTE 
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX45)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (INTEGER 2 18446744075185946622) &OPTIONAL), not a (VALUES
+;                                                                                   FIXNUM
+;                                                                                   &OPTIONAL).
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* SB-SYS:WITH-PINNED-OBJECTS FLET #:WITH-PINNED-OBJECTS-THUNK90 
+; --> BLOCK PROGN LET WHEN IF < 
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX46)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (INTEGER 2 18446744075454382078) &OPTIONAL), not a (VALUES
+;                                                                                   FIXNUM
+;                                                                                   &OPTIONAL).
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* SB-SYS:WITH-PINNED-OBJECTS FLET #:WITH-PINNED-OBJECTS-THUNK90 
+; --> BLOCK PROGN LET WHEN IF PRIME-CANDIDATE::%OR-BYTE 
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX46)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (INTEGER 2 18446744075454382078) &OPTIONAL), not a (VALUES
+;                                                                                   FIXNUM
+;                                                                                   &OPTIONAL).
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* SB-SYS:WITH-PINNED-OBJECTS FLET #:WITH-PINNED-OBJECTS-THUNK90 
+; --> BLOCK PROGN LET WHEN IF < 
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX47)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (INTEGER 2 18446744075722817534) &OPTIONAL), not a (VALUES
+;                                                                                   FIXNUM
+;                                                                                   &OPTIONAL).
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* SB-SYS:WITH-PINNED-OBJECTS FLET #:WITH-PINNED-OBJECTS-THUNK90 
+; --> BLOCK PROGN LET WHEN IF PRIME-CANDIDATE::%OR-BYTE 
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX47)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (INTEGER 2 18446744075722817534) &OPTIONAL), not a (VALUES
+;                                                                                   FIXNUM
+;                                                                                   &OPTIONAL).
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* SB-SYS:WITH-PINNED-OBJECTS FLET #:WITH-PINNED-OBJECTS-THUNK90 
+; --> BLOCK PROGN 
+; ==>
+;   (LET ((PRIME-CANDIDATE::SAP (SB-SYS:VECTOR-SAP PRIME-CANDIDATE::WORDS)))
+;     (DECLARE (TYPE SYSTEM-AREA-POINTER PRIME-CANDIDATE::SAP))
+;     (LOOP PRIME-CANDIDATE::WHILE (<=
+;                                   (+ PRIME-CANDIDATE::BASE
+;                                      PRIME-CANDIDATE::FACTOR)
+;                                   PRIME-CANDIDATE::END)
+;           DO (PRIME-CANDIDATE::%OR-BYTE PRIME-CANDIDATE::SAP
+;               (+ PRIME-CANDIDATE::BASE #:INDEX40)
+;               32) (PRIME-CANDIDATE::%OR-BYTE PRIME-CANDIDATE::SAP
+;                    (+ PRIME-CANDIDATE::BASE #:INDEX41)
+;                    1) (PRIME-CANDIDATE::%OR-BYTE PRIME-CANDIDATE::SAP
+;                        (+ PRIME-CANDIDATE::BASE #:INDEX42)
+;                        8) (PRIME-CANDIDATE::%OR-BYTE PRIME-CANDIDATE::SAP
+;                            (+ PRIME-CANDIDATE::BASE #:INDEX43)
+;                            64) (PRIME-CANDIDATE::%OR-BYTE PRIME-CANDIDATE::SAP
+;                                 (+ PRIME-CANDIDATE::BASE #:INDEX44)
+;                                 2) (PRIME-CANDIDATE::%OR-BYTE
+;                                     PRIME-CANDIDATE::SAP
+;                                     (+ PRIME-CANDIDATE::BASE #:INDEX45)
+;                                     16) (PRIME-CANDIDATE::%OR-BYTE
+;                                          PRIME-CANDIDATE::SAP
+;                                          (+ PRIME-CANDIDATE::BASE #:INDEX46)
+;                                          128) (PRIME-CANDIDATE::%OR-BYTE
+;                                                PRIME-CANDIDATE::SAP
+;                                                (+ PRIME-CANDIDATE::BASE
+;                                                   #:INDEX47)
+;                                                4) ...)
+;     (WHEN (< (+ PRIME-CANDIDATE::BASE #:INDEX40) PRIME-CANDIDATE::END)
+;       (PRIME-CANDIDATE::%OR-BYTE PRIME-CANDIDATE::SAP
+;        (+ PRIME-CANDIDATE::BASE #:INDEX40) 32))
+;     (WHEN (< (+ PRIME-CANDIDATE::BASE #:INDEX41) PRIME-CANDIDATE::END)
+;       (PRIME-CANDIDATE::%OR-BYTE PRIME-CANDIDATE::SAP
+;        (+ PRIME-CANDIDATE::BASE #:INDEX41) 1))
+;     (WHEN (< (+ PRIME-CANDIDATE::BASE #:INDEX42) PRIME-CANDIDATE::END)
+;       (PRIME-CANDIDATE::%OR-BYTE PRIME-CANDIDATE::SAP
+;        (+ PRIME-CANDIDATE::BASE #:INDEX42) 8))
+;     (WHEN (< (+ PRIME-CANDIDATE::BASE #:INDEX43) PRIME-CANDIDATE::END)
+;       (PRIME-CANDIDATE::%OR-BYTE PRIME-CANDIDATE::SAP
+;        (+ PRIME-CANDIDATE::BASE #:INDEX43) 64))
+;     (WHEN (< (+ PRIME-CANDIDATE::BASE #:INDEX44) PRIME-CANDIDATE::END)
+;       (PRIME-CANDIDATE::%OR-BYTE PRIME-CANDIDATE::SAP
+;        (+ PRIME-CANDIDATE::BASE #:INDEX44) 2))
+;     (WHEN (< (+ PRIME-CANDIDATE::BASE #:INDEX45) PRIME-CANDIDATE::END)
+;       (PRIME-CANDIDATE::%OR-BYTE PRIME-CANDIDATE::SAP
+;        (+ PRIME-CANDIDATE::BASE #:INDEX45) 16))
+;     (WHEN (< (+ PRIME-CANDIDATE::BASE #:INDEX46) PRIME-CANDIDATE::END)
+;       (PRIME-CANDIDATE::%OR-BYTE PRIME-CANDIDATE::SAP
+;        (+ PRIME-CANDIDATE::BASE #:INDEX46) 128))
+;     (WHEN (< (+ PRIME-CANDIDATE::BASE #:INDEX47) PRIME-CANDIDATE::END)
+;       (PRIME-CANDIDATE::%OR-BYTE PRIME-CANDIDATE::SAP
+;        (+ PRIME-CANDIDATE::BASE #:INDEX47) 4)))
+; 
+; note: doing SAP to pointer coercion (cost 20) to SAP
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* SB-SYS:WITH-PINNED-OBJECTS FLET #:WITH-PINNED-OBJECTS-THUNK95 
+; --> BLOCK PROGN LET LOOP BLOCK TAGBODY UNLESS IF <= 
+; ==>
+;   (+ PRIME-CANDIDATE::BASE PRIME-CANDIDATE::FACTOR)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (INTEGER 3 18446744075857035262) &OPTIONAL), not a (VALUES
+;                                                                                   FIXNUM
+;                                                                                   &OPTIONAL).
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* SB-SYS:WITH-PINNED-OBJECTS FLET #:WITH-PINNED-OBJECTS-THUNK95 
+; --> BLOCK PROGN LET LOOP BLOCK TAGBODY PROGN PRIME-CANDIDATE::%OR-BYTE 
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX48)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (MOD 18446744073843769343) &OPTIONAL), not a (VALUES
+;                                                                             FIXNUM
+;                                                                             &OPTIONAL).
+
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX49)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (MOD 18446744074112204799) &OPTIONAL), not a (VALUES
+;                                                                             FIXNUM
+;                                                                             &OPTIONAL).
+
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX50)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (MOD 18446744074380640255) &OPTIONAL), not a (VALUES
+;                                                                             FIXNUM
+;                                                                             &OPTIONAL).
+
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX51)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (INTEGER 1 18446744074649075710) &OPTIONAL), not a (VALUES
+;                                                                                   FIXNUM
+;                                                                                   &OPTIONAL).
+
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX52)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (INTEGER 1 18446744074917511166) &OPTIONAL), not a (VALUES
+;                                                                                   FIXNUM
+;                                                                                   &OPTIONAL).
+
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX53)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (INTEGER 2 18446744075185946622) &OPTIONAL), not a (VALUES
+;                                                                                   FIXNUM
+;                                                                                   &OPTIONAL).
+
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX54)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (INTEGER 2 18446744075454382078) &OPTIONAL), not a (VALUES
+;                                                                                   FIXNUM
+;                                                                                   &OPTIONAL).
+
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX55)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (INTEGER 2 18446744075722817534) &OPTIONAL), not a (VALUES
+;                                                                                   FIXNUM
+;                                                                                   &OPTIONAL).
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* SB-SYS:WITH-PINNED-OBJECTS FLET #:WITH-PINNED-OBJECTS-THUNK95 
+; --> BLOCK PROGN LET WHEN IF < 
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX48)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (MOD 18446744073843769343) &OPTIONAL), not a (VALUES
+;                                                                             FIXNUM
+;                                                                             &OPTIONAL).
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* SB-SYS:WITH-PINNED-OBJECTS FLET #:WITH-PINNED-OBJECTS-THUNK95 
+; --> BLOCK PROGN LET WHEN IF PRIME-CANDIDATE::%OR-BYTE 
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX48)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (MOD 18446744073843769343) &OPTIONAL), not a (VALUES
+;                                                                             FIXNUM
+;                                                                             &OPTIONAL).
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* SB-SYS:WITH-PINNED-OBJECTS FLET #:WITH-PINNED-OBJECTS-THUNK95 
+; --> BLOCK PROGN LET WHEN IF < 
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX49)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (MOD 18446744074112204799) &OPTIONAL), not a (VALUES
+;                                                                             FIXNUM
+;                                                                             &OPTIONAL).
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* SB-SYS:WITH-PINNED-OBJECTS FLET #:WITH-PINNED-OBJECTS-THUNK95 
+; --> BLOCK PROGN LET WHEN IF PRIME-CANDIDATE::%OR-BYTE 
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX49)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (MOD 18446744074112204799) &OPTIONAL), not a (VALUES
+;                                                                             FIXNUM
+;                                                                             &OPTIONAL).
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* SB-SYS:WITH-PINNED-OBJECTS FLET #:WITH-PINNED-OBJECTS-THUNK95 
+; --> BLOCK PROGN LET WHEN IF < 
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX50)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (MOD 18446744074380640255) &OPTIONAL), not a (VALUES
+;                                                                             FIXNUM
+;                                                                             &OPTIONAL).
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* SB-SYS:WITH-PINNED-OBJECTS FLET #:WITH-PINNED-OBJECTS-THUNK95 
+; --> BLOCK PROGN LET WHEN IF PRIME-CANDIDATE::%OR-BYTE 
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX50)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (MOD 18446744074380640255) &OPTIONAL), not a (VALUES
+;                                                                             FIXNUM
+;                                                                             &OPTIONAL).
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* SB-SYS:WITH-PINNED-OBJECTS FLET #:WITH-PINNED-OBJECTS-THUNK95 
+; --> BLOCK PROGN LET WHEN IF < 
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX51)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (INTEGER 1 18446744074649075710) &OPTIONAL), not a (VALUES
+;                                                                                   FIXNUM
+;                                                                                   &OPTIONAL).
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* SB-SYS:WITH-PINNED-OBJECTS FLET #:WITH-PINNED-OBJECTS-THUNK95 
+; --> BLOCK PROGN LET WHEN IF PRIME-CANDIDATE::%OR-BYTE 
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX51)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (INTEGER 1 18446744074649075710) &OPTIONAL), not a (VALUES
+;                                                                                   FIXNUM
+;                                                                                   &OPTIONAL).
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* SB-SYS:WITH-PINNED-OBJECTS FLET #:WITH-PINNED-OBJECTS-THUNK95 
+; --> BLOCK PROGN LET WHEN IF < 
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX52)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (INTEGER 1 18446744074917511166) &OPTIONAL), not a (VALUES
+;                                                                                   FIXNUM
+;                                                                                   &OPTIONAL).
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* SB-SYS:WITH-PINNED-OBJECTS FLET #:WITH-PINNED-OBJECTS-THUNK95 
+; --> BLOCK PROGN LET WHEN IF PRIME-CANDIDATE::%OR-BYTE 
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX52)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (INTEGER 1 18446744074917511166) &OPTIONAL), not a (VALUES
+;                                                                                   FIXNUM
+;                                                                                   &OPTIONAL).
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* SB-SYS:WITH-PINNED-OBJECTS FLET #:WITH-PINNED-OBJECTS-THUNK95 
+; --> BLOCK PROGN LET WHEN IF < 
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX53)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (INTEGER 2 18446744075185946622) &OPTIONAL), not a (VALUES
+;                                                                                   FIXNUM
+;                                                                                   &OPTIONAL).
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* SB-SYS:WITH-PINNED-OBJECTS FLET #:WITH-PINNED-OBJECTS-THUNK95 
+; --> BLOCK PROGN LET WHEN IF PRIME-CANDIDATE::%OR-BYTE 
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX53)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (INTEGER 2 18446744075185946622) &OPTIONAL), not a (VALUES
+;                                                                                   FIXNUM
+;                                                                                   &OPTIONAL).
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* SB-SYS:WITH-PINNED-OBJECTS FLET #:WITH-PINNED-OBJECTS-THUNK95 
+; --> BLOCK PROGN LET WHEN IF < 
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX54)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (INTEGER 2 18446744075454382078) &OPTIONAL), not a (VALUES
+;                                                                                   FIXNUM
+;                                                                                   &OPTIONAL).
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* SB-SYS:WITH-PINNED-OBJECTS FLET #:WITH-PINNED-OBJECTS-THUNK95 
+; --> BLOCK PROGN LET WHEN IF PRIME-CANDIDATE::%OR-BYTE 
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX54)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (INTEGER 2 18446744075454382078) &OPTIONAL), not a (VALUES
+;                                                                                   FIXNUM
+;                                                                                   &OPTIONAL).
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* SB-SYS:WITH-PINNED-OBJECTS FLET #:WITH-PINNED-OBJECTS-THUNK95 
+; --> BLOCK PROGN LET WHEN IF < 
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX55)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (INTEGER 2 18446744075722817534) &OPTIONAL), not a (VALUES
+;                                                                                   FIXNUM
+;                                                                                   &OPTIONAL).
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* SB-SYS:WITH-PINNED-OBJECTS FLET #:WITH-PINNED-OBJECTS-THUNK95 
+; --> BLOCK PROGN LET WHEN IF PRIME-CANDIDATE::%OR-BYTE 
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX55)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (INTEGER 2 18446744075722817534) &OPTIONAL), not a (VALUES
+;                                                                                   FIXNUM
+;                                                                                   &OPTIONAL).
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* SB-SYS:WITH-PINNED-OBJECTS FLET #:WITH-PINNED-OBJECTS-THUNK95 
+; --> BLOCK PROGN 
+; ==>
+;   (LET ((PRIME-CANDIDATE::SAP (SB-SYS:VECTOR-SAP PRIME-CANDIDATE::WORDS)))
+;     (DECLARE (TYPE SYSTEM-AREA-POINTER PRIME-CANDIDATE::SAP))
+;     (LOOP PRIME-CANDIDATE::WHILE (<=
+;                                   (+ PRIME-CANDIDATE::BASE
+;                                      PRIME-CANDIDATE::FACTOR)
+;                                   PRIME-CANDIDATE::END)
+;           DO (PRIME-CANDIDATE::%OR-BYTE PRIME-CANDIDATE::SAP
+;               (+ PRIME-CANDIDATE::BASE #:INDEX48)
+;               64) (PRIME-CANDIDATE::%OR-BYTE PRIME-CANDIDATE::SAP
+;                    (+ PRIME-CANDIDATE::BASE #:INDEX49)
+;                    8) (PRIME-CANDIDATE::%OR-BYTE PRIME-CANDIDATE::SAP
+;                        (+ PRIME-CANDIDATE::BASE #:INDEX50)
+;                        1) (PRIME-CANDIDATE::%OR-BYTE PRIME-CANDIDATE::SAP
+;                            (+ PRIME-CANDIDATE::BASE #:INDEX51)
+;                            32) (PRIME-CANDIDATE::%OR-BYTE PRIME-CANDIDATE::SAP
+;                                 (+ PRIME-CANDIDATE::BASE #:INDEX52)
+;                                 4) (PRIME-CANDIDATE::%OR-BYTE
+;                                     PRIME-CANDIDATE::SAP
+;                                     (+ PRIME-CANDIDATE::BASE #:INDEX53)
+;                                     128) (PRIME-CANDIDATE::%OR-BYTE
+;                                           PRIME-CANDIDATE::SAP
+;                                           (+ PRIME-CANDIDATE::BASE #:INDEX54)
+;                                           16) (PRIME-CANDIDATE::%OR-BYTE
+;                                                PRIME-CANDIDATE::SAP
+;                                                (+ PRIME-CANDIDATE::BASE
+;                                                   #:INDEX55)
+;                                                2) ...)
+;     (WHEN (< (+ PRIME-CANDIDATE::BASE #:INDEX48) PRIME-CANDIDATE::END)
+;       (PRIME-CANDIDATE::%OR-BYTE PRIME-CANDIDATE::SAP
+;        (+ PRIME-CANDIDATE::BASE #:INDEX48) 64))
+;     (WHEN (< (+ PRIME-CANDIDATE::BASE #:INDEX49) PRIME-CANDIDATE::END)
+;       (PRIME-CANDIDATE::%OR-BYTE PRIME-CANDIDATE::SAP
+;        (+ PRIME-CANDIDATE::BASE #:INDEX49) 8))
+;     (WHEN (< (+ PRIME-CANDIDATE::BASE #:INDEX50) PRIME-CANDIDATE::END)
+;       (PRIME-CANDIDATE::%OR-BYTE PRIME-CANDIDATE::SAP
+;        (+ PRIME-CANDIDATE::BASE #:INDEX50) 1))
+;     (WHEN (< (+ PRIME-CANDIDATE::BASE #:INDEX51) PRIME-CANDIDATE::END)
+;       (PRIME-CANDIDATE::%OR-BYTE PRIME-CANDIDATE::SAP
+;        (+ PRIME-CANDIDATE::BASE #:INDEX51) 32))
+;     (WHEN (< (+ PRIME-CANDIDATE::BASE #:INDEX52) PRIME-CANDIDATE::END)
+;       (PRIME-CANDIDATE::%OR-BYTE PRIME-CANDIDATE::SAP
+;        (+ PRIME-CANDIDATE::BASE #:INDEX52) 4))
+;     (WHEN (< (+ PRIME-CANDIDATE::BASE #:INDEX53) PRIME-CANDIDATE::END)
+;       (PRIME-CANDIDATE::%OR-BYTE PRIME-CANDIDATE::SAP
+;        (+ PRIME-CANDIDATE::BASE #:INDEX53) 128))
+;     (WHEN (< (+ PRIME-CANDIDATE::BASE #:INDEX54) PRIME-CANDIDATE::END)
+;       (PRIME-CANDIDATE::%OR-BYTE PRIME-CANDIDATE::SAP
+;        (+ PRIME-CANDIDATE::BASE #:INDEX54) 16))
+;     (WHEN (< (+ PRIME-CANDIDATE::BASE #:INDEX55) PRIME-CANDIDATE::END)
+;       (PRIME-CANDIDATE::%OR-BYTE PRIME-CANDIDATE::SAP
+;        (+ PRIME-CANDIDATE::BASE #:INDEX55) 2)))
+; 
+; note: doing SAP to pointer coercion (cost 20) to SAP
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* SB-SYS:WITH-PINNED-OBJECTS FLET #:WITH-PINNED-OBJECTS-THUNK106 
+; --> BLOCK PROGN LET LOOP BLOCK TAGBODY UNLESS IF <= 
+; ==>
+;   (+ PRIME-CANDIDATE::BASE PRIME-CANDIDATE::FACTOR)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (INTEGER 3 18446744075857035262) &OPTIONAL), not a (VALUES
+;                                                                                   FIXNUM
+;                                                                                   &OPTIONAL).
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* SB-SYS:WITH-PINNED-OBJECTS FLET #:WITH-PINNED-OBJECTS-THUNK106 
+; --> BLOCK PROGN LET LOOP BLOCK TAGBODY PROGN PRIME-CANDIDATE::%OR-BYTE 
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX56)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (MOD 18446744073843769343) &OPTIONAL), not a (VALUES
+;                                                                             FIXNUM
+;                                                                             &OPTIONAL).
+
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX57)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (MOD 18446744074112204799) &OPTIONAL), not a (VALUES
+;                                                                             FIXNUM
+;                                                                             &OPTIONAL).
+
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX58)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (MOD 18446744074380640255) &OPTIONAL), not a (VALUES
+;                                                                             FIXNUM
+;                                                                             &OPTIONAL).
+
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX59)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (INTEGER 1 18446744074649075710) &OPTIONAL), not a (VALUES
+;                                                                                   FIXNUM
+;                                                                                   &OPTIONAL).
+
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX60)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (INTEGER 1 18446744074917511166) &OPTIONAL), not a (VALUES
+;                                                                                   FIXNUM
+;                                                                                   &OPTIONAL).
+
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX61)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (INTEGER 2 18446744075185946622) &OPTIONAL), not a (VALUES
+;                                                                                   FIXNUM
+;                                                                                   &OPTIONAL).
+
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX62)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (INTEGER 2 18446744075454382078) &OPTIONAL), not a (VALUES
+;                                                                                   FIXNUM
+;                                                                                   &OPTIONAL).
+
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX63)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (INTEGER 2 18446744075722817534) &OPTIONAL), not a (VALUES
+;                                                                                   FIXNUM
+;                                                                                   &OPTIONAL).
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* SB-SYS:WITH-PINNED-OBJECTS FLET #:WITH-PINNED-OBJECTS-THUNK106 
+; --> BLOCK PROGN LET WHEN IF < 
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX56)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (MOD 18446744073843769343) &OPTIONAL), not a (VALUES
+;                                                                             FIXNUM
+;                                                                             &OPTIONAL).
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* SB-SYS:WITH-PINNED-OBJECTS FLET #:WITH-PINNED-OBJECTS-THUNK106 
+; --> BLOCK PROGN LET WHEN IF PRIME-CANDIDATE::%OR-BYTE 
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX56)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (MOD 18446744073843769343) &OPTIONAL), not a (VALUES
+;                                                                             FIXNUM
+;                                                                             &OPTIONAL).
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* SB-SYS:WITH-PINNED-OBJECTS FLET #:WITH-PINNED-OBJECTS-THUNK106 
+; --> BLOCK PROGN LET WHEN IF < 
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX57)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (MOD 18446744074112204799) &OPTIONAL), not a (VALUES
+;                                                                             FIXNUM
+;                                                                             &OPTIONAL).
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* SB-SYS:WITH-PINNED-OBJECTS FLET #:WITH-PINNED-OBJECTS-THUNK106 
+; --> BLOCK PROGN LET WHEN IF PRIME-CANDIDATE::%OR-BYTE 
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX57)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (MOD 18446744074112204799) &OPTIONAL), not a (VALUES
+;                                                                             FIXNUM
+;                                                                             &OPTIONAL).
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* SB-SYS:WITH-PINNED-OBJECTS FLET #:WITH-PINNED-OBJECTS-THUNK106 
+; --> BLOCK PROGN LET WHEN IF < 
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX58)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (MOD 18446744074380640255) &OPTIONAL), not a (VALUES
+;                                                                             FIXNUM
+;                                                                             &OPTIONAL).
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* SB-SYS:WITH-PINNED-OBJECTS FLET #:WITH-PINNED-OBJECTS-THUNK106 
+; --> BLOCK PROGN LET WHEN IF PRIME-CANDIDATE::%OR-BYTE 
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX58)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (MOD 18446744074380640255) &OPTIONAL), not a (VALUES
+;                                                                             FIXNUM
+;                                                                             &OPTIONAL).
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* SB-SYS:WITH-PINNED-OBJECTS FLET #:WITH-PINNED-OBJECTS-THUNK106 
+; --> BLOCK PROGN LET WHEN IF < 
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX59)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (INTEGER 1 18446744074649075710) &OPTIONAL), not a (VALUES
+;                                                                                   FIXNUM
+;                                                                                   &OPTIONAL).
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* SB-SYS:WITH-PINNED-OBJECTS FLET #:WITH-PINNED-OBJECTS-THUNK106 
+; --> BLOCK PROGN LET WHEN IF PRIME-CANDIDATE::%OR-BYTE 
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX59)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (INTEGER 1 18446744074649075710) &OPTIONAL), not a (VALUES
+;                                                                                   FIXNUM
+;                                                                                   &OPTIONAL).
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* SB-SYS:WITH-PINNED-OBJECTS FLET #:WITH-PINNED-OBJECTS-THUNK106 
+; --> BLOCK PROGN LET WHEN IF < 
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX60)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (INTEGER 1 18446744074917511166) &OPTIONAL), not a (VALUES
+;                                                                                   FIXNUM
+;                                                                                   &OPTIONAL).
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* SB-SYS:WITH-PINNED-OBJECTS FLET #:WITH-PINNED-OBJECTS-THUNK106 
+; --> BLOCK PROGN LET WHEN IF PRIME-CANDIDATE::%OR-BYTE 
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX60)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (INTEGER 1 18446744074917511166) &OPTIONAL), not a (VALUES
+;                                                                                   FIXNUM
+;                                                                                   &OPTIONAL).
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* SB-SYS:WITH-PINNED-OBJECTS FLET #:WITH-PINNED-OBJECTS-THUNK106 
+; --> BLOCK PROGN LET WHEN IF < 
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX61)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (INTEGER 2 18446744075185946622) &OPTIONAL), not a (VALUES
+;                                                                                   FIXNUM
+;                                                                                   &OPTIONAL).
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* SB-SYS:WITH-PINNED-OBJECTS FLET #:WITH-PINNED-OBJECTS-THUNK106 
+; --> BLOCK PROGN LET WHEN IF PRIME-CANDIDATE::%OR-BYTE 
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX61)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (INTEGER 2 18446744075185946622) &OPTIONAL), not a (VALUES
+;                                                                                   FIXNUM
+;                                                                                   &OPTIONAL).
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* SB-SYS:WITH-PINNED-OBJECTS FLET #:WITH-PINNED-OBJECTS-THUNK106 
+; --> BLOCK PROGN LET WHEN IF < 
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX62)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (INTEGER 2 18446744075454382078) &OPTIONAL), not a (VALUES
+;                                                                                   FIXNUM
+;                                                                                   &OPTIONAL).
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* SB-SYS:WITH-PINNED-OBJECTS FLET #:WITH-PINNED-OBJECTS-THUNK106 
+; --> BLOCK PROGN LET WHEN IF PRIME-CANDIDATE::%OR-BYTE 
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX62)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (INTEGER 2 18446744075454382078) &OPTIONAL), not a (VALUES
+;                                                                                   FIXNUM
+;                                                                                   &OPTIONAL).
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* SB-SYS:WITH-PINNED-OBJECTS FLET #:WITH-PINNED-OBJECTS-THUNK106 
+; --> BLOCK PROGN LET WHEN IF < 
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX63)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (INTEGER 2 18446744075722817534) &OPTIONAL), not a (VALUES
+;                                                                                   FIXNUM
+;                                                                                   &OPTIONAL).
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* SB-SYS:WITH-PINNED-OBJECTS FLET #:WITH-PINNED-OBJECTS-THUNK106 
+; --> BLOCK PROGN LET WHEN IF PRIME-CANDIDATE::%OR-BYTE 
+; ==>
+;   (+ PRIME-CANDIDATE::BASE #:INDEX63)
+; 
+; note: forced to do +/UNSIGNED=>INTEGER (cost 8)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a (OR (INTEGER 0 0)
+;                                   (INTEGER 3 18446744073709551615)), not a FIXNUM.
+;       The result is a (VALUES (INTEGER 2 18446744075722817534) &OPTIONAL), not a (VALUES
+;                                                                                   FIXNUM
+;                                                                                   &OPTIONAL).
+
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* SB-SYS:WITH-PINNED-OBJECTS FLET #:WITH-PINNED-OBJECTS-THUNK106 
+; --> BLOCK PROGN 
+; ==>
+;   (LET ((PRIME-CANDIDATE::SAP (SB-SYS:VECTOR-SAP PRIME-CANDIDATE::WORDS)))
+;     (DECLARE (TYPE SYSTEM-AREA-POINTER PRIME-CANDIDATE::SAP))
+;     (LOOP PRIME-CANDIDATE::WHILE (<=
+;                                   (+ PRIME-CANDIDATE::BASE
+;                                      PRIME-CANDIDATE::FACTOR)
+;                                   PRIME-CANDIDATE::END)
+;           DO (PRIME-CANDIDATE::%OR-BYTE PRIME-CANDIDATE::SAP
+;               (+ PRIME-CANDIDATE::BASE #:INDEX56)
+;               128) (PRIME-CANDIDATE::%OR-BYTE PRIME-CANDIDATE::SAP
+;                     (+ PRIME-CANDIDATE::BASE #:INDEX57)
+;                     64) (PRIME-CANDIDATE::%OR-BYTE PRIME-CANDIDATE::SAP
+;                          (+ PRIME-CANDIDATE::BASE #:INDEX58)
+;                          32) (PRIME-CANDIDATE::%OR-BYTE PRIME-CANDIDATE::SAP
+;                               (+ PRIME-CANDIDATE::BASE #:INDEX59)
+;                               16) (PRIME-CANDIDATE::%OR-BYTE
+;                                    PRIME-CANDIDATE::SAP
+;                                    (+ PRIME-CANDIDATE::BASE #:INDEX60)
+;                                    8) (PRIME-CANDIDATE::%OR-BYTE
+;                                        PRIME-CANDIDATE::SAP
+;                                        (+ PRIME-CANDIDATE::BASE #:INDEX61)
+;                                        4) (PRIME-CANDIDATE::%OR-BYTE
+;                                            PRIME-CANDIDATE::SAP
+;                                            (+ PRIME-CANDIDATE::BASE #:INDEX62)
+;                                            2) (PRIME-CANDIDATE::%OR-BYTE
+;                                                PRIME-CANDIDATE::SAP
+;                                                (+ PRIME-CANDIDATE::BASE
+;                                                   #:INDEX63)
+;                                                1) ...)
+;     (WHEN (< (+ PRIME-CANDIDATE::BASE #:INDEX56) PRIME-CANDIDATE::END)
+;       (PRIME-CANDIDATE::%OR-BYTE PRIME-CANDIDATE::SAP
+;        (+ PRIME-CANDIDATE::BASE #:INDEX56) 128))
+;     (WHEN (< (+ PRIME-CANDIDATE::BASE #:INDEX57) PRIME-CANDIDATE::END)
+;       (PRIME-CANDIDATE::%OR-BYTE PRIME-CANDIDATE::SAP
+;        (+ PRIME-CANDIDATE::BASE #:INDEX57) 64))
+;     (WHEN (< (+ PRIME-CANDIDATE::BASE #:INDEX58) PRIME-CANDIDATE::END)
+;       (PRIME-CANDIDATE::%OR-BYTE PRIME-CANDIDATE::SAP
+;        (+ PRIME-CANDIDATE::BASE #:INDEX58) 32))
+;     (WHEN (< (+ PRIME-CANDIDATE::BASE #:INDEX59) PRIME-CANDIDATE::END)
+;       (PRIME-CANDIDATE::%OR-BYTE PRIME-CANDIDATE::SAP
+;        (+ PRIME-CANDIDATE::BASE #:INDEX59) 16))
+;     (WHEN (< (+ PRIME-CANDIDATE::BASE #:INDEX60) PRIME-CANDIDATE::END)
+;       (PRIME-CANDIDATE::%OR-BYTE PRIME-CANDIDATE::SAP
+;        (+ PRIME-CANDIDATE::BASE #:INDEX60) 8))
+;     (WHEN (< (+ PRIME-CANDIDATE::BASE #:INDEX61) PRIME-CANDIDATE::END)
+;       (PRIME-CANDIDATE::%OR-BYTE PRIME-CANDIDATE::SAP
+;        (+ PRIME-CANDIDATE::BASE #:INDEX61) 4))
+;     (WHEN (< (+ PRIME-CANDIDATE::BASE #:INDEX62) PRIME-CANDIDATE::END)
+;       (PRIME-CANDIDATE::%OR-BYTE PRIME-CANDIDATE::SAP
+;        (+ PRIME-CANDIDATE::BASE #:INDEX62) 2))
+;     (WHEN (< (+ PRIME-CANDIDATE::BASE #:INDEX63) PRIME-CANDIDATE::END)
+;       (PRIME-CANDIDATE::%OR-BYTE PRIME-CANDIDATE::SAP
+;        (+ PRIME-CANDIDATE::BASE #:INDEX63) 1)))
+; 
+; note: doing SAP to pointer coercion (cost 20) to SAP
+
+; in: DEFUN COUNT-PRIMES
+;     (+
+;      (IF (>= PRIME-CANDIDATE::LIMIT 2)
+;          1
+;          0)
+;      (- PRIME-CANDIDATE::SIZE PRIME-CANDIDATE::COMPOSITES))
+; 
+; note: doing signed word to integer coercion (cost 20), for:
+;       the first result of inline (signed-byte 64) arithmetic
+
+; file: /workspace/scratch/73f29dd8a4f8/primes-experiments/batch/PrimeLisp/solution_3/sieve.lisp
+; in: DEFINE-SPARSE-RESETTERS
+;     (PRIME-CANDIDATE::DEFINE-SPARSE-RESETTERS)
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* SB-SYS:WITH-PINNED-OBJECTS FLET #:WITH-PINNED-OBJECTS-THUNK65 
+; --> BLOCK PROGN LET LOOP BLOCK TAGBODY PROGN 
+; ==>
+;   (PRIME-CANDIDATE::%OR-BYTE PRIME-CANDIDATE::SAP
+;    (+ PRIME-CANDIDATE::BASE #:INDEX0) 1)
+; 
+; caught STYLE-WARNING:
+;   undefined function: PRIME-CANDIDATE::%OR-BYTE
+; 
+; compilation unit finished
+;   Undefined function:
+;     %OR-BYTE
+;   caught 1 STYLE-WARNING condition
+;   printed 220 notes
+Unhandled UNDEFINED-FUNCTION in thread #<SB-THREAD:THREAD tid=7 "main thread" RUNNING
+                                          {1200038003}>:
+  The function PRIME-CANDIDATE::%OR-BYTE is undefined.
+
+Backtrace for: #<SB-THREAD:THREAD tid=7 "main thread" RUNNING {1200038003}>
+0: ("undefined function" #.(SB-SYS:INT-SAP #X1204104FF0) 1056 2)
+1: (PRIME-CANDIDATE::SPARSE-3 #<unavailable argument> #<unavailable argument>)
+2: (PRIME-CANDIDATE:RUN-SIEVE #<unavailable argument>)
+3: (PRIME-BENCH:CHECK-CANDIDATE)
+4: (PRIME-BENCH:MEASURE :SECONDS 5 :REPEATS 3)
+5: (PRIME-BENCH:MAIN)
+6: (SB-INT:SIMPLE-EVAL-IN-LEXENV (PRIME-BENCH:MAIN) #<NULL-LEXENV>)
+7: (EVAL (PRIME-BENCH:MAIN))
+8: (SB-IMPL::PROCESS-EVAL/LOAD-OPTIONS ((:LOAD . "bootstrap.lisp") (:EVAL . "(prime-bench:main)") (:QUIT)))
+9: (SB-IMPL::TOPLEVEL-INIT)
+10: ((FLET SB-UNIX::BODY :IN SB-IMPL::START-LISP))
+11: ((FLET "WITHOUT-INTERRUPTS-BODY-3" :IN SB-IMPL::START-LISP))
+12: (SB-IMPL::%START-LISP)
+
+unhandled condition in --disable-debugger mode, quitting
