@@ -11,10 +11,37 @@ Deux méthodes ont été comparées pendant trente minutes au maximum, pour opti
 L'objectif des itérations est de **réduire le temps par crible**. Le temps de
 développement sera consigné séparément. Le crible initial simple est archivé dans
 `campaign-2026-09-13/candidates/baseline`. `sieve.lisp` contient désormais la
-proposition interactive retenue, avec déroulage dense et clairsemé et VOP locale
-d'OR octet.
+proposition optimisée ensuite par introspection SBCL, avec noyaux assembleur
+dense et clairsemé locaux.
 
-## Résultat de la campagne du 13 septembre 2026
+## Résultat du prolongement par introspection SBCL
+
+La version actuelle, `echologie-cl-kernels129`, économise **24,43 % de temps**
+par rapport à la version précédemment publiée : **280,634 → 212,069 µs/crible**
+dans la série de confirmation (cinq mesures de cinq secondes par version,
+alternées dans des images neuves). La première série finale donnait 23,22 %.
+Les 47 tailles du contrôle indépendant passent. La supériorité sur Rust reste
+à démontrer.
+
+Les noyaux machine suppriment des conversions d'indices et des opérations
+intermédiaires identifiées au désassemblage. Le SIMD et deux autres seuils de
+déroulage ont été testés et archivés sans être retenus. La compilation complète,
+le chargement et le contrôle sont passés d'une observation de 26,13 s à 0,54 s.
+La reprise avec cache, empreintes et contrôle prend environ 0,33 s.
+
+[Rapport et mesures brutes](campaign-2026-09-13-followup/RAPPORT.md).
+[Reprise interactive sans recopie et reproduction](campaign-2026-09-13-followup/README.md).
+
+```sh
+./campaign-2026-09-13-followup/resume.sh
+```
+
+Le lanceur compile les sources seulement si le cache manque ou si leur empreinte
+ou la version SBCL change. Les modifications suivantes peuvent être enregistrées
+et compilées individuellement avec `lab:apply-file` ; leur manifeste permet de
+les recharger après fermeture de l'image.
+
+## Résultat de la première campagne du 13 septembre 2026
 
 | Version | Médiane µs/crible | Cribles/s | Temps économisé |
 |---|---:|---:|---:|
@@ -31,10 +58,10 @@ d'une méthode. La supériorité sur Rust n'est pas démontrée.
 [Rapport complet, résultats bruts et reproduction](campaign-2026-09-13/RAPPORT.md).
 [Provenance du code](EXPERIMENT.md).
 
-Exemple réellement mesuré pour le candidat retenu :
+Exemple réellement mesuré pour le candidat actuel (contrôle final supplémentaire) :
 
 ```text
-echologie-cl-hybrid129-unboxed;19449;5.003974;1;algorithm=base,faithful=yes,bits=1
+echologie-cl-kernels129;24316;5.003981;1;algorithm=base,faithful=yes,bits=1
 ```
 
 ## Exécution

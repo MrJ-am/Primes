@@ -1,0 +1,101 @@
+; disassembly for PRIME-CANDIDATE::DENSE-3
+; Size: 363 bytes. Origin: #xB800FE2816                       ; PRIME-CANDIDATE::DENSE-3
+; 816:       4C8B4FF9         MOV R9, [RDI-7]
+; 81A:       4531C0           XOR R8D, R8D
+; 81D:       E9D2000000       JMP L1
+; 822:       0F1F8000000000   NOP
+; 829:       0F1F8000000000   NOP
+; 830: L0:   488B47F9         MOV RAX, [RDI-7]
+; 834:       498D5006         LEA RDX, [R8+6]
+; 838:       4839D0           CMP RAX, RDX
+; 83B:       0F8622010000     JBE L4
+; 841:       C4A17E6F448701   VMOVDQU YMM0, [RDI+R8*4+1]
+; 848:       C5FE6F0D50FFFFFF VMOVDQU YMM1, [RIP-176]         ; [#xB800FE27A0]
+; 850:       C5FDEBC1         VPOR YMM0, YMM0, YMM1
+; 854:       488B47F9         MOV RAX, [RDI-7]
+; 858:       498D5006         LEA RDX, [R8+6]
+; 85C:       4839D0           CMP RAX, RDX
+; 85F:       0F8603010000     JBE L5
+; 865:       C4A17E7F448701   VMOVDQU [RDI+R8*4+1], YMM0
+; 86C:       498D5008         LEA RDX, [R8+8]
+; 870:       498D4008         LEA RAX, [R8+8]
+; 874:       488B5FF9         MOV RBX, [RDI-7]
+; 878:       488D7006         LEA RSI, [RAX+6]
+; 87C:       4839F3           CMP RBX, RSI
+; 87F:       0F86E8000000     JBE L6
+; 885:       C5FE6F448701     VMOVDQU YMM0, [RDI+RAX*4+1]
+; 88B:       C5FE6F0D2DFFFFFF VMOVDQU YMM1, [RIP-211]         ; [#xB800FE27C0]
+; 893:       C5FDEBC1         VPOR YMM0, YMM0, YMM1
+; 897:       488B47F9         MOV RAX, [RDI-7]
+; 89B:       488D5A06         LEA RBX, [RDX+6]
+; 89F:       4839D8           CMP RAX, RBX
+; 8A2:       0F86CA000000     JBE L7
+; 8A8:       C5FE7F449701     VMOVDQU [RDI+RDX*4+1], YMM0
+; 8AE:       498D5010         LEA RDX, [R8+16]
+; 8B2:       498D4010         LEA RAX, [R8+16]
+; 8B6:       488B5FF9         MOV RBX, [RDI-7]
+; 8BA:       488D7006         LEA RSI, [RAX+6]
+; 8BE:       4839F3           CMP RBX, RSI
+; 8C1:       0F86B0000000     JBE L8
+; 8C7:       C5FE6F448701     VMOVDQU YMM0, [RDI+RAX*4+1]
+; 8CD:       C5FE6F0D0BFFFFFF VMOVDQU YMM1, [RIP-245]         ; [#xB800FE27E0]
+; 8D5:       C5FDEBC1         VPOR YMM0, YMM0, YMM1
+; 8D9:       488B47F9         MOV RAX, [RDI-7]
+; 8DD:       488D5A06         LEA RBX, [RDX+6]
+; 8E1:       4839D8           CMP RAX, RBX
+; 8E4:       0F8692000000     JBE L9
+; 8EA:       C5FE7F449701     VMOVDQU [RDI+RDX*4+1], YMM0
+; 8F0:       4983C018         ADD R8, 24
+; 8F4: L1:   498D4018         LEA RAX, [R8+24]
+; 8F8:       4C39C8           CMP RAX, R9
+; 8FB:       0F8E2FFFFFFF     JLE L0
+; 901:       498BF0           MOV RSI, R8
+; 904:       EB46             JMP L3
+; 906:       0F1F440000       NOP
+; 90B:       0F1F440000       NOP
+; 910: L2:   488B5CB701       MOV RBX, [RDI+RSI*4+1]
+; 915:       488BC6           MOV RAX, RSI
+; 918:       48D1F8           SAR RAX, 1
+; 91B:       48B95655555555555555 MOV RCX, 6148914691236517206
+; 925:       41B803000000     MOV R8D, 3
+; 92B:       48F7E1           MUL RCX
+; 92E:       49F7E0           MUL R8
+; 931:       488BC2           MOV RAX, RDX
+; 934:       488B0D3DFEFFFF   MOV RCX, [RIP-451]              ; #(2635249153387078802 10540996613548315209 5270498306774157604)
+; 93B:       488B44C101       MOV RAX, [RCX+RAX*8+1]
+; 940:       4809C3           OR RBX, RAX
+; 943:       48895CB701       MOV [RDI+RSI*4+1], RBX
+; 948:       4883C602         ADD RSI, 2
+; 94C: L3:   4C39CE           CMP RSI, R9
+; 94F:       7CBF             JL L2
+; 951:       488B4701         MOV RAX, [RDI+1]
+; 955:       4883E0FD         AND RAX, -3
+; 959:       48894701         MOV [RDI+1], RAX
+; 95D:       498BFC           MOV RDI, R12                    ; NIL
+; 960:       C9               LEAVE
+; 961:       F8               CLC
+; 962:       C3               RET
+; 963: L4:   CC23             INT3 35                         ; INVALID-ARRAY-INDEX-ERROR
+; 965:       1C               BYTE #X1C                       ; RDI(d)
+; 966:       01               BYTE #X01                       ; RAX(a)
+; 967:       09               BYTE #X09                       ; RDX(a)
+; 968: L5:   CC23             INT3 35                         ; INVALID-ARRAY-INDEX-ERROR
+; 96A:       1C               BYTE #X1C                       ; RDI(d)
+; 96B:       01               BYTE #X01                       ; RAX(a)
+; 96C:       09               BYTE #X09                       ; RDX(a)
+; 96D: L6:   CC23             INT3 35                         ; INVALID-ARRAY-INDEX-ERROR
+; 96F:       1C               BYTE #X1C                       ; RDI(d)
+; 970:       0D               BYTE #X0D                       ; RBX(a)
+; 971:       19               BYTE #X19                       ; RSI(a)
+; 972: L7:   CC23             INT3 35                         ; INVALID-ARRAY-INDEX-ERROR
+; 974:       1C               BYTE #X1C                       ; RDI(d)
+; 975:       01               BYTE #X01                       ; RAX(a)
+; 976:       0D               BYTE #X0D                       ; RBX(a)
+; 977: L8:   CC23             INT3 35                         ; INVALID-ARRAY-INDEX-ERROR
+; 979:       1C               BYTE #X1C                       ; RDI(d)
+; 97A:       0D               BYTE #X0D                       ; RBX(a)
+; 97B:       19               BYTE #X19                       ; RSI(a)
+; 97C: L9:   CC23             INT3 35                         ; INVALID-ARRAY-INDEX-ERROR
+; 97E:       1C               BYTE #X1C                       ; RDI(d)
+; 97F:       01               BYTE #X01                       ; RAX(a)
+; 980:       0D               BYTE #X0D                       ; RBX(a)

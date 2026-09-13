@@ -1,0 +1,173 @@
+Script started on 2026-09-13 10:04:33-07:00 [COMMAND="./run.sh repl" TERM="dumb" TTY="/dev/console" COLUMNS="80" LINES="24"]
+
+; file: /workspace/scratch/7ce7d755ab89/primes-review/PrimeLisp/solution_3/sieve.lisp
+; in: DEFUN COUNT-PRIMES
+;     (+
+;      (IF (>= PRIME-CANDIDATE::LIMIT 2)
+;          1
+;          0)
+;      (- PRIME-CANDIDATE::NBITS
+;         (+
+;          (LOOP PRIME-CANDIDATE::FOR PRIME-CANDIDATE::I FIXNUM PRIME-CANDIDATE::BELOW PRIME-CANDIDATE::NWORDS
+;                PRIME-CANDIDATE::SUM (LOGCOUNT #) FIXNUM)
+;          (IF (ZEROP PRIME-CANDIDATE::TAIL)
+;              0
+;              (LOGCOUNT #)))))
+; 
+; note: doing signed word to integer coercion (cost 20), for:
+;       the first result of inline (signed-byte 64) arithmetic
+; 
+; compilation unit finished
+;   printed 1 note
+* (load "campaign-2026-09-13-followup/lab.lisp")
+(lab:measure)
+(with-open-file (out "campaign-2026-09-13-followup/diagnostics/baseline-disassembly.txt" :direction :output :if-exists :supersede) (let ((*standard-output* out)) (disassemble 'prime-candidate::dense-3) (disassemble 'prime-candidate::sparse-3)))
+T
+* Candidate validated (including 78,498 primes through 1,000,000).
+echologie-cl-hybrid129-unboxed;19474;5.003984;1;algorithm=base,faithful=yes,bits=1
+echologie-cl-hybrid129-unboxed;19284;5.003984;1;algorithm=base,faithful=yes,bits=1
+echologie-cl-hybrid129-unboxed;20070;5.003984;1;algorithm=base,faithful=yes,bits=1
+Median: 256.957 us/sieve (3891.7 sieves/s).
+Saved: /workspace/scratch/7ce7d755ab89/primes-review/PrimeLisp/solution_3/results/3998307944-277986140.sexp
+(:UTC-UNIVERSAL-TIME 3998307944 :METHOD "interactive" :SBCL "2.6.8" :MACHINE
+ "Intel(R) Xeon(R) Platinum 8370C CPU @ 2.80GHz" :SYSTEM "6.18.44" :CPU "0"
+ :MODE "repl" :LABEL "echologie-cl-hybrid129-unboxed" :TAGS
+ "algorithm=base,faithful=yes,bits=1" :LIMIT 1000000 :SOURCE-FILES-SHA256
+ "c51f1976f446a6e3826b47174385afb733384183a1724489583867c2ab0f9def  /workspace/scratch/7ce7d755ab89/primes-review/PrimeLisp/solution_3/sieve.lisp
+1206c525a19c95872a09b77e1ce652f5e7e4d941780a753c40c20e43b0002b7d  /workspace/scratch/7ce7d755ab89/primes-review/PrimeLisp/solution_3/bench.lisp
+88ce9e36823b2386eb98d826c9d30f9bc194c424875a16172f6aa9fbb1644e8f  /workspace/scratch/7ce7d755ab89/primes-review/PrimeLisp/solution_3/bootstrap.lisp
+"
+ :MEDIAN-MICROSECONDS-PER-SIEVE 256.957173667454d0 :SAMPLES
+ ((:PASSES 19474 :SECONDS 5.003984d0 :CPU-SECONDS 5.003573d0
+   :MICROSECONDS-PER-SIEVE 256.957173667454d0 :SIEVES-PER-SECOND
+   3891.699094161772d0 :BYTES-CONSED 1217021200 :GC-SECONDS 0.021884d0)
+  (:PASSES 19284 :SECONDS 5.003984d0 :CPU-SECONDS 5.005599d0
+   :MICROSECONDS-PER-SIEVE 259.48890271727856d0 :SIEVES-PER-SECOND
+   3853.729348455151d0 :BYTES-CONSED 1205126656 :GC-SECONDS 0.022964d0)
+  (:PASSES 20070 :SECONDS 5.003984d0 :CPU-SECONDS 5.003667d0
+   :MICROSECONDS-PER-SIEVE 249.32655705032386d0 :SIEVES-PER-SECOND
+   4010.8041912204358d0 :BYTES-CONSED 1254244320 :GC-SECONDS 0.024355d0)))
+* NIL
+* (load "campaign-2026-09-13-followup/lab.lisp")
+T
+* (lab:restore)
+(progn (lab:measure) (values))
+(with-open-file (out "campaign-2026-09-13-followup/diagnostics/sparse-kernel-disassembly.txt" :direction :output :if-exists :supersede) (let ((*standard-output* out)) (disassemble 'prime-candidate::sparse-3)))
+WARNING: redefining PRIME-CANDIDATE::SPARSE-1 in DEFUN
+WARNING: redefining PRIME-CANDIDATE::SPARSE-3 in DEFUN
+WARNING: redefining PRIME-CANDIDATE::SPARSE-5 in DEFUN
+WARNING: redefining PRIME-CANDIDATE::SPARSE-7 in DEFUN
+WARNING: redefining PRIME-CANDIDATE::SPARSE-9 in DEFUN
+WARNING: redefining PRIME-CANDIDATE::SPARSE-11 in DEFUN
+WARNING: redefining PRIME-CANDIDATE::SPARSE-13 in DEFUN
+WARNING: redefining PRIME-CANDIDATE::SPARSE-15 in DEFUN
+Candidate validated (including 78,498 primes through 1,000,000).
+RESTORED 1 deltas
+NIL
+* Candidate validated (including 78,498 primes through 1,000,000).
+echologie-cl-sparse-kernel;21582;5.003980;1;algorithm=base,faithful=yes,bits=1
+echologie-cl-sparse-kernel;22646;5.003979;1;algorithm=base,faithful=yes,bits=1
+echologie-cl-sparse-kernel;22416;5.003978;1;algorithm=base,faithful=yes,bits=1
+Median: 223.232 us/sieve (4479.6 sieves/s).
+Saved: /workspace/scratch/7ce7d755ab89/primes-review/PrimeLisp/solution_3/results/3998308125-581869302.sexp
+* NIL
+* (require :sb-sprof)
+(with-open-file (out "campaign-2026-09-13-followup/diagnostics/sparse-profile.txt" :direction :output :if-exists :supersede) (let ((*standard-output* out)) (sb-sprof:with-profiling (:max-samples 1500 :report :flat :loop nil) (dotimes (i 10000) (prime-candidate:run-sieve (prime-candidate:make-sieve 1000000))))))
+("SB-SPROF")
+* NIL
+* (load "campaign-2026-09-13-followup/lab.lisp")
+(lab:restore)
+(progn (lab:measure) (values))
+(with-open-file (out "campaign-2026-09-13-followup/diagnostics/dense-kernel-disassembly.txt" :direction :output :if-exists :supersede) (let ((*standard-output* out)) (disassemble 'prime-candidate::dense-3) (disassemble 'prime-candidate::dense-29)))
+T
+* WARNING: redefining PRIME-CANDIDATE::DENSE-3 in DEFUN
+WARNING: redefining PRIME-CANDIDATE::DENSE-5 in DEFUN
+WARNING: redefining PRIME-CANDIDATE::DENSE-7 in DEFUN
+WARNING: redefining PRIME-CANDIDATE::DENSE-9 in DEFUN
+WARNING: redefining PRIME-CANDIDATE::DENSE-11 in DEFUN
+WARNING: redefining PRIME-CANDIDATE::DENSE-13 in DEFUN
+WARNING: redefining PRIME-CANDIDATE::DENSE-15 in DEFUN
+WARNING: redefining PRIME-CANDIDATE::DENSE-17 in DEFUN
+WARNING: redefining PRIME-CANDIDATE::DENSE-19 in DEFUN
+WARNING: redefining PRIME-CANDIDATE::DENSE-21 in DEFUN
+WARNING: redefining PRIME-CANDIDATE::DENSE-23 in DEFUN
+WARNING: redefining PRIME-CANDIDATE::DENSE-25 in DEFUN
+WARNING: redefining PRIME-CANDIDATE::DENSE-27 in DEFUN
+WARNING: redefining PRIME-CANDIDATE::DENSE-29 in DEFUN
+WARNING: redefining PRIME-CANDIDATE::DENSE-31 in DEFUN
+WARNING: redefining PRIME-CANDIDATE::DENSE-33 in DEFUN
+WARNING: redefining PRIME-CANDIDATE::DENSE-35 in DEFUN
+WARNING: redefining PRIME-CANDIDATE::DENSE-37 in DEFUN
+WARNING: redefining PRIME-CANDIDATE::DENSE-39 in DEFUN
+WARNING: redefining PRIME-CANDIDATE::DENSE-41 in DEFUN
+WARNING: redefining PRIME-CANDIDATE::DENSE-43 in DEFUN
+WARNING: redefining PRIME-CANDIDATE::DENSE-45 in DEFUN
+WARNING: redefining PRIME-CANDIDATE::DENSE-47 in DEFUN
+WARNING: redefining PRIME-CANDIDATE::DENSE-49 in DEFUN
+WARNING: redefining PRIME-CANDIDATE::DENSE-51 in DEFUN
+WARNING: redefining PRIME-CANDIDATE::DENSE-53 in DEFUN
+WARNING: redefining PRIME-CANDIDATE::DENSE-55 in DEFUN
+WARNING: redefining PRIME-CANDIDATE::DENSE-57 in DEFUN
+WARNING: redefining PRIME-CANDIDATE::DENSE-59 in DEFUN
+WARNING: redefining PRIME-CANDIDATE::DENSE-61 in DEFUN
+WARNING: redefining PRIME-CANDIDATE::DENSE-63 in DEFUN
+WARNING: redefining PRIME-CANDIDATE::DENSE-65 in DEFUN
+WARNING: redefining PRIME-CANDIDATE::DENSE-67 in DEFUN
+WARNING: redefining PRIME-CANDIDATE::DENSE-69 in DEFUN
+WARNING: redefining PRIME-CANDIDATE::DENSE-71 in DEFUN
+WARNING: redefining PRIME-CANDIDATE::DENSE-73 in DEFUN
+WARNING: redefining PRIME-CANDIDATE::DENSE-75 in DEFUN
+WARNING: redefining PRIME-CANDIDATE::DENSE-77 in DEFUN
+WARNING: redefining PRIME-CANDIDATE::DENSE-79 in DEFUN
+WARNING: redefining PRIME-CANDIDATE::DENSE-81 in DEFUN
+WARNING: redefining PRIME-CANDIDATE::DENSE-83 in DEFUN
+WARNING: redefining PRIME-CANDIDATE::DENSE-85 in DEFUN
+WARNING: redefining PRIME-CANDIDATE::DENSE-87 in DEFUN
+WARNING: redefining PRIME-CANDIDATE::DENSE-89 in DEFUN
+WARNING: redefining PRIME-CANDIDATE::DENSE-91 in DEFUN
+WARNING: redefining PRIME-CANDIDATE::DENSE-93 in DEFUN
+WARNING: redefining PRIME-CANDIDATE::DENSE-95 in DEFUN
+WARNING: redefining PRIME-CANDIDATE::DENSE-97 in DEFUN
+WARNING: redefining PRIME-CANDIDATE::DENSE-99 in DEFUN
+WARNING: redefining PRIME-CANDIDATE::DENSE-101 in DEFUN
+WARNING: redefining PRIME-CANDIDATE::DENSE-103 in DEFUN
+WARNING: redefining PRIME-CANDIDATE::DENSE-105 in DEFUN
+WARNING: redefining PRIME-CANDIDATE::DENSE-107 in DEFUN
+WARNING: redefining PRIME-CANDIDATE::DENSE-109 in DEFUN
+WARNING: redefining PRIME-CANDIDATE::DENSE-111 in DEFUN
+WARNING: redefining PRIME-CANDIDATE::DENSE-113 in DEFUN
+WARNING: redefining PRIME-CANDIDATE::DENSE-115 in DEFUN
+WARNING: redefining PRIME-CANDIDATE::DENSE-117 in DEFUN
+WARNING: redefining PRIME-CANDIDATE::DENSE-119 in DEFUN
+WARNING: redefining PRIME-CANDIDATE::DENSE-121 in DEFUN
+WARNING: redefining PRIME-CANDIDATE::DENSE-123 in DEFUN
+WARNING: redefining PRIME-CANDIDATE::DENSE-125 in DEFUN
+WARNING: redefining PRIME-CANDIDATE::DENSE-127 in DEFUN
+WARNING: redefining PRIME-CANDIDATE::DENSE-129 in DEFUN
+Candidate validated (including 78,498 primes through 1,000,000).
+RESTORED 2 deltas
+NIL
+* Candidate validated (including 78,498 primes through 1,000,000).
+echologie-cl-dense-sparse-kernels;24596;5.003981;1;algorithm=base,faithful=yes,bits=1
+echologie-cl-dense-sparse-kernels;23921;5.003981;1;algorithm=base,faithful=yes,bits=1
+echologie-cl-dense-sparse-kernels;24523;5.003981;1;algorithm=base,faithful=yes,bits=1
+Median: 204.053 us/sieve (4900.7 sieves/s).
+Saved: /workspace/scratch/7ce7d755ab89/primes-review/PrimeLisp/solution_3/results/3998308249-669121262.sexp
+* NIL
+* (require :sb-simd)
+(apropos "U64.4" "SB-SIMD-AVX2")
+
+debugger invoked on a END-OF-FILE in thread
+#<THREAD tid=5 "main thread" RUNNING {1200038003}>:
+  end of file on #<FD-STREAM for "file /workspace/scratch/73f29dd8a4f8/runtime/sbcl-2.6.8/bin/../lib/sbcl/contrib/sb-simd.fasl" {1202AAB7E3}>
+
+Type HELP for debugger help, or (SB-EXT:EXIT) to exit from SBCL.
+
+restarts (invokable by number or by possibly-abbreviated name):
+  0: [ABORT] Exit debugger, returning to top level.
+
+(SB-IMPL::INPUT-UNSIGNED-8BIT-BYTE #<FD-STREAM for "file /workspace/scratch/73f29dd8a4f8/runtime/sbcl-2.6.8/bin/../lib/sbcl/contrib/sb-simd.fasl" {1202AAB7E3}> T NIL)
+0] abort
+* (sb-ext:quit)
+
+Script done on 2026-09-13 10:12:03-07:00 [COMMAND_EXIT_CODE="0"]

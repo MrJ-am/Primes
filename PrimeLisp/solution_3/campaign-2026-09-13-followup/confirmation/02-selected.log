@@ -1,0 +1,4 @@
+echologie-cl-kernels129;21518;5.003986;1;algorithm=base,faithful=yes,bits=1
+Candidate validated (including 78,498 primes through 1,000,000).
+Median: 232.549 us/sieve (4300.2 sieves/s).
+Saved: /workspace/scratch/7ce7d755ab89/primes-review/PrimeLisp/solution_3/.build/followup/comparison/selected/results/3998308962-277986140.sexp

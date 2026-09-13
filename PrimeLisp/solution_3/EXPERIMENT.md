@@ -1,6 +1,15 @@
 # Provenance de la proposition retenue
 
-Le candidat `sieve.lisp` est la copie exacte de la proposition interactive figée lors de la campagne du 13 septembre 2026.
+Le candidat `sieve.lisp` prolonge la proposition interactive de la première
+campagne du 13 septembre 2026. Ses noyaux dense et clairsemé sont maintenant
+générés directement avec des VOP locales SBCL. L'interface, la représentation
+et le pilote de mesure sont conservés.
+
+- [Optimisation par introspection, coûts et contrôles](campaign-2026-09-13-followup/RAPPORT.md).
+- [Sources exactes de départ](campaign-2026-09-13-followup/baseline.lisp).
+- [Reconstruction du candidat final](campaign-2026-09-13-followup/assemble-candidate.py).
+
+La première campagne reste archivée sans modification :
 
 - [Bilan comparatif et contrôles indépendants](campaign-2026-09-13/RAPPORT.md).
 - [Journal original interactif, provenance et licence](campaign-2026-09-13/candidates/interactive/EXPERIMENT.md).

@@ -7,8 +7,8 @@
   (:use #:cl)
   (:export #:make-sieve #:run-sieve #:primep #:count-primes #:*tags* #:*name*))
 (in-package #:prime-candidate)
-(declaim (optimize (speed 3) (safety 0) (debug 1)))
-(defparameter *name* "echologie-cl-hybrid129-unboxed")
+(declaim (optimize (speed 3) (safety 0) (debug 0)))
+(defparameter *name* "echologie-cl-kernels129")
 (defparameter *tags* "algorithm=base,faithful=yes,bits=1")
 (deftype words () '(simple-array (unsigned-byte 64) (*)))
 (defclass word-sieve ()
@@ -27,50 +27,7 @@
   (declare (type words bits) (type fixnum index))
   (logbitp (logand index 63) (aref bits (ash index -6))))
 
-;; The generated LOGIOR arguments are individual multiples of one factor.
-;; SBCL folds their constant masks within a word. Every odd factor still has
-;; a function: the running sieve, not a precomputed prime list, selects it.
-(defmacro define-dense-resetters (maximum)
-  (declare (optimize (speed 1)))
-  `(progn
-     ,@(loop for p from 3 to maximum by 2
-             for name = (intern (format nil "DENSE-~D" p))
-             for start = (* (floor (floor (* p p) 2) (* 64 p)) p)
-             for updates =
-               (loop for w below p
-                     for masks = (loop for k below 64
-                                       for bit = (+ (floor p 2) (* k p))
-                                       when (= w (floor bit 64))
-                                         collect (ash 1 (mod bit 64)))
-                     when masks collect
-                       `(let ((word (aref bits (+ base ,w))))
-                          (declare (type (unsigned-byte 64) word))
-                          (setf word (logior word ,@masks))
-                          (setf (aref bits (+ base ,w)) word)))
-             collect
-               `(defun ,name (bits)
-                  (declare (type words bits))
-                  (let ((base ,start) (end (length bits)))
-                    (declare (type fixnum base end))
-                    (loop while (<= base (- end ,p)) do
-                      ,@updates
-                      (incf base ,p))
-                    ,@(loop for update in updates
-                            for w = (third (third (second (first (second update)))))
-                            collect `(when (< (+ base ,w) end) ,update))
-                    (setf (aref bits ,(floor (floor p 2) 64))
-                          (logand (aref bits ,(floor (floor p 2) 64))
-                                  ,(logxor #xffffffffffffffff (ash 1 (mod (floor p 2) 64)))))
-                  nil)))
-     (defun dense-reset (bits factor)
-       (declare (type words bits) (type fixnum factor))
-       (case factor
-         ,@(loop for p from 3 to maximum by 2
-                 collect `(,p (,(intern (format nil "DENSE-~D" p)) bits)))))))
-(define-dense-resetters 129)
-
-;; This local VOP emits one memory OR for a single composite flag. It does
-;; not replace or modify SBCL's general bit-vector or arithmetic operations.
+;; Local byte update for the bounded sparse tail.
 (defun or-byte! (sap offset mask)
   (declare (type sb-sys:system-area-pointer sap)
            (type (signed-byte 64) offset) (type (unsigned-byte 8) mask))
@@ -89,45 +46,144 @@
     (:generator 1
       (sb-assem:inst or :byte (sb-vm::ea 0 sap offset) mask))))
 
-;; Sparse factors are >129, so the first chunk is past the factor's own bit.
-;; Eight multiples repeat their bit positions; byte offsets remain dynamic.
-;; On 64-bit SBCL, factors <= ISQRT(MOST-POSITIVE-FIXNUM) fit 31 bits;
-;; byte offsets fit 31 bits and the full buffer plus a step fits 59 bits.
-(defmacro define-sparse-resetters ()
-  (declare (optimize (speed 1)))
+
+(eval-when (:compile-toplevel :load-toplevel :execute)
+  (sb-c:defknown sparse-kernel! (sb-sys:system-area-pointer (unsigned-byte 64) (unsigned-byte 64) (unsigned-byte 64) (integer 1 15))
+      (values) (sb-c:always-translatable) :overwrite-fndb-silently t)
+  (sb-c:define-vop (sparse-kernel!)
+    (:translate sparse-kernel!) (:policy :fast-safe)
+    ;; Keep inputs live until all temporary-register computations finish.
+    (:args (sap :scs (sb-vm::sap-reg) :to :save)
+           (blocks :scs (sb-vm::unsigned-reg) :to :save)
+           (q :scs (sb-vm::unsigned-reg) :to :save)
+           (step :scs (sb-vm::unsigned-reg) :to :save))
+    (:arg-types sb-vm::system-area-pointer sb-vm::unsigned-num sb-vm::unsigned-num sb-vm::unsigned-num (:constant (integer 1 15)))
+    (:info residue)
+    (:temporary (:sc sb-vm::sap-reg) ptr)
+    (:temporary (:sc sb-vm::unsigned-reg) remaining q3 q5 q7)
+    (:generator 1
+      (let ((again (sb-assem:gen-label)) (done (sb-assem:gen-label)))
+        (sb-vm::move ptr sap)
+        (sb-vm::move remaining blocks)
+        (sb-assem:inst test remaining remaining)
+        (sb-assem:inst jmp :z done)
+        (sb-assem:inst lea q3 (sb-vm::ea 0 q q 2))
+        (sb-assem:inst lea q5 (sb-vm::ea 0 q q 4))
+        (sb-assem:inst lea q7 (sb-vm::ea 0 q3 q 4))
+        (sb-assem:emit-label again)
+        (loop for k below 8 for index in (list nil q q q3 q q5 q3 q7)
+              for scale in '(1 1 2 1 4 1 2 1)
+              for carry = (floor (+ (floor residue 2) (* k (mod residue 8))) 8)
+              for mask = (ash 1 (mod (+ (floor residue 2) (* k residue)) 8))
+              do (sb-assem:inst or :byte (sb-vm::ea carry ptr index scale) mask))
+        (sb-assem:inst add ptr step)
+        (sb-assem:inst dec remaining)
+        (sb-assem:inst jmp :nz again)
+        (sb-assem:emit-label done)))))
+(defmacro define-kernel-resetters ()
   `(progn
-     ,@(loop for equivalent from 1 to 15 by 2
-             for name = (intern (format nil "SPARSE-~D" equivalent))
-             for offsets = (loop for k below 8 collect (intern (format nil "OFFSET~D" k)))
-             for masks = (loop for k below 8 collect
-                              (ash 1 (mod (+ (floor equivalent 2) (* k equivalent)) 8)))
-             for updates = (loop for offset in offsets for mask in masks collect
-                                 `(or-byte! sap (the (signed-byte 64) (+ base ,offset)) ,mask))
+     ,@(loop for r from 1 to 15 by 2 for name = (intern (format nil "SPARSE-~D" r))
              collect
              `(defun ,name (bits nbytes factor)
-                (declare (type words bits) (type fixnum nbytes) (type (integer 3 #.(isqrt most-positive-fixnum)) factor)
-                         (optimize (speed 3) (safety 0) (debug 1)))
+                (declare (type words bits) (type fixnum nbytes) (type (integer 3 2147483647) factor))
+                (let* ((first (ash factor -4)) (start (* first factor)) (q (ash factor -3))
+                       (blocks (floor (- nbytes start) factor))
+                       (tail (+ start first (* blocks factor))))
+                  (declare (type (unsigned-byte 59) first start q blocks tail))
+                  (sb-sys:with-pinned-objects (bits)
+                    (let ((sap (sb-sys:vector-sap bits)))
+                      (sparse-kernel! (sb-sys:sap+ sap (+ start first)) blocks q factor ,r)
+                      ,@(loop for k below 8
+                              for carry = (floor (+ (floor r 2) (* k (mod r 8))) 8)
+                              for mask = (ash 1 (mod (+ (floor r 2) (* k r)) 8))
+                              collect `(let ((index (+ tail (* ,k q) ,carry)))
+                                         (declare (type (unsigned-byte 59) index))
+                                         (when (< index nbytes) (or-byte! sap index ,mask)))))))
+                nil))))
+(define-kernel-resetters)
+
+(eval-when (:compile-toplevel :load-toplevel :execute)
+  (sb-c:defknown dense-kernel! (sb-sys:system-area-pointer (unsigned-byte 64) (integer 3 129))
+      (values) (sb-c:always-translatable) :overwrite-fndb-silently t)
+  (sb-c:define-vop (dense-kernel!)
+    (:translate dense-kernel!) (:policy :fast-safe)
+    (:args (sap :scs (sb-vm::sap-reg) :to :save)
+           (nwords :scs (sb-vm::unsigned-reg) :to :save))
+    (:arg-types sb-vm::system-area-pointer sb-vm::unsigned-num (:constant (integer 3 129)))
+    (:info factor)
+    (:temporary (:sc sb-vm::sap-reg) ptr)
+    (:temporary (:sc sb-vm::unsigned-reg) remaining mask0 mask1 mask2)
+    (:generator 1
+      (let* ((groups (make-array factor :initial-element nil))
+             (first (* factor (floor factor 128)))
+             (again (sb-assem:gen-label)) (tail (sb-assem:gen-label)))
+        ;; Generate the same individual multiples as the Rust/Lisp dense loop.
+        ;; Associative ORs within one word are folded during code generation.
+        (dotimes (k 64)
+          (let ((bit (+ (floor factor 2) (* k factor))))
+            (push (ash 1 (mod bit 64)) (aref groups (floor bit 64)))))
+        (let ((masks (map 'vector (lambda (bits) (reduce #'logior bits :initial-value 0)) groups)))
+          (sb-assem:inst lea ptr (sb-vm::ea (* 8 first) sap))
+          (sb-vm::move remaining nwords)
+          (unless (zerop first) (sb-assem:inst sub remaining first))
+          (when (= factor 3)
+            (loop for reg in (list mask0 mask1 mask2) for value across masks
+                  do (sb-assem:inst mov reg value)))
+          (flet ((emit-word (i)
+                   (let ((mask (aref masks i)))
+                     (unless (zerop mask)
+                       (cond ((= factor 3)
+                              (sb-assem:inst or :qword (sb-vm::ea (* i 8) ptr)
+                                             (nth i (list mask0 mask1 mask2))))
+                             ((typep mask '(signed-byte 32))
+                              (sb-assem:inst or :qword (sb-vm::ea (* i 8) ptr) mask))
+                             (t (sb-assem:inst mov mask0 mask)
+                                (sb-assem:inst or :qword (sb-vm::ea (* i 8) ptr) mask0)))))))
+            (sb-assem:inst cmp remaining factor)
+            (sb-assem:inst jmp :b tail)
+            (sb-assem:emit-label again)
+            (dotimes (i factor) (emit-word i))
+            (sb-assem:inst add ptr (* factor 8))
+            (sb-assem:inst sub remaining factor)
+            (sb-assem:inst cmp remaining factor)
+            (sb-assem:inst jmp :ae again)
+            (sb-assem:emit-label tail)
+            (dotimes (i factor)
+              (unless (zerop (aref masks i))
+                (let ((skip (sb-assem:gen-label)))
+                  (sb-assem:inst cmp remaining i)
+                  (sb-assem:inst jmp :be skip)
+                  (emit-word i)
+                  (sb-assem:emit-label skip)))))
+          (let* ((bit (floor factor 2))
+                 (clear (logxor #xffffffffffffffff (ash 1 (mod bit 64)))))
+            (sb-assem:inst mov mask0 clear)
+            (sb-assem:inst and :qword (sb-vm::ea (* 8 (floor bit 64)) sap) mask0)))))))
+(defmacro define-dense-kernels ()
+  `(progn
+     ,@(loop for p from 3 to 129 by 2 collect
+             `(defun ,(intern (format nil "DENSE-~D" p)) (bits)
+                (declare (type words bits))
                 (sb-sys:with-pinned-objects (bits)
-                  (let ((sap (sb-sys:vector-sap bits)))
-                    (declare (type sb-sys:system-area-pointer sap))
-                    (let ((base (* (floor (ash (* factor factor) -1) (ash factor 3)) factor))
-                          ,@(loop for offset in offsets for k below 8 collect
-                              `(,offset (ash (+ (ash factor -1) (* ,k factor)) -3))))
-                  (declare (type (unsigned-byte 59) base) (type (unsigned-byte 31) ,@offsets))
-                  (loop while (<= base (- nbytes factor)) do
-                    ,@updates
-                    (incf base factor))
-                  ,@(loop for offset in offsets for update in updates collect
-                          `(when (< (+ base ,offset) nbytes) ,update)))))
-                nil))
+                  (dense-kernel! (sb-sys:vector-sap bits) (length bits) ,p))
+                nil))))
+(define-dense-kernels)
+
+;; Dispatch is generated for all odd factors, never a precomputed prime list.
+(defmacro define-dispatchers ()
+  `(progn
+     (defun dense-reset (bits factor)
+       (declare (type words bits) (type fixnum factor))
+       (case factor ,@(loop for p from 3 to 129 by 2 collect
+         `(,p (,(intern (format nil "DENSE-~D" p)) bits)))))
      (defun sparse-reset (bits factor)
        (declare (type words bits) (type fixnum factor))
        (let ((nbytes (ash (length bits) 3)))
          (declare (type fixnum nbytes))
          (case (logand factor 15)
-           ,@(loop for equivalent from 1 to 15 by 2 collect
-                   `(,equivalent (,(intern (format nil "SPARSE-~D" equivalent)) bits nbytes factor))))))))
-(define-sparse-resetters)
+           ,@(loop for r from 1 to 15 by 2 collect
+             `(,r (,(intern (format nil "SPARSE-~D" r)) bits nbytes factor))))))))
+(define-dispatchers)
 
 (defun run-sieve (sieve)
   (let ((bits (sieve-bits sieve)) (limit (sieve-limit sieve)))

@@ -1,0 +1,26 @@
+{
+  "base_commit": "7f8f5e69bac8789bac1a39f14e0cd8ea0b2d0656",
+  "sbcl": "2.6.8",
+  "cpu": 0,
+  "dynamic_space_mib": 1024,
+  "limit": 1000000,
+  "seconds_per_sample": 5,
+  "exploration_samples_per_variant": 3,
+  "final_order": [
+    "baseline",
+    "selected",
+    "selected",
+    "baseline",
+    "baseline",
+    "selected"
+  ],
+  "confirmation_samples_per_candidate": 5,
+  "rust_executed": false,
+  "independent_developers_compared": false,
+  "baseline_sha256": "c51f1976f446a6e3826b47174385afb733384183a1724489583867c2ab0f9def",
+  "selected_deltas": [
+    "01-sparse-kernel.lisp",
+    "02-dense-kernel.lisp"
+  ],
+  "dense_threshold": 129
+}

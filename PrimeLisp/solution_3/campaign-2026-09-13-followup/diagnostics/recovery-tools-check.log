@@ -1,0 +1,477 @@
+
+; file: /workspace/scratch/7ce7d755ab89/primes-review/PrimeLisp/solution_3/campaign-2026-09-13-followup/variants/01-sparse-kernel.lisp
+; in: SB-C:DEFINE-VOP (SPARSE-KERNEL!)
+;     (FLOOR PRIME-CANDIDATE::RESIDUE 2)
+; 
+; note: unable to
+;   optimize
+; due to type uncertainty:
+;   The first argument is a REAL, not a SINGLE-FLOAT.
+; 
+; note: unable to
+;   optimize
+; due to type uncertainty:
+;   The first argument is a REAL, not a DOUBLE-FLOAT.
+; 
+; note: unable to
+;   optimize
+; due to type uncertainty:
+;   The first argument is a REAL, not a INTEGER.
+; 
+; note: unable to
+;   optimize
+; due to type uncertainty:
+;   The first argument is a REAL, not a RATIONAL.
+; 
+; note: unable to
+;   convert division by 2^k to shift
+; due to type uncertainty:
+;   The first argument is a REAL, not a INTEGER.
+; 
+; note: unable to
+;   optimize
+; due to type uncertainty:
+;   The first argument is a REAL, not a INTEGER.
+
+;     (MOD PRIME-CANDIDATE::RESIDUE 8)
+; 
+; note: unable to
+;   optimize
+; due to type uncertainty:
+;   The first argument is a REAL, not a SINGLE-FLOAT.
+; 
+; note: unable to
+;   optimize
+; due to type uncertainty:
+;   The first argument is a REAL, not a DOUBLE-FLOAT.
+; 
+; note: unable to
+;   optimize
+; due to type uncertainty:
+;   The first argument is a REAL, not a INTEGER.
+; 
+; note: unable to
+;   optimize
+; due to type uncertainty:
+;   The first argument is a REAL, not a RATIONAL.
+; 
+; note: unable to
+;   convert division by 2^k to shift
+; due to type uncertainty:
+;   The first argument is a REAL, not a INTEGER.
+; 
+; note: unable to
+;   optimize
+; due to type uncertainty:
+;   The first argument is a REAL, not a INTEGER.
+
+;     (+ (FLOOR PRIME-CANDIDATE::RESIDUE 2)
+;        (* PRIME-CANDIDATE::K (MOD PRIME-CANDIDATE::RESIDUE 8)))
+; 
+; note: unable to
+;   optimize
+; due to type uncertainty:
+;   The second argument is a (OR FLOAT (RATIONAL 0 (56))), not a RATIONAL.
+
+;     (FLOOR
+;      (+ (FLOOR PRIME-CANDIDATE::RESIDUE 2)
+;         (* PRIME-CANDIDATE::K (MOD PRIME-CANDIDATE::RESIDUE 8)))
+;      8)
+; 
+; note: unable to
+;   optimize
+; due to type uncertainty:
+;   The first argument is a REAL, not a SINGLE-FLOAT.
+; 
+; note: unable to
+;   optimize
+; due to type uncertainty:
+;   The first argument is a REAL, not a DOUBLE-FLOAT.
+; 
+; note: unable to
+;   optimize
+; due to type uncertainty:
+;   The first argument is a REAL, not a INTEGER.
+; 
+; note: unable to
+;   optimize
+; due to type uncertainty:
+;   The first argument is a REAL, not a RATIONAL.
+; 
+; note: unable to
+;   convert division by 2^k to shift
+; due to type uncertainty:
+;   The first argument is a REAL, not a INTEGER.
+; 
+; note: unable to
+;   optimize
+; due to type uncertainty:
+;   The first argument is a REAL, not a INTEGER.
+
+;     (FLOOR PRIME-CANDIDATE::RESIDUE 2)
+; 
+; note: unable to
+;   optimize
+; due to type uncertainty:
+;   The first argument is a REAL, not a SINGLE-FLOAT.
+; 
+; note: unable to
+;   optimize
+; due to type uncertainty:
+;   The first argument is a REAL, not a DOUBLE-FLOAT.
+; 
+; note: unable to
+;   optimize
+; due to type uncertainty:
+;   The first argument is a REAL, not a INTEGER.
+; 
+; note: unable to
+;   optimize
+; due to type uncertainty:
+;   The first argument is a REAL, not a RATIONAL.
+; 
+; note: unable to
+;   convert division by 2^k to shift
+; due to type uncertainty:
+;   The first argument is a REAL, not a INTEGER.
+; 
+; note: unable to
+;   optimize
+; due to type uncertainty:
+;   The first argument is a REAL, not a INTEGER.
+
+;     (+ (FLOOR PRIME-CANDIDATE::RESIDUE 2)
+;        (* PRIME-CANDIDATE::K PRIME-CANDIDATE::RESIDUE))
+; 
+; note: unable to
+;   optimize
+; due to type uncertainty:
+;   The second argument is a REAL, not a RATIONAL.
+
+;     (MOD
+;      (+ (FLOOR PRIME-CANDIDATE::RESIDUE 2)
+;         (* PRIME-CANDIDATE::K PRIME-CANDIDATE::RESIDUE))
+;      8)
+; 
+; note: unable to
+;   optimize
+; due to type uncertainty:
+;   The first argument is a REAL, not a SINGLE-FLOAT.
+; 
+; note: unable to
+;   optimize
+; due to type uncertainty:
+;   The first argument is a REAL, not a DOUBLE-FLOAT.
+; 
+; note: unable to
+;   optimize
+; due to type uncertainty:
+;   The first argument is a REAL, not a INTEGER.
+; 
+; note: unable to
+;   optimize
+; due to type uncertainty:
+;   The first argument is a REAL, not a RATIONAL.
+; 
+; note: unable to
+;   convert division by 2^k to shift
+; due to type uncertainty:
+;   The first argument is a REAL, not a INTEGER.
+; 
+; note: unable to
+;   optimize
+; due to type uncertainty:
+;   The first argument is a REAL, not a INTEGER.
+
+;     (* PRIME-CANDIDATE::K (MOD PRIME-CANDIDATE::RESIDUE 8))
+; 
+; note: forced to do GENERIC-* (cost 30)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The second argument is a (OR FLOAT (RATIONAL 0 (8))), not a FIXNUM.
+;       The result is a (VALUES (OR FLOAT (RATIONAL 0 (56))) &OPTIONAL), not a (VALUES
+;                                                                               FIXNUM
+;                                                                               &OPTIONAL).
+;       unable to do inline (unsigned-byte 64) arithmetic (cost 4) because:
+;       The second argument is a (OR FLOAT (RATIONAL 0 (8))), not a (UNSIGNED-BYTE
+;                                                                    64).
+;       The result is a (VALUES (OR FLOAT (RATIONAL 0 (56))) &OPTIONAL), not a (VALUES
+;                                                                               (UNSIGNED-BYTE
+;                                                                                64)
+;                                                                               &OPTIONAL).
+;       etc.
+
+;     (+ (FLOOR PRIME-CANDIDATE::RESIDUE 2)
+;        (* PRIME-CANDIDATE::K (MOD PRIME-CANDIDATE::RESIDUE 8)))
+; 
+; note: forced to do GENERIC-+ (cost 10)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a INTEGER, not a FIXNUM.
+;       The second argument is a (OR FLOAT (RATIONAL 0 (56))), not a FIXNUM.
+;       The result is a (VALUES REAL &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       unable to do inline (unsigned-byte 64) arithmetic (cost 4) because:
+;       The first argument is a INTEGER, not a (UNSIGNED-BYTE 64).
+;       The second argument is a (OR FLOAT (RATIONAL 0 (56))), not a (UNSIGNED-BYTE
+;                                                                     64).
+;       The result is a (VALUES REAL &OPTIONAL), not a (VALUES (UNSIGNED-BYTE 64)
+;                                                              &OPTIONAL).
+;       etc.
+
+;     (* PRIME-CANDIDATE::K PRIME-CANDIDATE::RESIDUE)
+; 
+; note: forced to do GENERIC-* (cost 30)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The second argument is a REAL, not a FIXNUM.
+;       The result is a (VALUES REAL &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       unable to do inline (unsigned-byte 64) arithmetic (cost 4) because:
+;       The second argument is a REAL, not a (UNSIGNED-BYTE 64).
+;       The result is a (VALUES REAL &OPTIONAL), not a (VALUES (UNSIGNED-BYTE 64)
+;                                                              &OPTIONAL).
+;       etc.
+
+;     (+ (FLOOR PRIME-CANDIDATE::RESIDUE 2)
+;        (* PRIME-CANDIDATE::K PRIME-CANDIDATE::RESIDUE))
+; 
+; note: forced to do GENERIC-+ (cost 10)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a INTEGER, not a FIXNUM.
+;       The second argument is a REAL, not a FIXNUM.
+;       The result is a (VALUES REAL &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       unable to do inline (unsigned-byte 64) arithmetic (cost 4) because:
+;       The first argument is a INTEGER, not a (UNSIGNED-BYTE 64).
+;       The second argument is a REAL, not a (UNSIGNED-BYTE 64).
+;       The result is a (VALUES REAL &OPTIONAL), not a (VALUES (UNSIGNED-BYTE 64)
+;                                                              &OPTIONAL).
+;       etc.
+
+; in: DEFMACRO DEFINE-KERNEL-RESETTERS
+;     (DEFMACRO PRIME-CANDIDATE::DEFINE-KERNEL-RESETTERS ()
+;       `(PROGN
+;         ,@(LOOP PRIME-CANDIDATE::FOR PRIME-CANDIDATE::R PRIME-CANDIDATE::FROM 1 PRIME-CANDIDATE::TO 15 PRIME-CANDIDATE::BY 2
+;                 PRIME-CANDIDATE::FOR PRIME-CANDIDATE::NAME = ...)))
+; --> EVAL-WHEN 
+; ==>
+;   (SB-C::%DEFMACRO 'PRIME-CANDIDATE::DEFINE-KERNEL-RESETTERS
+;                    (SB-INT:NAMED-LAMBDA (MACRO-FUNCTION
+;                                          PRIME-CANDIDATE::DEFINE-KERNEL-RESETTERS)
+;                        (#:EXPR #:ENV)
+;                      (DECLARE (SB-C::LAMBDA-LIST NIL))
+;                      (DECLARE (IGNORE #:ENV))
+;                      (SB-INT:NAMED-DS-BIND (:MACRO
+;                                             PRIME-CANDIDATE::DEFINE-KERNEL-RESETTERS
+;                                             . DEFMACRO)
+;                          NIL
+;                          (CDR #:EXPR)
+;                        (DECLARE (SB-C::CONSTANT-VALUE))
+;                        (BLOCK PRIME-CANDIDATE::DEFINE-KERNEL-RESETTERS
+;                          `(PROGN ,@#))))
+;                    (SB-C:SOURCE-LOCATION))
+; 
+; caught STYLE-WARNING:
+;   redefining PRIME-CANDIDATE::DEFINE-KERNEL-RESETTERS in DEFMACRO
+
+; in: DEFINE-KERNEL-RESETTERS
+;     (PRIME-CANDIDATE::DEFINE-KERNEL-RESETTERS)
+; --> DEFUN PROGN SB-IMPL::%DEFUN SB-IMPL::%DEFUN SB-INT:NAMED-LAMBDA FUNCTION 
+; --> BLOCK LET* + 
+; ==>
+;   1
+; 
+; note: forced to do */UNSIGNED=>INTEGER (cost 10)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The result is a (VALUES
+;                        (OR (INTEGER 0 0)
+;                            (INTEGER 3 1237940038708919520448217089))
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       unable to do inline (unsigned-byte 64) arithmetic (cost 4) because:
+;       The result is a (VALUES
+;                        (OR (INTEGER 0 0)
+;                            (INTEGER 3 1237940038708919520448217089))
+;                        &OPTIONAL), not a (VALUES (UNSIGNED-BYTE 64) &OPTIONAL).
+;       etc.
+; 
+; note: forced to do GENERIC-+ (cost 10)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The second argument is a (OR (INTEGER 0 0)
+;                                    (INTEGER 3 1237940038708919520448217089)), not a FIXNUM.
+;       unable to do inline (unsigned-byte 64) arithmetic (cost 4) because:
+;       The second argument is a (OR (INTEGER 0 0)
+;                                    (INTEGER 3 1237940038708919520448217089)), not a (UNSIGNED-BYTE
+;                                                                                      64).
+;       etc.
+; 
+; note: forced to do */UNSIGNED=>INTEGER (cost 10)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The result is a (VALUES
+;                        (OR (INTEGER 0 0)
+;                            (INTEGER 3 1237940038708919520448217089))
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       unable to do inline (unsigned-byte 64) arithmetic (cost 4) because:
+;       The result is a (VALUES
+;                        (OR (INTEGER 0 0)
+;                            (INTEGER 3 1237940038708919520448217089))
+;                        &OPTIONAL), not a (VALUES (UNSIGNED-BYTE 64) &OPTIONAL).
+;       etc.
+; 
+; note: forced to do GENERIC-+ (cost 10)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The second argument is a (OR (INTEGER 0 0)
+;                                    (INTEGER 3 1237940038708919520448217089)), not a FIXNUM.
+;       unable to do inline (unsigned-byte 64) arithmetic (cost 4) because:
+;       The second argument is a (OR (INTEGER 0 0)
+;                                    (INTEGER 3 1237940038708919520448217089)), not a (UNSIGNED-BYTE
+;                                                                                      64).
+;       etc.
+; 
+; note: forced to do */UNSIGNED=>INTEGER (cost 10)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The result is a (VALUES
+;                        (OR (INTEGER 0 0)
+;                            (INTEGER 3 1237940038708919520448217089))
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       unable to do inline (unsigned-byte 64) arithmetic (cost 4) because:
+;       The result is a (VALUES
+;                        (OR (INTEGER 0 0)
+;                            (INTEGER 3 1237940038708919520448217089))
+;                        &OPTIONAL), not a (VALUES (UNSIGNED-BYTE 64) &OPTIONAL).
+;       etc.
+; 
+; note: forced to do GENERIC-+ (cost 10)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The second argument is a (OR (INTEGER 0 0)
+;                                    (INTEGER 3 1237940038708919520448217089)), not a FIXNUM.
+;       unable to do inline (unsigned-byte 64) arithmetic (cost 4) because:
+;       The second argument is a (OR (INTEGER 0 0)
+;                                    (INTEGER 3 1237940038708919520448217089)), not a (UNSIGNED-BYTE
+;                                                                                      64).
+;       etc.
+; 
+; note: forced to do */UNSIGNED=>INTEGER (cost 10)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The result is a (VALUES
+;                        (OR (INTEGER 0 0)
+;                            (INTEGER 3 1237940038708919520448217089))
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       unable to do inline (unsigned-byte 64) arithmetic (cost 4) because:
+;       The result is a (VALUES
+;                        (OR (INTEGER 0 0)
+;                            (INTEGER 3 1237940038708919520448217089))
+;                        &OPTIONAL), not a (VALUES (UNSIGNED-BYTE 64) &OPTIONAL).
+;       etc.
+; 
+; note: forced to do GENERIC-+ (cost 10)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The second argument is a (OR (INTEGER 0 0)
+;                                    (INTEGER 3 1237940038708919520448217089)), not a FIXNUM.
+;       unable to do inline (unsigned-byte 64) arithmetic (cost 4) because:
+;       The second argument is a (OR (INTEGER 0 0)
+;                                    (INTEGER 3 1237940038708919520448217089)), not a (UNSIGNED-BYTE
+;                                                                                      64).
+;       etc.
+; 
+; note: forced to do */UNSIGNED=>INTEGER (cost 10)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The result is a (VALUES
+;                        (OR (INTEGER 0 0)
+;                            (INTEGER 3 1237940038708919520448217089))
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       unable to do inline (unsigned-byte 64) arithmetic (cost 4) because:
+;       The result is a (VALUES
+;                        (OR (INTEGER 0 0)
+;                            (INTEGER 3 1237940038708919520448217089))
+;                        &OPTIONAL), not a (VALUES (UNSIGNED-BYTE 64) &OPTIONAL).
+;       etc.
+; 
+; note: forced to do GENERIC-+ (cost 10)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The second argument is a (OR (INTEGER 0 0)
+;                                    (INTEGER 3 1237940038708919520448217089)), not a FIXNUM.
+;       unable to do inline (unsigned-byte 64) arithmetic (cost 4) because:
+;       The second argument is a (OR (INTEGER 0 0)
+;                                    (INTEGER 3 1237940038708919520448217089)), not a (UNSIGNED-BYTE
+;                                                                                      64).
+;       etc.
+; 
+; note: forced to do */UNSIGNED=>INTEGER (cost 10)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The result is a (VALUES
+;                        (OR (INTEGER 0 0)
+;                            (INTEGER 3 1237940038708919520448217089))
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       unable to do inline (unsigned-byte 64) arithmetic (cost 4) because:
+;       The result is a (VALUES
+;                        (OR (INTEGER 0 0)
+;                            (INTEGER 3 1237940038708919520448217089))
+;                        &OPTIONAL), not a (VALUES (UNSIGNED-BYTE 64) &OPTIONAL).
+;       etc.
+; 
+; note: forced to do GENERIC-+ (cost 10)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The second argument is a (OR (INTEGER 0 0)
+;                                    (INTEGER 3 1237940038708919520448217089)), not a FIXNUM.
+;       unable to do inline (unsigned-byte 64) arithmetic (cost 4) because:
+;       The second argument is a (OR (INTEGER 0 0)
+;                                    (INTEGER 3 1237940038708919520448217089)), not a (UNSIGNED-BYTE
+;                                                                                      64).
+;       etc.
+; 
+; note: forced to do */UNSIGNED=>INTEGER (cost 10)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The result is a (VALUES
+;                        (OR (INTEGER 0 0)
+;                            (INTEGER 3 1237940038708919520448217089))
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       unable to do inline (unsigned-byte 64) arithmetic (cost 4) because:
+;       The result is a (VALUES
+;                        (OR (INTEGER 0 0)
+;                            (INTEGER 3 1237940038708919520448217089))
+;                        &OPTIONAL), not a (VALUES (UNSIGNED-BYTE 64) &OPTIONAL).
+;       etc.
+; 
+; note: forced to do GENERIC-+ (cost 10)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The second argument is a (OR (INTEGER 0 0)
+;                                    (INTEGER 3 1237940038708919520448217089)), not a FIXNUM.
+;       unable to do inline (unsigned-byte 64) arithmetic (cost 4) because:
+;       The second argument is a (OR (INTEGER 0 0)
+;                                    (INTEGER 3 1237940038708919520448217089)), not a (UNSIGNED-BYTE
+;                                                                                      64).
+;       etc.
+; 
+; note: forced to do */UNSIGNED=>INTEGER (cost 10)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The result is a (VALUES
+;                        (OR (INTEGER 0 0)
+;                            (INTEGER 3 1237940038708919520448217089))
+;                        &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       unable to do inline (unsigned-byte 64) arithmetic (cost 4) because:
+;       The result is a (VALUES
+;                        (OR (INTEGER 0 0)
+;                            (INTEGER 3 1237940038708919520448217089))
+;                        &OPTIONAL), not a (VALUES (UNSIGNED-BYTE 64) &OPTIONAL).
+;       etc.
+; 
+; note: forced to do GENERIC-+ (cost 10)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The second argument is a (OR (INTEGER 0 0)
+;                                    (INTEGER 3 1237940038708919520448217089)), not a FIXNUM.
+;       unable to do inline (unsigned-byte 64) arithmetic (cost 4) because:
+;       The second argument is a (OR (INTEGER 0 0)
+;                                    (INTEGER 3 1237940038708919520448217089)), not a (UNSIGNED-BYTE
+;                                                                                      64).
+;       etc.
+; 
+; compilation unit finished
+;   caught 1 STYLE-WARNING condition
+;   printed 52 notes
+WARNING: redefining PRIME-CANDIDATE::SPARSE-1 in DEFUN
+WARNING: redefining PRIME-CANDIDATE::SPARSE-3 in DEFUN
+WARNING: redefining PRIME-CANDIDATE::SPARSE-5 in DEFUN
+WARNING: redefining PRIME-CANDIDATE::SPARSE-7 in DEFUN
+WARNING: redefining PRIME-CANDIDATE::SPARSE-9 in DEFUN
+WARNING: redefining PRIME-CANDIDATE::SPARSE-11 in DEFUN
+WARNING: redefining PRIME-CANDIDATE::SPARSE-13 in DEFUN
+WARNING: redefining PRIME-CANDIDATE::SPARSE-15 in DEFUN
+Candidate validated (including 78,498 primes through 1,000,000).
+APPLIED campaign-2026-09-13-followup/variants/01-sparse-kernel.lisp
+Candidate validated (including 78,498 primes through 1,000,000).
+RESTORED 1 deltas

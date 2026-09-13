@@ -1,0 +1,77 @@
+
+Number of samples:   221
+Sample interval:     0.01 seconds
+Total sampling time: 2.21 seconds
+Graph cycles:        0
+Sampled threads:
+   #<THREAD tid=8 "finalizer" RUNNING {120003A463}> (128/1048576 bytes, 1 hash buckets)
+   #<THREAD tid=5 "main thread" RUNNING {1200038003}> (25232/1048576 bytes, 150 hash buckets)
+
+           Self        Total        Cumul
+  Nr  Count     %  Count     %  Count     %    Calls  Function
+------------------------------------------------------------------------
+   1     12   5.4     12   5.4     12   5.4        -  PRIME-CANDIDATE::SPARSE-7
+   2     12   5.4     12   5.4     24  10.9        -  PRIME-CANDIDATE::SPARSE-5
+   3     11   5.0     11   5.0     35  15.8        -  PRIME-CANDIDATE::SPARSE-3
+   4     11   5.0     11   5.0     46  20.8        -  PRIME-CANDIDATE::SPARSE-1
+   5     11   5.0     11   5.0     57  25.8        -  PRIME-CANDIDATE::SPARSE-15
+   6     10   4.5     10   4.5     67  30.3        -  PRIME-CANDIDATE::SPARSE-9
+   7      9   4.1      9   4.1     76  34.4        -  PRIME-CANDIDATE::SPARSE-13
+   8      8   3.6      8   3.6     84  38.0        -  PRIME-CANDIDATE::DENSE-29
+   9      8   3.6      8   3.6     92  41.6        -  PRIME-CANDIDATE::DENSE-41
+  10      8   3.6      8   3.6    100  45.2        -  PRIME-CANDIDATE::DENSE-43
+  11      7   3.2      7   3.2    107  48.4        -  PRIME-CANDIDATE::DENSE-31
+  12      6   2.7      6   2.7    113  51.1        -  PRIME-CANDIDATE::DENSE-13
+  13      5   2.3      5   2.3    118  53.4        -  PRIME-CANDIDATE::DENSE-17
+  14      5   2.3      5   2.3    123  55.7        -  PRIME-CANDIDATE::DENSE-19
+  15      5   2.3      5   2.3    128  57.9        -  PRIME-CANDIDATE::DENSE-5
+  16      5   2.3      5   2.3    133  60.2        -  PRIME-CANDIDATE::DENSE-11
+  17      4   1.8    182  82.4    137  62.0        -  PRIME-CANDIDATE:RUN-SIEVE
+  18      4   1.8      4   1.8    141  63.8        -  PRIME-CANDIDATE::DENSE-67
+  19      4   1.8      4   1.8    145  65.6        -  PRIME-CANDIDATE::DENSE-7
+  20      4   1.8      4   1.8    149  67.4        -  PRIME-CANDIDATE::DENSE-113
+  21      4   1.8      4   1.8    153  69.2        -  PRIME-CANDIDATE::DENSE-97
+  22      4   1.8      4   1.8    157  71.0        -  PRIME-CANDIDATE::SPARSE-11
+  23      3   1.4      3   1.4    160  72.4        -  PRIME-CANDIDATE::DENSE-79
+  24      3   1.4      3   1.4    163  73.8        -  PRIME-CANDIDATE::DENSE-59
+  25      3   1.4      3   1.4    166  75.1        -  PRIME-CANDIDATE::DENSE-61
+  26      2   0.9      2   0.9    168  76.0        -  PRIME-CANDIDATE::DENSE-73
+  27      2   0.9      2   0.9    170  76.9        -  PRIME-CANDIDATE::DENSE-37
+  28      2   0.9      2   0.9    172  77.8        -  PRIME-CANDIDATE::DENSE-89
+  29      2   0.9      2   0.9    174  78.7        -  PRIME-CANDIDATE::DENSE-23
+  30      2   0.9      2   0.9    176  79.6        -  PRIME-CANDIDATE::DENSE-71
+  31      2   0.9      2   0.9    178  80.5        -  PRIME-CANDIDATE::DENSE-3
+  32      2   0.9      2   0.9    180  81.4        -  PRIME-CANDIDATE::DENSE-101
+  33      1   0.5      1   0.5    181  81.9        -  PRIME-CANDIDATE::DENSE-109
+  34      1   0.5      1   0.5    182  82.4        -  PRIME-CANDIDATE::DENSE-83
+  35      1   0.5      1   0.5    183  82.8        -  PRIME-CANDIDATE::DENSE-107
+  36      0   0.0    221 100.0    183  82.8        -  foreign function call_into_lisp_
+  37      0   0.0    216  97.7    183  82.8        -  top level form
+  38      0   0.0    216  97.7    183  82.8        -  (FLET "G" :IN SB-C::%COMPILE-IN-LEXENV)
+  39      0   0.0    216  97.7    183  82.8        -  SB-C::%COMPILE-IN-LEXENV
+  40      0   0.0    216  97.7    183  82.8        -  SB-C:EVAL-WITH-COMPILE-IN-LEXENV
+  41      0   0.0    216  97.7    183  82.8        -  SB-IMPL::%SIMPLE-EVAL
+  42      0   0.0    216  97.7    183  82.8        -  SB-INT:SIMPLE-EVAL-IN-LEXENV
+  43      0   0.0    216  97.7    183  82.8        -  EVAL
+  44      0   0.0    216  97.7    183  82.8        -  INTERACTIVE-EVAL
+  45      0   0.0    216  97.7    183  82.8        -  SB-IMPL::REPL-FUN
+  46      0   0.0    216  97.7    183  82.8        -  (LAMBDA NIL :IN SB-IMPL::TOPLEVEL-REPL)
+  47      0   0.0    216  97.7    183  82.8        -  SB-IMPL::%WITH-REBOUND-IO-SYNTAX
+  48      0   0.0    216  97.7    183  82.8        -  SB-IMPL::TOPLEVEL-REPL
+  49      0   0.0    216  97.7    183  82.8        -  SB-IMPL::TOPLEVEL-INIT
+  50      0   0.0    216  97.7    183  82.8        -  (FLET SB-UNIX::BODY :IN SB-IMPL::START-LISP)
+  51      0   0.0    216  97.7    183  82.8        -  (FLET "WITHOUT-INTERRUPTS-BODY-3" :IN SB-IMPL::START-LISP)
+  52      0   0.0    216  97.7    183  82.8        -  SB-IMPL::%START-LISP
+  53      0   0.0     33  14.9    183  82.8        -  foreign function lisp_alloc
+  54      0   0.0     33  14.9    183  82.8        -  ALLOC-TRAMP
+  55      0   0.0     33  14.9    183  82.8        -  PRIME-CANDIDATE:MAKE-SIEVE
+  56      0   0.0      5   2.3    183  82.8        -  foreign function pthread_cond_wait
+  57      0   0.0      5   2.3    183  82.8        -  foreign function finalizer_thread_wait
+  58      0   0.0      5   2.3    183  82.8        -  (LAMBDA NIL :IN SB-IMPL::FINALIZER-THREAD-START)
+  59      0   0.0      5   2.3    183  82.8        -  (FLET SB-UNIX::BODY :IN SB-THREAD::RUN)
+  60      0   0.0      5   2.3    183  82.8        -  (FLET "WITHOUT-INTERRUPTS-BODY-" :IN SB-THREAD::RUN)
+  61      0   0.0      5   2.3    183  82.8        -  SB-THREAD::RUN
+  62      0   0.0      5   2.3    183  82.8        -  foreign function funcall1
+  63      0   0.0      5   2.3    183  82.8        -  foreign function new_thread_trampoline
+------------------------------------------------------------------------
+         38  17.2                                     elsewhere
