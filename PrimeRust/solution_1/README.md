@@ -1,6 +1,7 @@
 # Rust solution by @mike-barber
 
 ![Algorithm](https://img.shields.io/badge/Algorithm-base-green)
+![Blocked algorithm](https://img.shields.io/badge/Algorithm-other-yellowgreen)
 ![Faithfulness](https://img.shields.io/badge/Faithful-yes-green)
 ![Parallelism](https://img.shields.io/badge/Parallel-no-green)
 ![Parallelism](https://img.shields.io/badge/Parallel-yes-green)
@@ -61,6 +62,30 @@ This was designed in a very fun collaboration with @GordonBGood. It has standard
 However, rather than generate all the code directly, I am able to use Rust's const generics to specialise the reset functions. This perhaps a little harder to understand in Rust, since you need to understand how the generics are used to compile down to constants: each new type created with a given generic value, e.g. N=2, results in specific code corresponding to that type. This allows the compiler to treat N as a constant in that context, and perform optimisations. Specifically, we are able to generate a pattern of *single bit* masks that repeat. The compiler is able to then generate `OR` mask instructions with immediate (literal) values, rather than needing to obtain the mask from a register or memory location. Have a look at Gordon's Chapel solution: he used a code-generator to render similar functions, and it's quite easy to see the algorithm there, as he used a code generator to write the dense reset functions. Rust is doing something similar, but in the background via generics.
 
 Now, in order to dispatch to one of these specific functions (remember `N` is a literal constant at compile time), we either need to write a big `match` statement, or we need to generate it. Doing it by hand is feasible -- there are only 32 dense resetters, and 8 sparse ones. But it's no fun doing it by hand. Although it's way more code, Rust's procedural macros are interesting, so I decided to take that approach: essentially, we tell the macro what the range of numbers is, and which functions to call, and it writes the `match` statement for us. I do some substitution of the identifier `N` to a literal value in the `TokenStream` processing. It's a nice way for Rust to write Rust at compile time. It's a gratuitously large hammer for a small nail, purely here to pique people's interest.
+
+## Cache blocking in `bit-unrolled-hybrid`
+
+The `--bits-unrolled` variant now traverses the sieve in 32 KiB blocks. Each
+block is completed before proceeding to the next, so most marking accesses
+reuse a smaller working set. Dense and sparse resetters retain their original
+patterns; their starting offsets are aligned to the factor's period, with a
+bounded overlap into the preceding block.
+
+Sparse addresses also use the Lisp kernel's decomposition into a runtime
+stride and constant carries for each residue modulo 16. The initial period
+uses `skip / 16`, replacing the equivalent division of the squared factor.
+
+This traversal transfers the cache-locality idea from
+[Common Lisp solution 3](../../PrimeLisp/solution_3). The first block contains
+the flags needed to discover all factors for this pass; it grows if necessary
+for unusually large limits. There is no cached prime list or state shared
+between passes. The allocation, initialization and release of each sieve
+remain part of the timed workload.
+
+This variant reports `algorithm=other,faithful=yes,bits=1` because it changes
+the traversal used by the `base` algorithm. Other variants keep their existing
+tags. See [benchmark results and reproduction](benchmarks/README.md) for the
+comparison with the unchanged Rust program and the Lisp submission.
 
 ## Extreme hybrid storage
 

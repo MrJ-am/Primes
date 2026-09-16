@@ -1,0 +1,242 @@
+{
+  "started_utc": "2026-09-16T08:15:51.002234+00:00",
+  "cpu": "AMD EPYC 9V74 80-Core Processor",
+  "logical_cpu": 0,
+  "platform": "Linux-6.18.44-x86_64-with-glibc2.39",
+  "limit": 1000000,
+  "seconds": 5,
+  "repeats": 5,
+  "rustc": "rustc 1.98.1 (48a229cea 2026-09-01)",
+  "sbcl": "SBCL 2.6.8",
+  "binary_sha256": {
+    "rust_original": "dfdf37315000162bd1b19b180e07fdbb570675bd501ccf40911656eb8fccce6e",
+    "rust_candidate": "ad9d3f3960bad0695cfef62e4c41339a27c046e1d8986ddd9fefb49dea8cb2db"
+  },
+  "lisp_sha256": {
+    "bench.lisp": "f45056ee9a1893d7042004582f958d9a7b8a3be685bb84b3fccb0c96748a99a5",
+    "bootstrap.lisp": "07080263385973769637e479ada3958c9f63e434c0fd07e5fb91b966a4323a5c",
+    "check.lisp": "4caf8ae08cd652d87a5c0b67d243ef2390d96836d27faba378b3e9db0f5da558",
+    "sieve.lisp": "33236a5378c8bba81fdb84677c0308ab818c48ece84fd88d32e8ce6b0a6bf0dd"
+  },
+  "commands": {
+    "rust_original": [
+      "/workspace/scratch/c1bf4e6f2af9/build-original/release/prime-sieve-rust",
+      "--bits-unrolled",
+      "--threads",
+      "1",
+      "--seconds",
+      "5",
+      "--limit",
+      "1000000"
+    ],
+    "rust_candidate": [
+      "/workspace/scratch/c1bf4e6f2af9/build-candidate/release/prime-sieve-rust",
+      "--bits-unrolled",
+      "--threads",
+      "1",
+      "--seconds",
+      "5",
+      "--limit",
+      "1000000"
+    ],
+    "lisp": [
+      "/workspace/scratch/c1bf4e6f2af9/primes-rust/PrimeLisp/solution_3/run.sh",
+      "batch",
+      "5",
+      "1"
+    ]
+  },
+  "samples": [
+    {
+      "round": 1,
+      "name": "rust_original",
+      "label": "mike-barber_bit-unrolled-hybrid",
+      "passes": 70674,
+      "elapsed": 5.0000019073,
+      "passes_per_second": 14134.79460814125,
+      "tags": "algorithm=base,faithful=yes,bits=1",
+      "stdout": "mike-barber_bit-unrolled-hybrid;70674;5.0000019073;1;algorithm=base,faithful=yes,bits=1\n",
+      "stderr": "\n-------------------------------------------------------\nComputing primes to 1000000 on 1 thread for 5 seconds.\n-------------------------------------------------------\n\nbit-unrolled-hybrid            Passes: 70674, Threads: 1, Time: 5.0000019073, Passes / sec: 14134.79, Limit: 1000000, Counts: 78498, Valid: Pass\n\n"
+    },
+    {
+      "round": 1,
+      "name": "rust_candidate",
+      "label": "mike-barber_bit-unrolled-hybrid",
+      "passes": 83298,
+      "elapsed": 5.0000553131,
+      "passes_per_second": 16659.415703214654,
+      "tags": "algorithm=other,faithful=yes,bits=1",
+      "stdout": "mike-barber_bit-unrolled-hybrid;83298;5.0000553131;1;algorithm=other,faithful=yes,bits=1\n",
+      "stderr": "\n-------------------------------------------------------\nComputing primes to 1000000 on 1 thread for 5 seconds.\n-------------------------------------------------------\n\nbit-unrolled-hybrid            Passes: 83298, Threads: 1, Time: 5.0000553131, Passes / sec: 16659.42, Limit: 1000000, Counts: 78498, Valid: Pass\n\n"
+    },
+    {
+      "round": 1,
+      "name": "lisp",
+      "label": "mrj-am-cl",
+      "passes": 76803,
+      "elapsed": 5.000134,
+      "passes_per_second": 15360.188346952302,
+      "tags": "algorithm=other,faithful=yes,bits=1",
+      "stdout": "mrj-am-cl;76803;5.000134000;1;algorithm=other,faithful=yes,bits=1\n",
+      "stderr": "Valid: Pass; primes: 78498; Lisp heap bytes: 0; GC time: 0 us\n"
+    },
+    {
+      "round": 2,
+      "name": "rust_original",
+      "label": "mike-barber_bit-unrolled-hybrid",
+      "passes": 71286,
+      "elapsed": 5.0000329018,
+      "passes_per_second": 14257.106183108757,
+      "tags": "algorithm=base,faithful=yes,bits=1",
+      "stdout": "mike-barber_bit-unrolled-hybrid;71286;5.0000329018;1;algorithm=base,faithful=yes,bits=1\n",
+      "stderr": "\n-------------------------------------------------------\nComputing primes to 1000000 on 1 thread for 5 seconds.\n-------------------------------------------------------\n\nbit-unrolled-hybrid            Passes: 71286, Threads: 1, Time: 5.0000329018, Passes / sec: 14257.11, Limit: 1000000, Counts: 78498, Valid: Pass\n\n"
+    },
+    {
+      "round": 2,
+      "name": "lisp",
+      "label": "mrj-am-cl",
+      "passes": 78312,
+      "elapsed": 5.000136,
+      "passes_per_second": 15661.973994307355,
+      "tags": "algorithm=other,faithful=yes,bits=1",
+      "stdout": "mrj-am-cl;78312;5.000136000;1;algorithm=other,faithful=yes,bits=1\n",
+      "stderr": "Valid: Pass; primes: 78498; Lisp heap bytes: 0; GC time: 0 us\n"
+    },
+    {
+      "round": 2,
+      "name": "rust_candidate",
+      "label": "mike-barber_bit-unrolled-hybrid",
+      "passes": 81308,
+      "elapsed": 5.000038147,
+      "passes_per_second": 16261.475934695505,
+      "tags": "algorithm=other,faithful=yes,bits=1",
+      "stdout": "mike-barber_bit-unrolled-hybrid;81308;5.0000381470;1;algorithm=other,faithful=yes,bits=1\n",
+      "stderr": "\n-------------------------------------------------------\nComputing primes to 1000000 on 1 thread for 5 seconds.\n-------------------------------------------------------\n\nbit-unrolled-hybrid            Passes: 81308, Threads: 1, Time: 5.0000381470, Passes / sec: 16261.48, Limit: 1000000, Counts: 78498, Valid: Pass\n\n"
+    },
+    {
+      "round": 3,
+      "name": "lisp",
+      "label": "mrj-am-cl",
+      "passes": 80135,
+      "elapsed": 5.000136,
+      "passes_per_second": 16026.564077457091,
+      "tags": "algorithm=other,faithful=yes,bits=1",
+      "stdout": "mrj-am-cl;80135;5.000136000;1;algorithm=other,faithful=yes,bits=1\n",
+      "stderr": "Valid: Pass; primes: 78498; Lisp heap bytes: 0; GC time: 0 us\n"
+    },
+    {
+      "round": 3,
+      "name": "rust_original",
+      "label": "mike-barber_bit-unrolled-hybrid",
+      "passes": 68102,
+      "elapsed": 5.0000071526,
+      "passes_per_second": 13620.380515773264,
+      "tags": "algorithm=base,faithful=yes,bits=1",
+      "stdout": "mike-barber_bit-unrolled-hybrid;68102;5.0000071526;1;algorithm=base,faithful=yes,bits=1\n",
+      "stderr": "\n-------------------------------------------------------\nComputing primes to 1000000 on 1 thread for 5 seconds.\n-------------------------------------------------------\n\nbit-unrolled-hybrid            Passes: 68102, Threads: 1, Time: 5.0000071526, Passes / sec: 13620.38, Limit: 1000000, Counts: 78498, Valid: Pass\n\n"
+    },
+    {
+      "round": 3,
+      "name": "rust_candidate",
+      "label": "mike-barber_bit-unrolled-hybrid",
+      "passes": 80525,
+      "elapsed": 5.0000171661,
+      "passes_per_second": 16104.944708181729,
+      "tags": "algorithm=other,faithful=yes,bits=1",
+      "stdout": "mike-barber_bit-unrolled-hybrid;80525;5.0000171661;1;algorithm=other,faithful=yes,bits=1\n",
+      "stderr": "\n-------------------------------------------------------\nComputing primes to 1000000 on 1 thread for 5 seconds.\n-------------------------------------------------------\n\nbit-unrolled-hybrid            Passes: 80525, Threads: 1, Time: 5.0000171661, Passes / sec: 16104.94, Limit: 1000000, Counts: 78498, Valid: Pass\n\n"
+    },
+    {
+      "round": 4,
+      "name": "lisp",
+      "label": "mrj-am-cl",
+      "passes": 77783,
+      "elapsed": 5.000135,
+      "passes_per_second": 15556.179983140455,
+      "tags": "algorithm=other,faithful=yes,bits=1",
+      "stdout": "mrj-am-cl;77783;5.000135000;1;algorithm=other,faithful=yes,bits=1\n",
+      "stderr": "Valid: Pass; primes: 78498; Lisp heap bytes: 0; GC time: 0 us\n"
+    },
+    {
+      "round": 4,
+      "name": "rust_candidate",
+      "label": "mike-barber_bit-unrolled-hybrid",
+      "passes": 82242,
+      "elapsed": 5.0000457764,
+      "passes_per_second": 16448.249411671124,
+      "tags": "algorithm=other,faithful=yes,bits=1",
+      "stdout": "mike-barber_bit-unrolled-hybrid;82242;5.0000457764;1;algorithm=other,faithful=yes,bits=1\n",
+      "stderr": "\n-------------------------------------------------------\nComputing primes to 1000000 on 1 thread for 5 seconds.\n-------------------------------------------------------\n\nbit-unrolled-hybrid            Passes: 82242, Threads: 1, Time: 5.0000457764, Passes / sec: 16448.25, Limit: 1000000, Counts: 78498, Valid: Pass\n\n"
+    },
+    {
+      "round": 4,
+      "name": "rust_original",
+      "label": "mike-barber_bit-unrolled-hybrid",
+      "passes": 69171,
+      "elapsed": 5.0000348091,
+      "passes_per_second": 13834.103689460253,
+      "tags": "algorithm=base,faithful=yes,bits=1",
+      "stdout": "mike-barber_bit-unrolled-hybrid;69171;5.0000348091;1;algorithm=base,faithful=yes,bits=1\n",
+      "stderr": "\n-------------------------------------------------------\nComputing primes to 1000000 on 1 thread for 5 seconds.\n-------------------------------------------------------\n\nbit-unrolled-hybrid            Passes: 69171, Threads: 1, Time: 5.0000348091, Passes / sec: 13834.10, Limit: 1000000, Counts: 78498, Valid: Pass\n\n"
+    },
+    {
+      "round": 5,
+      "name": "rust_candidate",
+      "label": "mike-barber_bit-unrolled-hybrid",
+      "passes": 78446,
+      "elapsed": 5.0001282692,
+      "passes_per_second": 15688.797522098575,
+      "tags": "algorithm=other,faithful=yes,bits=1",
+      "stdout": "mike-barber_bit-unrolled-hybrid;78446;5.0001282692;1;algorithm=other,faithful=yes,bits=1\n",
+      "stderr": "\n-------------------------------------------------------\nComputing primes to 1000000 on 1 thread for 5 seconds.\n-------------------------------------------------------\n\nbit-unrolled-hybrid            Passes: 78446, Threads: 1, Time: 5.0001282692, Passes / sec: 15688.80, Limit: 1000000, Counts: 78498, Valid: Pass\n\n"
+    },
+    {
+      "round": 5,
+      "name": "lisp",
+      "label": "mrj-am-cl",
+      "passes": 76756,
+      "elapsed": 5.000136,
+      "passes_per_second": 15350.782458717122,
+      "tags": "algorithm=other,faithful=yes,bits=1",
+      "stdout": "mrj-am-cl;76756;5.000136000;1;algorithm=other,faithful=yes,bits=1\n",
+      "stderr": "Valid: Pass; primes: 78498; Lisp heap bytes: 0; GC time: 0 us\n"
+    },
+    {
+      "round": 5,
+      "name": "rust_original",
+      "label": "mike-barber_bit-unrolled-hybrid",
+      "passes": 67990,
+      "elapsed": 5.0000219345,
+      "passes_per_second": 13597.94034719549,
+      "tags": "algorithm=base,faithful=yes,bits=1",
+      "stdout": "mike-barber_bit-unrolled-hybrid;67990;5.0000219345;1;algorithm=base,faithful=yes,bits=1\n",
+      "stderr": "\n-------------------------------------------------------\nComputing primes to 1000000 on 1 thread for 5 seconds.\n-------------------------------------------------------\n\nbit-unrolled-hybrid            Passes: 67990, Threads: 1, Time: 5.0000219345, Passes / sec: 13597.94, Limit: 1000000, Counts: 78498, Valid: Pass\n\n"
+    }
+  ],
+  "baseline_ref": "c8fa14d3e67835258ddd15230b8be6b9d77d4c48",
+  "candidate_source_commit": "048437508fae97feda3f681c4d9130345928c8cf",
+  "candidate_source_sha256": {
+    "main.rs": "1128bfeb7237aee9a7597939d165f2b7dee8dfc9df5ea713f50b582cadd7737d",
+    "unrolled.rs": "f5b0c4aeea5a1931e00697b37863d91fa72976d22813140e11694b6b6c090c3e",
+    "unrolled_extreme.rs": "107fedfe25aaf4b924c3c11a2227a574fe591be58441153872349024b6ef7887"
+  },
+  "cargo_build_config": "[build]\n\n# Note - AVX512 disabled on both x86 targets, as it causes a performance \n# issue on newer Skylake Xeons that support it.\n\n[target.x86_64-pc-windows-msvc]\nrustflags = [ \"-C\", \"target-cpu=native\", \"-C\", \"target-feature=-avx512f\" ]\n\n[target.x86_64-unknown-linux-gnu]\nrustflags = [ \"-C\", \"target-cpu=native\", \"-C\", \"target-feature=-avx512f\" ]\n\n[target.aarch64-unknown-linux-gnu]\nrustflags = [ \"-C\", \"target-cpu=native\" ]\n\n# Apple -- you'll need to add the appropriate ones here if I haven't done so.\n#          these are not tested, as I don't own a Mac.\n\n[target.x86_64-apple-darwin]\nrustflags = [ \"-C\", \"target-cpu=native\" ]\n\n[target.aarch64-apple-darwin]\nrustflags = [ \"-C\", \"target-cpu=native\" ]\n",
+  "summary": {
+    "rust_original": {
+      "median": 13834.103689460253,
+      "minimum": 13597.94034719549,
+      "maximum": 14257.106183108757
+    },
+    "rust_candidate": {
+      "median": 16261.475934695505,
+      "minimum": 15688.797522098575,
+      "maximum": 16659.415703214654
+    },
+    "lisp": {
+      "median": 15556.179983140455,
+      "minimum": 15350.782458717122,
+      "maximum": 16026.564077457091
+    }
+  },
+  "finished_utc": "2026-09-16T08:17:57.568786+00:00"
+}
