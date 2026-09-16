@@ -97,6 +97,8 @@ pub struct FlagStorageUnrolledHybrid {
 }
 
 impl FlagStorage for FlagStorageUnrolledHybrid {
+    const ALGORITHM: &'static str = "other";
+
     fn create_true(size: usize) -> Self {
         let num_words = size / 64 + (size % 64).min(1);
         Self {
@@ -118,15 +120,55 @@ impl FlagStorage for FlagStorageUnrolledHybrid {
     /// ```ignore
     /// // dense reset
     /// match skip {
-    ///     3 => ResetterDenseU64::<3>::reset_dense(self.words.as_mut()),
-    ///     5 => ResetterDenseU64::<5>::reset_dense(self.words.as_mut()),
+    ///     3 => ResetterDenseU64::<3>::reset_dense_from(&mut self.words[..end], begin),
+    ///     5 => ResetterDenseU64::<5>::reset_dense_from(&mut self.words[..end], begin),
     ///     //... etc
-    ///     129 => ResetterDenseU64::<129>::reset_dense(self.words.as_mut()),
+    ///     129 => ResetterDenseU64::<129>::reset_dense_from(&mut self.words[..end], begin),
     ///     _ => debug_assert!(false, "this case should not occur"),
     ///  },
     /// ```
     #[inline(always)]
     fn reset_flags(&mut self, skip: usize) {
+        self.reset_flags_from(skip, 0, self.words.len());
+    }
+
+    #[inline(always)]
+    fn get(&self, index: usize) -> bool {
+        if index >= self.length_bits {
+            return false;
+        }
+        let word = self.words.get(index / 64).unwrap();
+        *word & (1 << (index % 64)) == 0
+    }
+
+    fn run_sieve(&mut self, limit: usize) {
+        const WORDS_PER_BLOCK: usize = 4096;
+        let root = (limit as f64).sqrt() as usize;
+        // Include every potential factor flag in the first block even for
+        // very large sieves. Factors are rediscovered in this pass's storage;
+        // no prime list or completed sieve survives between passes.
+        let first_end = self
+            .words
+            .len()
+            .min(WORDS_PER_BLOCK.max(root / 128 + 1));
+        let mut begin = 0;
+        let mut end = first_end;
+        while begin < self.words.len() {
+            let q = (limit.min(end * 128) as f64).sqrt() as usize;
+            for factor in (3..=q).step_by(2) {
+                if self.get(factor / 2) {
+                    self.reset_flags_from(factor, begin, end);
+                }
+            }
+            begin = end;
+            end = self.words.len().min(end + WORDS_PER_BLOCK);
+        }
+    }
+}
+
+impl FlagStorageUnrolledHybrid {
+    #[inline(always)]
+    fn reset_flags_from(&mut self, skip: usize, begin: usize, end: usize) {
         // sparse resets for skip factors larger than those covered by dense resets
         if skip > 129 {
             let equivalent_skip = pattern_equivalent_skip(skip, 8);
@@ -135,7 +177,9 @@ impl FlagStorage for FlagStorageUnrolledHybrid {
                 3,
                 2,
                 17,
-                ResetterSparseU8::<N>::reset_sparse(self.words.as_mut(), skip),
+                ResetterSparseU8::<N>::reset_sparse_from(
+                    &mut self.words[..end], skip, begin * 8
+                ),
                 debug_assert!(
                     false,
                     "this case should not occur skip {} equivalent {}",
@@ -151,22 +195,13 @@ impl FlagStorage for FlagStorageUnrolledHybrid {
             3,
             2,
             129, // 64 unique sets
-            ResetterDenseU64::<N>::reset_dense(self.words.as_mut()),
+            ResetterDenseU64::<N>::reset_dense_from(&mut self.words[..end], begin),
             debug_assert!(
                 false,
                 "dense reset function should not be called for skip {}",
                 skip
             )
         );
-    }
-
-    #[inline(always)]
-    fn get(&self, index: usize) -> bool {
-        if index >= self.length_bits {
-            return false;
-        }
-        let word = self.words.get(index / 64).unwrap();
-        *word & (1 << (index % 64)) == 0
     }
 }
 
@@ -183,7 +218,7 @@ impl<const SKIP: usize> ResetterDenseU64<SKIP> {
     const RELATIVE_INDICES: [usize; 64] = index_pattern(SKIP);
 
     #[inline(never)]
-    pub fn reset_dense(words: &mut [u64]) {
+    fn reset_dense_from(words: &mut [u64], begin: usize) {
         // determine the offset of the first skip-size chunk we need
         // to touch, and proceed from there.
         let square_start = square_start(SKIP);
@@ -191,7 +226,8 @@ impl<const SKIP: usize> ResetterDenseU64<SKIP> {
             square_start < words.len() * 64,
             "square_start should be within the bounds of our array; check caller"
         );
-        let start_chunk_offset = square_start / 64 / SKIP * SKIP;
+        // Align to the mask period. The bounded overlap only marks composites.
+        let start_chunk_offset = (square_start / 64 / SKIP).max(begin / SKIP) * SKIP;
 
         let mut chunks = words[start_chunk_offset..].chunks_exact_mut(SKIP);
         (&mut chunks).for_each(|chunk| {
@@ -245,6 +281,11 @@ impl<const EQUIVALENT_SKIP: usize> ResetterSparseU8<EQUIVALENT_SKIP> {
 
     #[inline(always)]
     pub fn reset_sparse(words: &mut [u64], skip: usize) {
+        Self::reset_sparse_from(words, skip, 0);
+    }
+
+    #[inline(always)]
+    fn reset_sparse_from(words: &mut [u64], skip: usize, begin: usize) {
         // calculate relative indices for the words we need to reset
         let relative_indices = index_pattern::<8>(skip);
 
@@ -258,7 +299,7 @@ impl<const EQUIVALENT_SKIP: usize> ResetterSparseU8<EQUIVALENT_SKIP> {
             square_start < bytes.len() * 8,
             "square_start should be within the bounds of our array; check caller"
         );
-        let start_chunk_offset = square_start / 8 / skip * skip;
+        let start_chunk_offset = (square_start / 8 / skip).max(begin / skip) * skip;
         debug_assert!(
             start_chunk_offset > skip / 2 / 8,
             "sparse resets are for larger skip factors; this starts too early: {}",
@@ -296,7 +337,42 @@ impl<const EQUIVALENT_SKIP: usize> ResetterSparseU8<EQUIVALENT_SKIP> {
 #[cfg(test)]
 mod tests {
 
+    use super::FlagStorageUnrolledHybrid;
+    use crate::primes::FlagStorage;
     use crate::unrolled::patterns::*;
+
+    #[test]
+    fn blocked_sieve_matches_independent_flags() {
+        // An ordinary byte sieve is independent of packed masks, dispatch and
+        // overlapping blocks. Compare every flag, including prime upper limits.
+        let maximum = 2_000_003;
+        let mut expected = vec![true; maximum + 1];
+        expected[0] = false;
+        expected[1] = false;
+        for p in 2..=1414 {
+            if expected[p] {
+                for multiple in (p * p..=maximum).step_by(p) {
+                    expected[multiple] = false;
+                }
+            }
+        }
+        let mut limits: Vec<_> = (0..=260).collect();
+        for boundary in [
+            127 * 127, 131 * 131, 257 * 257, 719 * 719, 727 * 727, 997 * 997,
+            524_288, 1_000_000, 1_048_576,
+        ] {
+            limits.extend(boundary - 2..=boundary + 2);
+        }
+        limits.push(maximum);
+        for limit in limits {
+            let mut storage = FlagStorageUnrolledHybrid::create_true(limit / 2 + 1);
+            storage.run_sieve(limit);
+            for n in (3..=limit).step_by(2) {
+                assert_eq!(storage.get(n / 2), expected[n], "limit {}, n {}", limit, n);
+            }
+            assert!(!storage.get(limit / 2 + 1));
+        }
+    }
 
     #[test]
     fn modulo_pattern_set_u8_correct() {

@@ -69,6 +69,8 @@ pub mod primes {
     /// Trait defining the interface to different kinds of storage, e.g.
     /// bits within bytes, a vector of bytes, etc.
     pub trait FlagStorage {
+        const ALGORITHM: &'static str = "base";
+
         /// create new storage for given number of flags pre-initialised to all true
         fn create_true(size: usize) -> Self;
 
@@ -78,6 +80,26 @@ pub mod primes {
 
         /// get a specific flag
         fn get(&self, index: usize) -> bool;
+
+        /// Discover factors and mark their multiples. Storage implementations may
+        /// override the traversal to keep a bounded working set in cache.
+        #[inline(always)]
+        fn run_sieve(&mut self, sieve_size: usize) {
+            let mut factor = 3;
+            let q = (sieve_size as f32).sqrt() as usize;
+            loop {
+                factor = (factor / 2..sieve_size / 2)
+                    .find(|n| self.get(*n))
+                    .unwrap()
+                    * 2
+                    + 1;
+                if factor > q {
+                    break;
+                }
+                self.reset_flags(factor);
+                factor += 2;
+            }
+        }
     }
 
     /// Recommended start for resetting bits -- at the square of the factor
@@ -618,30 +640,7 @@ pub mod primes {
         // calculate the primes up to the specified limit
         #[inline(always)]
         pub fn run_sieve(&mut self) {
-            let mut factor = 3;
-            let q = (self.sieve_size as f32).sqrt() as usize;
-
-            loop {
-                // find next factor - next still-flagged number
-                factor = (factor / 2..self.sieve_size / 2)
-                    .find(|n| self.flags.get(*n))
-                    .unwrap()
-                    * 2
-                    + 1;
-
-                // check for termination _before_ resetting flags;
-                // note: need to check up to and including q, otherwise we
-                // fail to catch cases like sieve_size = 1000
-                if factor > q {
-                    break;
-                }
-
-                // reset flags starting at `start`, every `factor`'th flag
-                let skip = factor;
-                self.flags.reset_flags(skip);
-
-                factor += 2;
-            }
+            self.flags.run_sieve(self.sieve_size);
         }
     }
 
@@ -689,13 +688,15 @@ pub mod primes {
         duration: Duration,
         passes: usize,
         threads: usize,
+        algorithm: &str,
     ) {
         println!(
-            "mike-barber_{};{};{:.10};{};algorithm=base,faithful=yes,bits={}",
+            "mike-barber_{};{};{:.10};{};algorithm={},faithful=yes,bits={}",
             label,
             passes,
             duration.as_secs_f32(),
             threads,
+            algorithm,
             bits_per_prime
         );
     }
@@ -1023,7 +1024,9 @@ fn run_implementation_st<T: 'static + FlagStorage + Send>(
             &primes::PrimeValidator::default(),
         );
         // and report results to stdout for reporting
-        report_results_stdout(label, bits_per_prime, duration, local_passes, 1);
+        report_results_stdout(
+            label, bits_per_prime, duration, local_passes, 1, T::ALGORITHM,
+        );
         eprintln!();
     }
 }
@@ -1080,7 +1083,9 @@ fn run_implementation_mt<T: 'static + FlagStorage + Send>(
             &primes::PrimeValidator::default(),
         );
         // and report results to stdout for reporting
-        report_results_stdout(label, bits_per_prime, duration, total_passes, num_threads);
+        report_results_stdout(
+            label, bits_per_prime, duration, total_passes, num_threads, T::ALGORITHM,
+        );
         eprintln!();
     }
 }
