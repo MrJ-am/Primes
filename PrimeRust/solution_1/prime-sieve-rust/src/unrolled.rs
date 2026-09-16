@@ -278,6 +278,16 @@ impl<const SKIP: usize> ResetterDenseU64<SKIP> {
 pub struct ResetterSparseU8<const EQUIVALENT_SKIP: usize>();
 impl<const EQUIVALENT_SKIP: usize> ResetterSparseU8<EQUIVALENT_SKIP> {
     const SINGLE_BIT_MASK_SET: [u8; 8] = mask_pattern_set_u8(EQUIVALENT_SKIP);
+    const BYTE_CARRIES: [usize; 8] = {
+        let residue = EQUIVALENT_SKIP % 16;
+        let mut carries = [0; 8];
+        let mut i = 0;
+        while i < 8 {
+            carries[i] = (residue / 2 + i * (residue % 8)) / 8;
+            i += 1;
+        }
+        carries
+    };
 
     #[inline(always)]
     pub fn reset_sparse(words: &mut [u64], skip: usize) {
@@ -286,8 +296,12 @@ impl<const EQUIVALENT_SKIP: usize> ResetterSparseU8<EQUIVALENT_SKIP> {
 
     #[inline(always)]
     fn reset_sparse_from(words: &mut [u64], skip: usize, begin: usize) {
-        // calculate relative indices for the words we need to reset
-        let relative_indices = index_pattern::<8>(skip);
+        // Factor the runtime stride out of the address pattern, as in the
+        // Lisp sparse kernel. Only the small carries depend on skip modulo 16.
+        let mut relative_indices = [0; 8];
+        for (i, index) in relative_indices.iter_mut().enumerate() {
+            *index = skip / 16 + i * (skip / 8) + Self::BYTE_CARRIES[i];
+        }
 
         // cast our wide word vector to bytes
         let bytes: &mut [u8] = reinterpret_slice_mut_u64_u8(words);
@@ -299,7 +313,8 @@ impl<const EQUIVALENT_SKIP: usize> ResetterSparseU8<EQUIVALENT_SKIP> {
             square_start < bytes.len() * 8,
             "square_start should be within the bounds of our array; check caller"
         );
-        let start_chunk_offset = (square_start / 8 / skip).max(begin / skip) * skip;
+        // floor(floor(skip * skip / 16) / skip) = floor(skip / 16).
+        let start_chunk_offset = (skip / 16).max(begin / skip) * skip;
         debug_assert!(
             start_chunk_offset > skip / 2 / 8,
             "sparse resets are for larger skip factors; this starts too early: {}",
