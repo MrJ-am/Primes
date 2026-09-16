@@ -1,0 +1,629 @@
+{
+  "started": "2026-09-16T12:56:05.105247+00:00",
+  "cpu": "model name\t: AMD EPYC 9V74 80-Core Processor",
+  "logical_cpu": 0,
+  "platform": "Linux-6.18.44-x86_64-with-glibc2.39",
+  "finished": "2026-09-16T13:03:17.515764+00:00",
+  "category": "wheel",
+  "metadata": {
+    "baseline_ref": "58000dc01b4e572c490e0aaa59f4d6ba9955d73a",
+    "compiler_versions": {
+      "gcc": "gcc (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0",
+      "rustc": "rustc 1.98.1 (48a229cea 2026-09-01)",
+      "sbcl": "SBCL 2.6.8"
+    },
+    "source_sha256": {
+      "base": {
+        "PrimeC/solution_6/sieve.c": "1f71fafa5ce640f53fb31d153665d021ddefa83899b972f1e09795881da84bb2",
+        "PrimeLisp/solution_4/sieve.lisp": "ba5aafbf5da7402b27f056049f1134d7dc1e7b4dd8504f16a39456ca3de65cba"
+      },
+      "wheel": {
+        "PrimeC/solution_7/sieve.c": "179bdf6a16a3617656846bd0521799ff3de8d986ef38d396a4e8563e1883daec",
+        "PrimeLisp/solution_5/sieve.lisp": "c873a1a8a6174c0b661e6d1afbf6747e8542923610bf9d4d766f0d2d1ba92287",
+        "PrimeRust/solution_8/main.rs": "d4d613edefa5e295d7a2017a863ec4a4e8c36a4ccacda659e120e5ffbe2eed3c",
+        "PrimeRust/solution_8/unrolled.rs": "0608359ddf635337108d61ad27c2ac9d565b53de32c0d96255be89f07ea0675d"
+      },
+      "other": {
+        "PrimeC/solution_5/src/sieve/sieve_stripe.h": "426e241d719df6fac2470aebde0775037baa3bc6c244523c57f97f960d5d1d73",
+        "PrimeC/solution_5/src/sieve/sieve_sparse_periods.h": "a30fe5e08d430c1422718918cf7fded9ac07e57c459269ae7702ee9360b67367",
+        "PrimeLisp/solution_3/sieve.lisp": "33236a5378c8bba81fdb84677c0308ab818c48ece84fd88d32e8ce6b0a6bf0dd",
+        "PrimeRust/solution_9/main.rs": "d4d613edefa5e295d7a2017a863ec4a4e8c36a4ccacda659e120e5ffbe2eed3c",
+        "PrimeRust/solution_9/unrolled.rs": "d4cb9fcd6a4890f28b229d3ae76ea6f3f08de71d1e9f4fb3780367b7c56b9e91"
+      }
+    }
+  },
+  "entries": [
+    {
+      "name": "c-wheel-reference",
+      "category": "wheel",
+      "command": [
+        "/workspace/scratch/c1bf4e6f2af9/three-categories/baseline/c-wheel"
+      ],
+      "source_base": "58000dc01b4e572c490e0aaa59f4d6ba9955d73a",
+      "executable_sha256": "209f1d24c2ce32b755c45e71f6b81be597b1afa34c5301d69595a8ce38459736"
+    },
+    {
+      "name": "c-wheel-candidate",
+      "category": "wheel",
+      "command": [
+        "/workspace/scratch/c1bf4e6f2af9/primes-wheel/PrimeC/solution_7/sieve"
+      ],
+      "cwd": "/workspace/scratch/c1bf4e6f2af9/primes-wheel/PrimeC/solution_7",
+      "source_base": "58000dc01b4e572c490e0aaa59f4d6ba9955d73a",
+      "executable_sha256": "39dc2349c684b0df17007c21bdc39950aa1ccdef4103a054ce225e998e866d75"
+    },
+    {
+      "name": "lisp-wheel-reference",
+      "category": "wheel",
+      "command": [
+        "/workspace/scratch/c1bf4e6f2af9/runtime/sbcl/bin/sbcl",
+        "--script",
+        "PrimeSieveWheelOpt.lisp"
+      ],
+      "cwd": "/workspace/scratch/c1bf4e6f2af9/primes-wheel/PrimeLisp/solution_2",
+      "source_base": "58000dc01b4e572c490e0aaa59f4d6ba9955d73a",
+      "executable_sha256": "c118806fd8c00004c1cd8f7e066ccdbf75eedbb8ee3aea3318dd74f179f7e4ad"
+    },
+    {
+      "name": "lisp-wheel-candidate",
+      "category": "wheel",
+      "command": [
+        "/workspace/scratch/c1bf4e6f2af9/primes-wheel/PrimeLisp/solution_5/run.sh",
+        "batch",
+        "5"
+      ],
+      "source_base": "58000dc01b4e572c490e0aaa59f4d6ba9955d73a",
+      "executable_sha256": "7091598ff2f8c9e7e1b2405675ae72197d1a91485a15fbcf2c8133fab0ffe0b9"
+    },
+    {
+      "name": "rust-wheel-candidate",
+      "category": "wheel",
+      "command": [
+        "/workspace/scratch/c1bf4e6f2af9/primes-wheel/PrimeRust/solution_8/sieve"
+      ],
+      "source_base": "58000dc01b4e572c490e0aaa59f4d6ba9955d73a",
+      "executable_sha256": "614fef4d2a259c14f2919f4fceac0c362a2d65e4ac618ae318b685b6f111a22f"
+    }
+  ],
+  "samples": [
+    {
+      "round": 1,
+      "name": "c-wheel-reference",
+      "pps": 8982.304787569252,
+      "passes": 44912,
+      "seconds": 5.000053,
+      "tags": "algorithm=wheel,faithful=yes,bits=1",
+      "stdout": "danielspaangberg_5760of30030_owrb;44912;5.000053;1;algorithm=wheel,faithful=yes,bits=1\n",
+      "stderr": ""
+    },
+    {
+      "round": 1,
+      "name": "c-wheel-candidate",
+      "pps": 13342.377296610794,
+      "passes": 66712,
+      "seconds": 5.000008508,
+      "tags": "algorithm=wheel,faithful=yes,bits=1",
+      "stdout": "MrJ-am-c-wheel;66712;5.000008508;1;algorithm=wheel,faithful=yes,bits=1\n",
+      "stderr": "Valid: Pass; primes: 78498\n"
+    },
+    {
+      "round": 1,
+      "name": "lisp-wheel-reference",
+      "pps": 4431.470601058449,
+      "passes": 22158,
+      "seconds": 5.000146,
+      "tags": "algorithm=wheel,faithful=yes,bits=1",
+      "stdout": "mayerrobert-cl-wheel-opt;22158;5.000146;1;algorithm=wheel,faithful=yes,bits=1\n",
+      "stderr": "2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97, ...\nAlgorithm: wheel optimized  Passes: 22158, Time: 5.000146, Avg: 0.22565873 ms, Count: 78498  Valid: yes\n"
+    },
+    {
+      "round": 1,
+      "name": "lisp-wheel-candidate",
+      "pps": 19319.43973624765,
+      "passes": 96600,
+      "seconds": 5.000145,
+      "tags": "algorithm=wheel,faithful=yes,bits=1",
+      "stdout": "mrj-am-cl-wheel;96600;5.000145000;1;algorithm=wheel,faithful=yes,bits=1\n",
+      "stderr": "Valid: Pass; primes: 78498; Lisp heap bytes: 0; GC time: 0 us\n"
+    },
+    {
+      "round": 1,
+      "name": "rust-wheel-candidate",
+      "pps": 17762.343590349225,
+      "passes": 88812,
+      "seconds": 5.000015879,
+      "tags": "algorithm=wheel,faithful=yes,bits=1",
+      "stdout": "MrJ-am-rust-wheel;88812;5.000015879;1;algorithm=wheel,faithful=yes,bits=1\n",
+      "stderr": "Valid: Pass; primes: 78498\n"
+    },
+    {
+      "round": 2,
+      "name": "rust-wheel-candidate",
+      "pps": 18133.067610473376,
+      "passes": 90666,
+      "seconds": 5.000036505,
+      "tags": "algorithm=wheel,faithful=yes,bits=1",
+      "stdout": "MrJ-am-rust-wheel;90666;5.000036505;1;algorithm=wheel,faithful=yes,bits=1\n",
+      "stderr": "Valid: Pass; primes: 78498\n"
+    },
+    {
+      "round": 2,
+      "name": "lisp-wheel-candidate",
+      "pps": 19483.22719312052,
+      "passes": 97419,
+      "seconds": 5.000147,
+      "tags": "algorithm=wheel,faithful=yes,bits=1",
+      "stdout": "mrj-am-cl-wheel;97419;5.000147000;1;algorithm=wheel,faithful=yes,bits=1\n",
+      "stderr": "Valid: Pass; primes: 78498; Lisp heap bytes: 0; GC time: 0 us\n"
+    },
+    {
+      "round": 2,
+      "name": "lisp-wheel-reference",
+      "pps": 4321.274683034192,
+      "passes": 21607,
+      "seconds": 5.000145,
+      "tags": "algorithm=wheel,faithful=yes,bits=1",
+      "stdout": "mayerrobert-cl-wheel-opt;21607;5.000145;1;algorithm=wheel,faithful=yes,bits=1\n",
+      "stderr": "2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97, ...\nAlgorithm: wheel optimized  Passes: 21607, Time: 5.000145, Avg: 0.2314132 ms, Count: 78498  Valid: yes\n"
+    },
+    {
+      "round": 2,
+      "name": "c-wheel-candidate",
+      "pps": 13274.37584063597,
+      "passes": 66372,
+      "seconds": 5.0000091,
+      "tags": "algorithm=wheel,faithful=yes,bits=1",
+      "stdout": "MrJ-am-c-wheel;66372;5.000009100;1;algorithm=wheel,faithful=yes,bits=1\n",
+      "stderr": "Valid: Pass; primes: 78498\n"
+    },
+    {
+      "round": 2,
+      "name": "c-wheel-reference",
+      "pps": 9131.143386911,
+      "passes": 45656,
+      "seconds": 5.000031,
+      "tags": "algorithm=wheel,faithful=yes,bits=1",
+      "stdout": "danielspaangberg_5760of30030_owrb;45656;5.000031;1;algorithm=wheel,faithful=yes,bits=1\n",
+      "stderr": ""
+    },
+    {
+      "round": 3,
+      "name": "c-wheel-reference",
+      "pps": 9117.976293261638,
+      "passes": 45590,
+      "seconds": 5.000013,
+      "tags": "algorithm=wheel,faithful=yes,bits=1",
+      "stdout": "danielspaangberg_5760of30030_owrb;45590;5.000013;1;algorithm=wheel,faithful=yes,bits=1\n",
+      "stderr": ""
+    },
+    {
+      "round": 3,
+      "name": "c-wheel-candidate",
+      "pps": 12908.203854679146,
+      "passes": 64542,
+      "seconds": 5.000075977,
+      "tags": "algorithm=wheel,faithful=yes,bits=1",
+      "stdout": "MrJ-am-c-wheel;64542;5.000075977;1;algorithm=wheel,faithful=yes,bits=1\n",
+      "stderr": "Valid: Pass; primes: 78498\n"
+    },
+    {
+      "round": 3,
+      "name": "lisp-wheel-reference",
+      "pps": 4170.878210356258,
+      "passes": 20855,
+      "seconds": 5.000146,
+      "tags": "algorithm=wheel,faithful=yes,bits=1",
+      "stdout": "mayerrobert-cl-wheel-opt;20855;5.000146;1;algorithm=wheel,faithful=yes,bits=1\n",
+      "stderr": "2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97, ...\nAlgorithm: wheel optimized  Passes: 20855, Time: 5.000146, Avg: 0.23975766 ms, Count: 78498  Valid: yes\n"
+    },
+    {
+      "round": 3,
+      "name": "lisp-wheel-candidate",
+      "pps": 19193.839539885434,
+      "passes": 95972,
+      "seconds": 5.000146,
+      "tags": "algorithm=wheel,faithful=yes,bits=1",
+      "stdout": "mrj-am-cl-wheel;95972;5.000146000;1;algorithm=wheel,faithful=yes,bits=1\n",
+      "stderr": "Valid: Pass; primes: 78498; Lisp heap bytes: 0; GC time: 0 us\n"
+    },
+    {
+      "round": 3,
+      "name": "rust-wheel-candidate",
+      "pps": 17526.38047561215,
+      "passes": 87632,
+      "seconds": 5.00000557,
+      "tags": "algorithm=wheel,faithful=yes,bits=1",
+      "stdout": "MrJ-am-rust-wheel;87632;5.000005570;1;algorithm=wheel,faithful=yes,bits=1\n",
+      "stderr": "Valid: Pass; primes: 78498\n"
+    },
+    {
+      "round": 4,
+      "name": "rust-wheel-candidate",
+      "pps": 17839.436958249862,
+      "passes": 89198,
+      "seconds": 5.000045697,
+      "tags": "algorithm=wheel,faithful=yes,bits=1",
+      "stdout": "MrJ-am-rust-wheel;89198;5.000045697;1;algorithm=wheel,faithful=yes,bits=1\n",
+      "stderr": "Valid: Pass; primes: 78498\n"
+    },
+    {
+      "round": 4,
+      "name": "lisp-wheel-candidate",
+      "pps": 19917.62637236048,
+      "passes": 99591,
+      "seconds": 5.000144,
+      "tags": "algorithm=wheel,faithful=yes,bits=1",
+      "stdout": "mrj-am-cl-wheel;99591;5.000144000;1;algorithm=wheel,faithful=yes,bits=1\n",
+      "stderr": "Valid: Pass; primes: 78498; Lisp heap bytes: 0; GC time: 0 us\n"
+    },
+    {
+      "round": 4,
+      "name": "lisp-wheel-reference",
+      "pps": 3940.2857317137805,
+      "passes": 19702,
+      "seconds": 5.000145,
+      "tags": "algorithm=wheel,faithful=yes,bits=1",
+      "stdout": "mayerrobert-cl-wheel-opt;19702;5.000145;1;algorithm=wheel,faithful=yes,bits=1\n",
+      "stderr": "2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97, ...\nAlgorithm: wheel optimized  Passes: 19702, Time: 5.000145, Avg: 0.2537887 ms, Count: 78498  Valid: yes\n"
+    },
+    {
+      "round": 4,
+      "name": "c-wheel-candidate",
+      "pps": 13596.749047542618,
+      "passes": 67984,
+      "seconds": 5.000018737,
+      "tags": "algorithm=wheel,faithful=yes,bits=1",
+      "stdout": "MrJ-am-c-wheel;67984;5.000018737;1;algorithm=wheel,faithful=yes,bits=1\n",
+      "stderr": "Valid: Pass; primes: 78498\n"
+    },
+    {
+      "round": 4,
+      "name": "c-wheel-reference",
+      "pps": 8759.652837832324,
+      "passes": 43799,
+      "seconds": 5.000084,
+      "tags": "algorithm=wheel,faithful=yes,bits=1",
+      "stdout": "danielspaangberg_5760of30030_owrb;43799;5.000084;1;algorithm=wheel,faithful=yes,bits=1\n",
+      "stderr": ""
+    }
+  ],
+  "summary": {
+    "c-wheel-reference": {
+      "median": 9050.140540415445,
+      "min": 8759.652837832324,
+      "max": 9131.143386911
+    },
+    "c-wheel-candidate": {
+      "median": 13308.376568623382,
+      "min": 12908.203854679146,
+      "max": 13596.749047542618
+    },
+    "lisp-wheel-reference": {
+      "median": 4246.076446695225,
+      "min": 3940.2857317137805,
+      "max": 4431.470601058449
+    },
+    "lisp-wheel-candidate": {
+      "median": 19401.333464684085,
+      "min": 19193.839539885434,
+      "max": 19917.62637236048
+    },
+    "rust-wheel-candidate": {
+      "median": 17800.89027429954,
+      "min": 17526.38047561215,
+      "max": 18133.067610473376
+    }
+  },
+  "additional_control": {
+    "entries": [
+      {
+        "name": "lisp-wheel-bitvector-reference",
+        "category": "wheel",
+        "cwd": "/workspace/scratch/c1bf4e6f2af9/primes-wheel/PrimeLisp/solution_2",
+        "command": [
+          "/workspace/scratch/c1bf4e6f2af9/runtime/sbcl/bin/sbcl",
+          "--script",
+          "PrimeSieveWheelBitvector.lisp"
+        ],
+        "executable_sha256": "c118806fd8c00004c1cd8f7e066ccdbf75eedbb8ee3aea3318dd74f179f7e4ad"
+      }
+    ],
+    "samples": [
+      {
+        "round": 1,
+        "name": "lisp-wheel-bitvector-reference",
+        "pps": 4388.471856621787,
+        "passes": 21943,
+        "seconds": 5.000146,
+        "tags": "algorithm=wheel,faithful=yes,bits=1",
+        "stdout": "mayerrobert-cl-wheel-bitvector;21943;5.000146;1;algorithm=wheel,faithful=yes,bits=1\n",
+        "stderr": "2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97, ...\nAlgorithm: wheel bitvector  Passes: 21943, Time: 5.000146, Avg: 0.22786975 ms, Count: 78498  Valid: yes\n"
+      },
+      {
+        "round": 2,
+        "name": "lisp-wheel-bitvector-reference",
+        "pps": 4183.1029520115135,
+        "passes": 20916,
+        "seconds": 5.000116,
+        "tags": "algorithm=wheel,faithful=yes,bits=1",
+        "stdout": "mayerrobert-cl-wheel-bitvector;20916;5.000116;1;algorithm=wheel,faithful=yes,bits=1\n",
+        "stderr": "2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97, ...\nAlgorithm: wheel bitvector  Passes: 20916, Time: 5.000116, Avg: 0.23905699 ms, Count: 78498  Valid: yes\n"
+      },
+      {
+        "round": 3,
+        "name": "lisp-wheel-bitvector-reference",
+        "pps": 4116.295446095669,
+        "passes": 20582,
+        "seconds": 5.000127,
+        "tags": "algorithm=wheel,faithful=yes,bits=1",
+        "stdout": "mayerrobert-cl-wheel-bitvector;20582;5.000127;1;algorithm=wheel,faithful=yes,bits=1\n",
+        "stderr": "2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97, ...\nAlgorithm: wheel bitvector  Passes: 20582, Time: 5.000127, Avg: 0.24293688 ms, Count: 78498  Valid: yes\n"
+      }
+    ],
+    "summary": {
+      "lisp-wheel-bitvector-reference": {
+        "median": 4183.1029520115135,
+        "min": 4116.295446095669,
+        "max": 4388.471856621787
+      }
+    }
+  },
+  "combined_campaign_order": [
+    {
+      "round": 1,
+      "name": "c-base-reference"
+    },
+    {
+      "round": 1,
+      "name": "c-base-candidate"
+    },
+    {
+      "round": 1,
+      "name": "lisp-base-reference"
+    },
+    {
+      "round": 1,
+      "name": "lisp-base-candidate"
+    },
+    {
+      "round": 1,
+      "name": "rust-base-unrolled"
+    },
+    {
+      "round": 1,
+      "name": "rust-base-extreme"
+    },
+    {
+      "round": 1,
+      "name": "c-wheel-reference"
+    },
+    {
+      "round": 1,
+      "name": "c-wheel-candidate"
+    },
+    {
+      "round": 1,
+      "name": "lisp-wheel-reference"
+    },
+    {
+      "round": 1,
+      "name": "lisp-wheel-candidate"
+    },
+    {
+      "round": 1,
+      "name": "rust-wheel-candidate"
+    },
+    {
+      "round": 1,
+      "name": "c-other-reference"
+    },
+    {
+      "round": 1,
+      "name": "c-other-candidate"
+    },
+    {
+      "round": 1,
+      "name": "lisp-other-reference"
+    },
+    {
+      "round": 1,
+      "name": "lisp-other-candidate"
+    },
+    {
+      "round": 1,
+      "name": "rust-other-candidate"
+    },
+    {
+      "round": 2,
+      "name": "rust-other-candidate"
+    },
+    {
+      "round": 2,
+      "name": "lisp-other-candidate"
+    },
+    {
+      "round": 2,
+      "name": "lisp-other-reference"
+    },
+    {
+      "round": 2,
+      "name": "c-other-candidate"
+    },
+    {
+      "round": 2,
+      "name": "c-other-reference"
+    },
+    {
+      "round": 2,
+      "name": "rust-wheel-candidate"
+    },
+    {
+      "round": 2,
+      "name": "lisp-wheel-candidate"
+    },
+    {
+      "round": 2,
+      "name": "lisp-wheel-reference"
+    },
+    {
+      "round": 2,
+      "name": "c-wheel-candidate"
+    },
+    {
+      "round": 2,
+      "name": "c-wheel-reference"
+    },
+    {
+      "round": 2,
+      "name": "rust-base-extreme"
+    },
+    {
+      "round": 2,
+      "name": "rust-base-unrolled"
+    },
+    {
+      "round": 2,
+      "name": "lisp-base-candidate"
+    },
+    {
+      "round": 2,
+      "name": "lisp-base-reference"
+    },
+    {
+      "round": 2,
+      "name": "c-base-candidate"
+    },
+    {
+      "round": 2,
+      "name": "c-base-reference"
+    },
+    {
+      "round": 3,
+      "name": "c-base-candidate"
+    },
+    {
+      "round": 3,
+      "name": "lisp-base-reference"
+    },
+    {
+      "round": 3,
+      "name": "lisp-base-candidate"
+    },
+    {
+      "round": 3,
+      "name": "rust-base-unrolled"
+    },
+    {
+      "round": 3,
+      "name": "rust-base-extreme"
+    },
+    {
+      "round": 3,
+      "name": "c-wheel-reference"
+    },
+    {
+      "round": 3,
+      "name": "c-wheel-candidate"
+    },
+    {
+      "round": 3,
+      "name": "lisp-wheel-reference"
+    },
+    {
+      "round": 3,
+      "name": "lisp-wheel-candidate"
+    },
+    {
+      "round": 3,
+      "name": "rust-wheel-candidate"
+    },
+    {
+      "round": 3,
+      "name": "c-other-reference"
+    },
+    {
+      "round": 3,
+      "name": "c-other-candidate"
+    },
+    {
+      "round": 3,
+      "name": "lisp-other-reference"
+    },
+    {
+      "round": 3,
+      "name": "lisp-other-candidate"
+    },
+    {
+      "round": 3,
+      "name": "rust-other-candidate"
+    },
+    {
+      "round": 3,
+      "name": "c-base-reference"
+    },
+    {
+      "round": 4,
+      "name": "c-base-reference"
+    },
+    {
+      "round": 4,
+      "name": "rust-other-candidate"
+    },
+    {
+      "round": 4,
+      "name": "lisp-other-candidate"
+    },
+    {
+      "round": 4,
+      "name": "lisp-other-reference"
+    },
+    {
+      "round": 4,
+      "name": "c-other-candidate"
+    },
+    {
+      "round": 4,
+      "name": "c-other-reference"
+    },
+    {
+      "round": 4,
+      "name": "rust-wheel-candidate"
+    },
+    {
+      "round": 4,
+      "name": "lisp-wheel-candidate"
+    },
+    {
+      "round": 4,
+      "name": "lisp-wheel-reference"
+    },
+    {
+      "round": 4,
+      "name": "c-wheel-candidate"
+    },
+    {
+      "round": 4,
+      "name": "c-wheel-reference"
+    },
+    {
+      "round": 4,
+      "name": "rust-base-extreme"
+    },
+    {
+      "round": 4,
+      "name": "rust-base-unrolled"
+    },
+    {
+      "round": 4,
+      "name": "lisp-base-candidate"
+    },
+    {
+      "round": 4,
+      "name": "lisp-base-reference"
+    },
+    {
+      "round": 4,
+      "name": "c-base-candidate"
+    }
+  ]
+}
