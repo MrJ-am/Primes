@@ -10,11 +10,67 @@
 (declaim (optimize (speed 3) (safety 0) (debug 1)))
 (declaim (sb-ext:muffle-conditions sb-ext:compiler-note))
 (defparameter *name* "cl")
-(defparameter *tags* "algorithm=wheel,faithful=yes,bits=1")
+(defparameter *tags* "algorithm=other,faithful=yes,bits=1")
 (defun checked-limit (limit)
   (declare (optimize (safety 3)))
   (check-type limit (integer 0 #.most-positive-fixnum))
   limit)
+(defun mark-flags! (storage offset mask)
+  (declare (type sb-sys:system-area-pointer storage)
+           (type (signed-byte 64) offset) (type (unsigned-byte 8) mask))
+  (setf (sb-sys:sap-ref-8 storage offset)
+        (logior (sb-sys:sap-ref-8 storage offset) mask))
+  (values))
+(eval-when (:compile-toplevel :load-toplevel :execute)
+  (sb-c:defknown mark-flags! (sb-sys:system-area-pointer (signed-byte 64) (unsigned-byte 8))
+      (values) (sb-c:always-translatable) :overwrite-fndb-silently t)
+  (sb-c:define-vop (mark-flags!)
+    (:translate mark-flags!)
+    (:policy :fast-safe)
+    (:args (storage :scs (sb-vm::sap-reg)) (offset :scs (sb-vm::signed-reg)))
+    (:arg-types sb-vm::system-area-pointer sb-vm::signed-num (:constant (unsigned-byte 8)))
+    (:info mask)
+    (:generator 1
+      (sb-assem:inst or :byte (sb-vm::ea 0 storage offset) mask))))
+
+
+;; Mark complete groups of eight multiples; the caller handles the partial tail.
+(eval-when (:compile-toplevel :load-toplevel :execute)
+  (sb-c:defknown mark-multiple-groups!
+      (sb-sys:system-area-pointer (unsigned-byte 64) (unsigned-byte 64)
+       (unsigned-byte 64) (integer 1 15))
+      (values) (sb-c:always-translatable) :overwrite-fndb-silently t)
+  (sb-c:define-vop (mark-multiple-groups!)
+    (:translate mark-multiple-groups!) (:policy :fast-safe)
+    ;; Keep inputs live until all temporary-register computations finish.
+    (:args (storage :scs (sb-vm::sap-reg) :to :save)
+           (group-count :scs (sb-vm::unsigned-reg) :to :save)
+           (byte-stride :scs (sb-vm::unsigned-reg) :to :save)
+           (step :scs (sb-vm::unsigned-reg) :to :save))
+    (:arg-types sb-vm::system-area-pointer sb-vm::unsigned-num sb-vm::unsigned-num sb-vm::unsigned-num (:constant (integer 1 15)))
+    (:info residue)
+    (:temporary (:sc sb-vm::sap-reg) cursor)
+    (:temporary (:sc sb-vm::unsigned-reg) remaining stride-3 stride-5 stride-7)
+    (:generator 1
+      (let ((again (sb-assem:gen-label)) (done (sb-assem:gen-label)))
+        (sb-vm::move cursor storage)
+        (sb-vm::move remaining group-count)
+        (sb-assem:inst test remaining remaining)
+        (sb-assem:inst jmp :z done)
+        (sb-assem:inst lea stride-3 (sb-vm::ea 0 byte-stride byte-stride 2))
+        (sb-assem:inst lea stride-5 (sb-vm::ea 0 byte-stride byte-stride 4))
+        (sb-assem:inst lea stride-7 (sb-vm::ea 0 stride-3 byte-stride 4))
+        (sb-assem:emit-label again)
+        (loop for k below 8 for index in (list nil byte-stride byte-stride stride-3 byte-stride stride-5 stride-3 stride-7)
+              for scale in '(1 1 2 1 4 1 2 1)
+              for carry = (floor (+ (floor residue 2) (* k (mod residue 8))) 8)
+              for mask = (ash 1 (mod (+ (floor residue 2) (* k residue)) 8))
+              do (sb-assem:inst or :byte (sb-vm::ea carry cursor index scale) mask))
+        (sb-assem:inst add cursor step)
+        (sb-assem:inst dec remaining)
+        (sb-assem:inst jmp :nz again)
+        (sb-assem:emit-label done)))))
+
 (sb-alien:define-alien-routine ("malloc" allocate-storage) sb-alien:unsigned-long
   (size sb-alien:unsigned-long))
 (sb-alien:define-alien-routine ("free" release-storage) sb-alien:void
@@ -176,114 +232,74 @@
           (sb-assem:inst vzeroupper))))))
 
 
-(defmacro define-small-markers (range)
-  (let ((operation (ecase range
-                     (:initial 'mark-initial-multiples!)
-                     (:block 'mark-block-multiples!)))
-        (dispatcher (intern (format nil "MARK-~A-SMALL-FACTOR" range))))
-    `(progn
-       ,@(loop for p from 3 to 129 by 2 collect
-         `(defun ,(intern (format nil "MARK-~A-BY-~D" range p)) (address word-count)
-            (declare (type (unsigned-byte 64) address) (type fixnum word-count))
-            (,operation (sb-sys:int-sap address) word-count ,p)
-            nil))
-       (defun ,dispatcher (address word-count factor)
-         (declare (type (unsigned-byte 64) address) (type fixnum word-count factor))
-         (case factor
-           ,@(loop for p from 3 to 129 by 2 collect
-             `(,p (,(intern (format nil "MARK-~A-BY-~D" range p)) address word-count))))))))
-(define-small-markers :initial)
-(define-small-markers :block)
-
-;; Factors 3 and 5 have already marked their multiples. For a later factor,
-;; visit only odd cofactors coprime to 30. The byte-mask phase repeats after
-;; 240 cofactors: 64 writes in 15 * factor bytes, instead of 120 writes.
-(eval-when (:compile-toplevel :load-toplevel :execute)
-  (sb-c:defknown mark-remaining-multiples!
-      (sb-sys:system-area-pointer sb-sys:system-area-pointer
-       (unsigned-byte 64) (unsigned-byte 64) (integer 1 15))
-      (values) (sb-c:always-translatable) :overwrite-fndb-silently t)
-  (sb-c:define-vop (mark-remaining-multiples!)
-    (:translate mark-remaining-multiples!) (:policy :fast-safe)
-    (:args (storage :scs (sb-vm::sap-reg) :to :save)
-           (end :scs (sb-vm::sap-reg) :to :save)
-           (byte-stride :scs (sb-vm::unsigned-reg) :to :save)
-           (period :scs (sb-vm::unsigned-reg) :to :save))
-    (:arg-types sb-vm::system-area-pointer sb-vm::system-area-pointer
-                sb-vm::unsigned-num sb-vm::unsigned-num (:constant (integer 1 15)))
-    (:info residue)
-    (:temporary (:sc sb-vm::sap-reg) cursor full-end tail-address)
-    (:temporary (:sc sb-vm::unsigned-reg) stride-3 stride-5 stride-7)
-    (:generator 1
-      (let ((again (sb-assem:gen-label)) (tail (sb-assem:gen-label))
-            (done (sb-assem:gen-label)))
-        (flet ((mark-period (bounded)
-                 (dotimes (group 30)
-                   (loop for low from 1 to 7 by 2
-                         for index in (list byte-stride stride-3 stride-5 stride-7)
-                         for cofactor = (+ (* group 8) low)
-                         unless (or (zerop (mod cofactor 3)) (zerop (mod cofactor 5))) do
-                     (let ((carry (floor (* cofactor residue) 16))
-                           (mask (ash 1 (mod (floor (* cofactor residue) 2) 8))))
-                       (if bounded
-                           (progn
-                             (sb-assem:inst lea tail-address (sb-vm::ea carry cursor index))
-                             (sb-assem:inst cmp tail-address end)
-                             (sb-assem:inst jmp :ae done)
-                             (sb-assem:inst or :byte (sb-vm::ea 0 tail-address) mask))
-                           (sb-assem:inst or :byte (sb-vm::ea carry cursor index) mask))))
-                   (sb-assem:inst lea cursor (sb-vm::ea 0 cursor byte-stride 8)))
-                 (sb-assem:inst add cursor (* 15 residue))))
-          (sb-vm::move cursor storage)
-          (sb-assem:inst lea stride-3 (sb-vm::ea 0 byte-stride byte-stride 2))
-          (sb-assem:inst lea stride-5 (sb-vm::ea 0 byte-stride byte-stride 4))
-          (sb-assem:inst lea stride-7 (sb-vm::ea 0 stride-3 byte-stride 4))
-          ;; Last offset = floor(239 * factor / 16) = period - byte-stride - 1.
-          (sb-vm::move full-end end)
-          (sb-assem:inst sub full-end period)
-          (sb-assem:inst jmp :b tail)
-          (sb-assem:inst lea full-end (sb-vm::ea 1 full-end byte-stride))
-          (sb-assem:inst cmp cursor full-end)
-          (sb-assem:inst jmp :ae tail)
-          (sb-assem:emit-alignment 4 :long-nop)
-          (sb-assem:emit-label again)
-          (mark-period nil)
-          (sb-assem:inst cmp cursor full-end)
-          (sb-assem:inst jmp :b again)
-          (sb-assem:emit-label tail)
-          (mark-period t)
-          (sb-assem:emit-label done))))))
-
-(defmacro define-remaining-markers ()
+(defmacro define-initial-markers ()
   `(progn
-     ,@(loop for r from 1 to 15 by 2 collect
-       `(defun ,(intern (format nil "MARK-REMAINING-RESIDUE-~D" r)) (address begin byte-count factor)
-          (declare (type (unsigned-byte 64) address) (type fixnum begin byte-count)
-                   (type (integer 131 2147483647) factor))
-          (let* ((period (* 15 factor))
-                 (start (max (* (floor factor 240) period)
-                             (if (zerop begin) 0
-                                 (the fixnum (* (floor begin period) period)))))
-                 (storage (sb-sys:int-sap address)))
-            (declare (type (unsigned-byte 59) period start))
-            (mark-remaining-multiples! (sb-sys:sap+ storage start)
-                                      (sb-sys:sap+ storage byte-count)
-                                      (ash factor -4) period ,r)
-            ;; The first period includes the factor itself (cofactor 1).
-            (when (zerop start)
-              (let* ((offset (ash factor -4))
-                     (mask (logxor 255 (ash 1 (logand (ash factor -1) 7)))))
-                (setf (sb-sys:sap-ref-8 storage offset)
-                      (logand (sb-sys:sap-ref-8 storage offset) mask)))))
+     ,@(loop for p from 3 to 129 by 2 collect
+       `(defun ,(intern (format nil "MARK-INITIAL-BY-~D" p)) (address word-count)
+          (declare (type (unsigned-byte 64) address) (type fixnum word-count))
+          (mark-initial-multiples! (sb-sys:int-sap address) word-count ,p)
           nil))
-     (defun mark-remaining-factor (address begin byte-count factor)
-       (declare (type (unsigned-byte 64) address) (type fixnum begin byte-count factor))
-       (case (logand factor 15)
-         ,@(loop for r from 1 to 15 by 2 collect
-             `(,r (,(intern (format nil "MARK-REMAINING-RESIDUE-~D" r))
-                    address begin byte-count factor)))))))
-(define-remaining-markers)
+     (defun mark-initial-small-factor (address word-count factor)
+       (declare (type (unsigned-byte 64) address) (type fixnum word-count factor))
+       (case factor ,@(loop for p from 3 to 129 by 2 collect
+         `(,p (,(intern (format nil "MARK-INITIAL-BY-~D" p)) address word-count)))))
+     ,@(loop for r from 1 to 15 by 2 collect
+       `(defun ,(intern (format nil "MARK-INITIAL-RESIDUE-~D" r)) (address byte-count factor)
+          (declare (type (unsigned-byte 64) address) (type fixnum byte-count)
+                   (type (integer 3 2147483647) factor))
+          (let* ((first (ash factor -4)) (start (* first factor)) (byte-stride (ash factor -3))
+                 (group-count (floor (- byte-count start) factor))
+                 (tail (+ start first (* group-count factor)))
+                 (storage (sb-sys:int-sap address)))
+            (declare (type (unsigned-byte 59) first start byte-stride group-count tail))
+            (mark-multiple-groups! (sb-sys:sap+ storage (+ start first)) group-count byte-stride factor ,r)
+            ,@(loop for k below 8
+               for carry = (floor (+ (floor r 2) (* k (mod r 8))) 8)
+               for mask = (ash 1 (mod (+ (floor r 2) (* k r)) 8))
+               collect `(let ((index (+ tail (* ,k byte-stride) ,carry)))
+                          (declare (type (unsigned-byte 59) index))
+                          (when (< index byte-count) (mark-flags! storage index ,mask)))))
+          nil))
+     (defun mark-initial-large-factor (address byte-count factor)
+       (declare (type (unsigned-byte 64) address) (type fixnum byte-count factor))
+       (case (logand factor 15) ,@(loop for r from 1 to 15 by 2 collect
+          `(,r (,(intern (format nil "MARK-INITIAL-RESIDUE-~D" r)) address byte-count factor)))))))
+(define-initial-markers)
 
+(defmacro define-block-markers ()
+  `(progn
+     ,@(loop for p from 3 to 129 by 2 collect
+       `(defun ,(intern (format nil "MARK-BLOCK-BY-~D" p)) (address word-count)
+          (declare (type (unsigned-byte 64) address) (type fixnum word-count))
+          (mark-block-multiples! (sb-sys:int-sap address) word-count ,p)
+          nil))
+     (defun mark-block-small-factor (address word-count factor)
+       (declare (type (unsigned-byte 64) address) (type fixnum word-count factor))
+       (case factor ,@(loop for p from 3 to 129 by 2 collect
+         `(,p (,(intern (format nil "MARK-BLOCK-BY-~D" p)) address word-count)))))
+     ,@(loop for r from 1 to 15 by 2 collect
+       `(defun ,(intern (format nil "MARK-BLOCK-RESIDUE-~D" r)) (address begin byte-count factor)
+          (declare (type (unsigned-byte 64) address) (type fixnum begin byte-count)
+                   (type (integer 3 2147483647) factor))
+          (let* ((first (ash factor -4))
+                 (start (max (* first factor) (* (floor begin factor) factor)))
+                 (byte-stride (ash factor -3)) (group-count (floor (- byte-count start) factor))
+                 (tail (+ start first (* group-count factor)))
+                 (storage (sb-sys:int-sap address)))
+            (declare (type (unsigned-byte 59) first start byte-stride group-count tail))
+            (mark-multiple-groups! (sb-sys:sap+ storage (+ start first)) group-count byte-stride factor ,r)
+            ,@(loop for k below 8
+               for carry = (floor (+ (floor r 2) (* k (mod r 8))) 8)
+               for mask = (ash 1 (mod (+ (floor r 2) (* k r)) 8))
+               collect `(let ((index (+ tail (* ,k byte-stride) ,carry)))
+                          (declare (type (unsigned-byte 59) index))
+                          (when (< index byte-count) (mark-flags! storage index ,mask)))))
+          nil))
+     (defun mark-block-large-factor (address begin byte-count factor)
+       (declare (type (unsigned-byte 64) address) (type fixnum begin byte-count factor))
+       (case (logand factor 15) ,@(loop for r from 1 to 15 by 2 collect
+          `(,r (,(intern (format nil "MARK-BLOCK-RESIDUE-~D" r)) address begin byte-count factor)))))))
+(define-block-markers)
 (defparameter *words-per-block* 4096)
 (defun mark-composites (state)
   (let ((address (sieve-state-address state)) (word-count (sieve-state-word-count state))
@@ -298,14 +314,14 @@
             unless (composite-flag-p address (ash factor -1)) do
         (cond ((zerop begin)
                (if (<= factor 129) (mark-initial-small-factor address end factor)
-                   (mark-remaining-factor address 0 (ash end 3) factor)))
+                   (mark-initial-large-factor address (ash end 3) factor)))
               ((<= factor 129)
                ;; A bounded overlap preserves the factor's repeating mask phase.
                ;; Only composites are written; no prime bit is cleared in later blocks.
                (let ((base (* (floor begin factor) factor)))
                  (declare (type fixnum base))
                  (mark-block-small-factor (+ address (ash base 3)) (- end base) factor)))
-              (t (mark-remaining-factor address (ash begin 3) (ash end 3) factor))))))
+              (t (mark-block-large-factor address (ash begin 3) (ash end 3) factor))))))
   state)
 
 (defun sieve-prime-p (state number)
