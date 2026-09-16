@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Compare an unchanged Rust binary, the candidate, and Common Lisp solution 3."""
+"""Compare Rust and Lisp baselines with a Rust and optional Lisp candidate."""
 import argparse
 import datetime
 import hashlib
@@ -21,6 +21,8 @@ def main():
     parser.add_argument("--candidate", required=True, type=Path)
     parser.add_argument("--baseline-ref", required=True)
     parser.add_argument("--lisp", required=True, type=Path)
+    parser.add_argument("--lisp-candidate", type=Path,
+                        help="also compare a modified Common Lisp solution 3")
     parser.add_argument("--sbcl", default="sbcl")
     parser.add_argument("--cpu", type=int, default=0)
     parser.add_argument("--seconds", type=int, default=5)
@@ -37,6 +39,9 @@ def main():
         "rust_candidate": [str(args.candidate.resolve()), *rust_args],
         "lisp": [str(args.lisp.resolve() / "run.sh"), "batch", str(args.seconds), "1"],
     }
+    if args.lisp_candidate:
+        commands["lisp_candidate"] = [str(args.lisp_candidate.resolve() / "run.sh"),
+                                      "batch", str(args.seconds), "1"]
     cpu = next(line.split(":", 1)[1].strip() for line in Path("/proc/cpuinfo").read_text().splitlines()
                if line.startswith("model name"))
     report = {
@@ -59,12 +64,18 @@ def main():
         for name in ["main.rs", "unrolled.rs", "unrolled_extreme.rs"]
     }
     report["cargo_build_config"] = (source / ".cargo" / "config").read_text()
+    if args.lisp_candidate:
+        report["lisp_candidate_sha256"] = {
+            p.name: digest(p) for p in sorted(args.lisp_candidate.glob("*.lisp"))
+        }
     env = dict(os.environ, SBCL=args.sbcl)
     names = list(commands)
     args.output.parent.mkdir(parents=True, exist_ok=True)
     for round_number in range(args.repeats):
-        # Rotate positions and reverse alternate rounds to reduce order bias.
-        order = names[round_number % 3:] + names[:round_number % 3]
+        # Run each rotation forward and backward. With 2 * len(names) rounds,
+        # every implementation occupies each position exactly twice.
+        start = (round_number // 2) % len(names)
+        order = names[start:] + names[:start]
         if round_number % 2:
             order.reverse()
         for name in order:

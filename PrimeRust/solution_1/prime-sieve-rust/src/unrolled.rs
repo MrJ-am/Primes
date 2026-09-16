@@ -97,7 +97,7 @@ pub struct FlagStorageUnrolledHybrid {
 }
 
 impl FlagStorage for FlagStorageUnrolledHybrid {
-    const ALGORITHM: &'static str = "other";
+    const ALGORITHM: &'static str = "wheel";
 
     fn create_true(size: usize) -> Self {
         let num_words = size / 64 + (size % 64).min(1);
@@ -155,10 +155,16 @@ impl FlagStorage for FlagStorageUnrolledHybrid {
         let mut end = first_end;
         while begin < self.words.len() {
             let q = (limit.min(end * 128) as f64).sqrt() as usize;
-            for factor in (3..=q).step_by(2) {
+            let mut factor = 3;
+            while factor <= q {
                 if self.get(factor / 2) {
-                    self.reset_flags_from(factor, begin, end);
+                    if factor <= 129 {
+                        self.reset_flags_from(factor, begin, end);
+                    } else {
+                        self.reset_remaining_flags_from(factor, begin, end);
+                    }
                 }
+                factor += 2;
             }
             begin = end;
             end = self.words.len().min(end + WORDS_PER_BLOCK);
@@ -167,6 +173,16 @@ impl FlagStorage for FlagStorageUnrolledHybrid {
 }
 
 impl FlagStorageUnrolledHybrid {
+    #[inline(always)]
+    fn reset_remaining_flags_from(&mut self, skip: usize, begin: usize, end: usize) {
+        let equivalent_skip = pattern_equivalent_skip(skip, 8);
+        generic_dispatch!(
+            equivalent_skip, 3, 2, 17,
+            ResetterRemainingU8::<N>::reset(&mut self.words[..end], skip, begin * 8),
+            debug_assert!(false, "invalid sparse residue {}", equivalent_skip)
+        );
+    }
+
     #[inline(always)]
     fn reset_flags_from(&mut self, skip: usize, begin: usize, end: usize) {
         // sparse resets for skip factors larger than those covered by dense resets
@@ -349,6 +365,88 @@ impl<const EQUIVALENT_SKIP: usize> ResetterSparseU8<EQUIVALENT_SKIP> {
     }
 }
 
+/// Mark cofactors coprime to 30, after factors 3 and 5 have been applied.
+/// A 240-cofactor period contains 64 writes instead of all 120 odd cofactors.
+struct ResetterRemainingU8<const EQUIVALENT_SKIP: usize>();
+impl<const EQUIVALENT_SKIP: usize> ResetterRemainingU8<EQUIVALENT_SKIP> {
+    const COFACTORS: [usize; 64] = {
+        let mut values = [0; 64];
+        let mut m = 1;
+        let mut i = 0;
+        while m < 240 {
+            if m % 3 != 0 && m % 5 != 0 {
+                values[i] = m;
+                i += 1;
+            }
+            m += 2;
+        }
+        values
+    };
+    const MASKS: [u8; 64] = {
+        let mut masks = [0; 64];
+        let mut i = 0;
+        while i < 64 {
+            masks[i] = 1 << ((Self::COFACTORS[i] * (EQUIVALENT_SKIP % 16) / 2) % 8);
+            i += 1;
+        }
+        masks
+    };
+    const CARRIES: [usize; 64] = {
+        let mut carries = [0; 64];
+        let mut i = 0;
+        while i < 64 {
+            carries[i] = Self::COFACTORS[i] * (EQUIVALENT_SKIP % 16) / 16;
+            i += 1;
+        }
+        carries
+    };
+
+    #[inline(never)]
+    fn reset(words: &mut [u64], skip: usize, begin: usize) {
+        let bytes = reinterpret_slice_mut_u64_u8(words);
+        let stride = skip / 16;
+        let period = 15 * skip;
+        let start = (skip / 240).max(begin / period) * period;
+        // Expand eight writes at a time so masks remain immediate constants,
+        // instead of loading masks and a 64-entry address table in the loop.
+        macro_rules! mark_eight {
+            ($action:ident, $base:expr) => {
+                $action!($base); $action!($base + 1);
+                $action!($base + 2); $action!($base + 3);
+                $action!($base + 4); $action!($base + 5);
+                $action!($base + 6); $action!($base + 7);
+            };
+        }
+        let mut chunks = bytes[start..].chunks_exact_mut(period);
+        for chunk in &mut chunks {
+            macro_rules! mark {
+                ($i:expr) => {{
+                    let index = Self::COFACTORS[$i] * stride + Self::CARRIES[$i];
+                    // m < 240 implies floor(m * skip / 16) < 15 * skip.
+                    unsafe { *chunk.get_unchecked_mut(index) |= Self::MASKS[$i]; }
+                }};
+            }
+            mark_eight!(mark, 0); mark_eight!(mark, 8);
+            mark_eight!(mark, 16); mark_eight!(mark, 24);
+            mark_eight!(mark, 32); mark_eight!(mark, 40);
+            mark_eight!(mark, 48); mark_eight!(mark, 56);
+        }
+        let remainder = chunks.into_remainder();
+        for i in 0..64 {
+            let index = Self::COFACTORS[i] * stride + Self::CARRIES[i];
+            if index >= remainder.len() {
+                break;
+            }
+            remainder[index] |= Self::MASKS[i];
+        }
+        // The first period includes the factor itself (cofactor 1).
+        if start == 0 {
+            bytes[skip / 16] &= !(1 << ((skip / 2) % 8));
+        }
+    }
+}
+
+
 #[cfg(test)]
 mod tests {
 
@@ -373,7 +471,8 @@ mod tests {
         }
         let mut limits: Vec<_> = (0..=260).collect();
         for boundary in [
-            127 * 127, 131 * 131, 257 * 257, 719 * 719, 727 * 727, 997 * 997,
+            127 * 127, 131 * 131, 131 * 239, 239 * 239, 241 * 241, 241 * 479,
+            257 * 257, 479 * 479, 487 * 487, 719 * 719, 727 * 727, 997 * 997,
             524_288, 1_000_000, 1_048_576,
         ] {
             limits.extend(boundary - 2..=boundary + 2);
