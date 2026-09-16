@@ -1,7 +1,7 @@
 # Rust solution by @mike-barber
 
 ![Algorithm](https://img.shields.io/badge/Algorithm-base-green)
-![Blocked algorithm](https://img.shields.io/badge/Algorithm-other-yellowgreen)
+![Blocked algorithm](https://img.shields.io/badge/Algorithm-wheel-yellowgreen)
 ![Faithfulness](https://img.shields.io/badge/Faithful-yes-green)
 ![Parallelism](https://img.shields.io/badge/Parallel-no-green)
 ![Parallelism](https://img.shields.io/badge/Parallel-yes-green)
@@ -67,13 +67,16 @@ Now, in order to dispatch to one of these specific functions (remember `N` is a 
 
 The `--bits-unrolled` variant now traverses the sieve in 32 KiB blocks. Each
 block is completed before proceeding to the next, so most marking accesses
-reuse a smaller working set. Dense and sparse resetters retain their original
-patterns; their starting offsets are aligned to the factor's period, with a
+reuse a smaller working set. Starting offsets are aligned to the factor's period, with a
 bounded overlap into the preceding block.
 
 Sparse addresses also use the Lisp kernel's decomposition into a runtime
-stride and constant carries for each residue modulo 16. The initial period
-uses `skip / 16`, replacing the equivalent division of the squared factor.
+stride and constant carries for each residue modulo 16. The next Lisp/Rust
+exchange added a cofactor wheel: after marking by 3 and 5, large factors only
+visit cofactors coprime to 30. A period spans 240 cofactors, or `15 * skip`
+bytes, and performs 64 writes instead of 120. Rust macros keep those masks
+as instruction immediates, avoiding a runtime mask/address table in the loop.
+The ordinary sparse resetter is retained for the other algorithms.
 
 This traversal transfers the cache-locality idea from
 [Common Lisp solution 3](../../PrimeLisp/solution_3). The first block contains
@@ -82,10 +85,10 @@ for unusually large limits. There is no cached prime list or state shared
 between passes. The allocation, initialization and release of each sieve
 remain part of the timed workload.
 
-This variant reports `algorithm=other,faithful=yes,bits=1` because it changes
-the traversal used by the `base` algorithm. Other variants keep their existing
-tags. See [benchmark results and reproduction](benchmarks/README.md) for the
-comparison with the unchanged Rust program and the Lisp submission.
+This variant reports `algorithm=wheel,faithful=yes,bits=1`. Storage remains one
+bit per odd candidate. Other variants keep their existing tags. See the
+[Lisp/Rust exchange](benchmarks/ping-pong.md) for the current measurements and
+the [initial Rust comparison](benchmarks/README.md) for the preceding campaign.
 
 ## Extreme hybrid storage
 

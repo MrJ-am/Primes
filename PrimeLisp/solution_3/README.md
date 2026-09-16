@@ -7,7 +7,7 @@ portable to other Common Lisp implementations.
 
 ## How it works
 
-`sieve.lisp` combines three optimizations:
+`sieve.lisp` combines four optimizations:
 
 - **Explicit memory lifetime.** Each pass creates a fresh sieve structure and
   zeroed native buffer. The structure has dynamic extent; SBCL's foreign-function
@@ -24,12 +24,17 @@ portable to other Common Lisp implementations.
   traffic through the full array. Factors are discovered in the current sieve's
   first block. Later blocks preserve the marking patterns with a small bounded
   overlap. No prime list or completed sieve is cached between passes.
+- **Avoiding redundant marking.** Once factors 3 and 5 have been applied, sparse
+  kernels visit only cofactors coprime to 30. Their byte-mask phase repeats
+  every 240 cofactors: 64 writes per period instead of 120. This is a wheel
+  used for marking; storage still has one bit per odd candidate. Masks describe
+  divisibility, not a precomputed list of primes. Factors are rediscovered in
+  each fresh sieve, including restoration of the factor's own bit when the
+  first mask period covers it.
 
-The output is tagged `algorithm=other,faithful=yes,bits=1`. Although the algorithm
-is an Eratosthenes sieve, the dense kernels combine multiple composite flags in
-one operation, unlike the project's `base` category. Each pass constructs its
-entire state at runtime. C library calls only manage storage; the sieve, timing
-and pass counting are implemented in Lisp and SBCL VOPs.
+The output is tagged `algorithm=wheel,faithful=yes,bits=1`. Each pass constructs
+its entire state at runtime. C library calls only manage storage; the sieve,
+timing and pass counting are implemented in Lisp and SBCL VOPs.
 
 ## Run
 
@@ -64,6 +69,9 @@ Lisp macros provide the specialization performed there with Rust generics and
 code generation. Rust disassembly informed the vector kernels; Callgrind cache
 simulation helped guide the block traversal.
 
+The next exchange introduced the sparse cofactor wheel in Lisp and transferred
+it back to Rust. See the [paired comparison and reproduction protocol](../../PrimeRust/solution_1/benchmarks/ping-pong.md).
+
 This implementation was developed by Codex, an AI coding agent, under human
 direction. The agent worked interactively in a persistent SBCL image: redefining
 and compiling functions, inspecting machine code with `disassemble`, and measuring
@@ -81,8 +89,9 @@ The state and its native address must not escape `with-sieve`.
 
 ## Example output
 
-SBCL 2.6.8, Linux x86-64, Intel Xeon Platinum 8370C, one logical CPU:
+SBCL 2.6.8, Linux x86-64, AMD EPYC 9V74, one logical CPU. First sample
+of the [eight-round comparison](../../PrimeRust/solution_1/benchmarks/ping-pong.md):
 
 ```text
-mrj-am-cl;49704;5.003980000;1;algorithm=other,faithful=yes,bits=1
+mrj-am-cl;99224;5.000140000;1;algorithm=wheel,faithful=yes,bits=1
 ```

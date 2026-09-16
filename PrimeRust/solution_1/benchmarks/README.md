@@ -1,5 +1,8 @@
 # Transferring cache blocking from Common Lisp to Rust
 
+This page records the first Rust optimization campaign. The next exchange is
+documented in [Lisp/Rust ping-pong](ping-pong.md).
+
 The experiment starts from `c8fa14d3e67835258ddd15230b8be6b9d77d4c48`,
 which includes the final Common Lisp solution 3 and the unchanged Mike Barber
 `bit-unrolled-hybrid` Rust implementation. Candidate source is published as
