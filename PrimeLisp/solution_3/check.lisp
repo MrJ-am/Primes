@@ -51,8 +51,16 @@
                 99991 100000 524287 524288 524289 999983 999999
                 1000000 1000001 1042441 1048575 1048576 1048577 2000003))
   (check-limit limit))
+;; Sparse periods can straddle the square of a factor, the 240-cofactor
+;; transition, or the last byte in a block. Compare all flags around them.
+(dolist (boundary (list (* 131 131) (* 131 239) (* 239 239) (* 241 241)
+                       (* 241 479) (* 479 479) (* 487 487)
+                       (* 719 719) (* 727 727) (* 997 997)))
+  (loop for delta from -2 to 2 do (check-limit (+ boundary delta))))
 (dolist (limit '(0 1 127 128 129 16129 524287 524288 524289
                 1048575 1048576 1048577 2000003))
+  (check-guards limit))
+(dolist (limit '(17161 31309 57121 58081 115439 229441 237169))
   (check-guards limit))
 (pm:with-sieve (state 10000000)
   (pm:run-sieve state)
