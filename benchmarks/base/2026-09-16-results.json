@@ -1,0 +1,646 @@
+{
+  "started": "2026-09-16T12:56:05.105247+00:00",
+  "cpu": "model name\t: AMD EPYC 9V74 80-Core Processor",
+  "logical_cpu": 0,
+  "platform": "Linux-6.18.44-x86_64-with-glibc2.39",
+  "finished": "2026-09-16T13:03:17.515764+00:00",
+  "category": "base",
+  "metadata": {
+    "baseline_ref": "58000dc01b4e572c490e0aaa59f4d6ba9955d73a",
+    "compiler_versions": {
+      "gcc": "gcc (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0",
+      "rustc": "rustc 1.98.1 (48a229cea 2026-09-01)",
+      "sbcl": "SBCL 2.6.8"
+    },
+    "source_sha256": {
+      "base": {
+        "PrimeC/solution_6/sieve.c": "1f71fafa5ce640f53fb31d153665d021ddefa83899b972f1e09795881da84bb2",
+        "PrimeLisp/solution_4/sieve.lisp": "ba5aafbf5da7402b27f056049f1134d7dc1e7b4dd8504f16a39456ca3de65cba"
+      },
+      "wheel": {
+        "PrimeC/solution_7/sieve.c": "179bdf6a16a3617656846bd0521799ff3de8d986ef38d396a4e8563e1883daec",
+        "PrimeLisp/solution_5/sieve.lisp": "c873a1a8a6174c0b661e6d1afbf6747e8542923610bf9d4d766f0d2d1ba92287",
+        "PrimeRust/solution_8/main.rs": "d4d613edefa5e295d7a2017a863ec4a4e8c36a4ccacda659e120e5ffbe2eed3c",
+        "PrimeRust/solution_8/unrolled.rs": "0608359ddf635337108d61ad27c2ac9d565b53de32c0d96255be89f07ea0675d"
+      },
+      "other": {
+        "PrimeC/solution_5/src/sieve/sieve_stripe.h": "426e241d719df6fac2470aebde0775037baa3bc6c244523c57f97f960d5d1d73",
+        "PrimeC/solution_5/src/sieve/sieve_sparse_periods.h": "a30fe5e08d430c1422718918cf7fded9ac07e57c459269ae7702ee9360b67367",
+        "PrimeLisp/solution_3/sieve.lisp": "33236a5378c8bba81fdb84677c0308ab818c48ece84fd88d32e8ce6b0a6bf0dd",
+        "PrimeRust/solution_9/main.rs": "d4d613edefa5e295d7a2017a863ec4a4e8c36a4ccacda659e120e5ffbe2eed3c",
+        "PrimeRust/solution_9/unrolled.rs": "d4cb9fcd6a4890f28b229d3ae76ea6f3f08de71d1e9f4fb3780367b7c56b9e91"
+      }
+    }
+  },
+  "entries": [
+    {
+      "name": "c-base-reference",
+      "category": "base",
+      "command": [
+        "/workspace/scratch/c1bf4e6f2af9/primes-other/PrimeC/solution_5/bin/sieve_base",
+        "--time",
+        "5"
+      ],
+      "source_base": "58000dc01b4e572c490e0aaa59f4d6ba9955d73a",
+      "executable_sha256": "a2537878138419cca7d2ad43c9868b9f4d404b4cb74583ad10a1e93a5472b7cd"
+    },
+    {
+      "name": "c-base-candidate",
+      "category": "base",
+      "command": [
+        "/workspace/scratch/c1bf4e6f2af9/primes-base/PrimeC/solution_6/sieve"
+      ],
+      "cwd": "/workspace/scratch/c1bf4e6f2af9/primes-base/PrimeC/solution_6",
+      "source_base": "58000dc01b4e572c490e0aaa59f4d6ba9955d73a",
+      "executable_sha256": "2d9eddc46c38f1a8b87d3e4483b70eadc30f7788d1b5b0268af4ca4f13c4d16b"
+    },
+    {
+      "name": "lisp-base-reference",
+      "category": "base",
+      "command": [
+        "/workspace/scratch/c1bf4e6f2af9/runtime/sbcl/bin/sbcl",
+        "--script",
+        "PrimeSievebitops.lisp"
+      ],
+      "cwd": "/workspace/scratch/c1bf4e6f2af9/primes-base/PrimeLisp/solution_2",
+      "source_base": "58000dc01b4e572c490e0aaa59f4d6ba9955d73a",
+      "executable_sha256": "c118806fd8c00004c1cd8f7e066ccdbf75eedbb8ee3aea3318dd74f179f7e4ad"
+    },
+    {
+      "name": "lisp-base-candidate",
+      "category": "base",
+      "command": [
+        "/workspace/scratch/c1bf4e6f2af9/primes-base/PrimeLisp/solution_4/run.sh",
+        "batch",
+        "5"
+      ],
+      "source_base": "58000dc01b4e572c490e0aaa59f4d6ba9955d73a",
+      "executable_sha256": "c68833353587033dae6ca812a7c9bf141fb8ac01a6e1ddd77356e5d97fecd147"
+    },
+    {
+      "name": "rust-base-unrolled",
+      "category": "base",
+      "command": [
+        "/workspace/scratch/c1bf4e6f2af9/three-categories/build-base/release/prime-sieve-rust",
+        "--bits-unrolled",
+        "--threads",
+        "1",
+        "--seconds",
+        "5"
+      ],
+      "source_base": "58000dc01b4e572c490e0aaa59f4d6ba9955d73a",
+      "executable_sha256": "6a0c5a92a8df399fc34e54b082130abb1326865e5ab6f7b00abd52cea995271e"
+    },
+    {
+      "name": "rust-base-extreme",
+      "category": "base",
+      "command": [
+        "/workspace/scratch/c1bf4e6f2af9/three-categories/build-base/release/prime-sieve-rust",
+        "--bits-extreme",
+        "--threads",
+        "1",
+        "--seconds",
+        "5"
+      ],
+      "source_base": "58000dc01b4e572c490e0aaa59f4d6ba9955d73a",
+      "executable_sha256": "6a0c5a92a8df399fc34e54b082130abb1326865e5ab6f7b00abd52cea995271e"
+    }
+  ],
+  "samples": [
+    {
+      "round": 1,
+      "name": "c-base-reference",
+      "pps": 4027.218775155118,
+      "passes": 20137,
+      "seconds": 5.000225,
+      "tags": "algorithm=base,faithful=yes,bits=1",
+      "stdout": "rogiervandam_base;20137;5.000225;1;algorithm=base,faithful=yes,bits=1\n",
+      "stderr": ""
+    },
+    {
+      "round": 1,
+      "name": "c-base-candidate",
+      "pps": 13578.285277067693,
+      "passes": 67892,
+      "seconds": 5.000042245,
+      "tags": "algorithm=base,faithful=yes,bits=1",
+      "stdout": "MrJ-am-c-base;67892;5.000042245;1;algorithm=base,faithful=yes,bits=1\n",
+      "stderr": "Valid: Pass; primes: 78498\n"
+    },
+    {
+      "round": 1,
+      "name": "lisp-base-reference",
+      "pps": 3251.306362376764,
+      "passes": 16257,
+      "seconds": 5.000144,
+      "tags": "algorithm=base,faithful=yes,bits=1",
+      "stdout": "mayerrobert-cl-dense;16257;5.000144;1;algorithm=base,faithful=yes,bits=1\n",
+      "stderr": "2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97, ...\nAlgorithm: base w/ dense bitops  Passes: 16257  Time: 5.000144 Avg: 0.30756867 ms Count: 78498  Valid: yes\n"
+    },
+    {
+      "round": 1,
+      "name": "lisp-base-candidate",
+      "pps": 10364.099441116208,
+      "passes": 51822,
+      "seconds": 5.000145,
+      "tags": "algorithm=base,faithful=yes,bits=1",
+      "stdout": "mrj-am-cl-base;51822;5.000145000;1;algorithm=base,faithful=yes,bits=1\n",
+      "stderr": "Valid: Pass; primes: 78498; Lisp heap bytes: 0; GC time: 0 us\n"
+    },
+    {
+      "round": 1,
+      "name": "rust-base-unrolled",
+      "pps": 14216.438661618233,
+      "passes": 71083,
+      "seconds": 5.0000567436,
+      "tags": "algorithm=base,faithful=yes,bits=1",
+      "stdout": "mike-barber_bit-unrolled-hybrid;71083;5.0000567436;1;algorithm=base,faithful=yes,bits=1\n",
+      "stderr": "\n-------------------------------------------------------\nComputing primes to 1000000 on 1 thread for 5 seconds.\n-------------------------------------------------------\n\nbit-unrolled-hybrid            Passes: 71083, Threads: 1, Time: 5.0000567436, Passes / sec: 14216.44, Limit: 1000000, Counts: 78498, Valid: Pass\n\n"
+    },
+    {
+      "round": 1,
+      "name": "rust-base-extreme",
+      "pps": 13959.949409701738,
+      "passes": 69800,
+      "seconds": 5.0000181198,
+      "tags": "algorithm=base,faithful=yes,bits=1",
+      "stdout": "mike-barber_bit-extreme-hybrid;69800;5.0000181198;1;algorithm=base,faithful=yes,bits=1\n",
+      "stderr": "\n-------------------------------------------------------\nComputing primes to 1000000 on 1 thread for 5 seconds.\n-------------------------------------------------------\n\nbit-extreme-hybrid             Passes: 69800, Threads: 1, Time: 5.0000181198, Passes / sec: 13959.95, Limit: 1000000, Counts: 78498, Valid: Pass\n\n"
+    },
+    {
+      "round": 2,
+      "name": "rust-base-extreme",
+      "pps": 14464.772410760988,
+      "passes": 72324,
+      "seconds": 5.0000095367,
+      "tags": "algorithm=base,faithful=yes,bits=1",
+      "stdout": "mike-barber_bit-extreme-hybrid;72324;5.0000095367;1;algorithm=base,faithful=yes,bits=1\n",
+      "stderr": "\n-------------------------------------------------------\nComputing primes to 1000000 on 1 thread for 5 seconds.\n-------------------------------------------------------\n\nbit-extreme-hybrid             Passes: 72324, Threads: 1, Time: 5.0000095367, Passes / sec: 14464.77, Limit: 1000000, Counts: 78498, Valid: Pass\n\n"
+    },
+    {
+      "round": 2,
+      "name": "rust-base-unrolled",
+      "pps": 14508.946036586825,
+      "passes": 72545,
+      "seconds": 5.0000185966,
+      "tags": "algorithm=base,faithful=yes,bits=1",
+      "stdout": "mike-barber_bit-unrolled-hybrid;72545;5.0000185966;1;algorithm=base,faithful=yes,bits=1\n",
+      "stderr": "\n-------------------------------------------------------\nComputing primes to 1000000 on 1 thread for 5 seconds.\n-------------------------------------------------------\n\nbit-unrolled-hybrid            Passes: 72545, Threads: 1, Time: 5.0000185966, Passes / sec: 14508.95, Limit: 1000000, Counts: 78498, Valid: Pass\n\n"
+    },
+    {
+      "round": 2,
+      "name": "lisp-base-candidate",
+      "pps": 10260.902433829418,
+      "passes": 51306,
+      "seconds": 5.000145,
+      "tags": "algorithm=base,faithful=yes,bits=1",
+      "stdout": "mrj-am-cl-base;51306;5.000145000;1;algorithm=base,faithful=yes,bits=1\n",
+      "stderr": "Valid: Pass; primes: 78498; Lisp heap bytes: 0; GC time: 0 us\n"
+    },
+    {
+      "round": 2,
+      "name": "lisp-base-reference",
+      "pps": 3421.502145038652,
+      "passes": 17108,
+      "seconds": 5.000143,
+      "tags": "algorithm=base,faithful=yes,bits=1",
+      "stdout": "mayerrobert-cl-dense;17108;5.000143;1;algorithm=base,faithful=yes,bits=1\n",
+      "stderr": "2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97, ...\nAlgorithm: base w/ dense bitops  Passes: 17108  Time: 5.000143 Avg: 0.2922693 ms Count: 78498  Valid: yes\n"
+    },
+    {
+      "round": 2,
+      "name": "c-base-candidate",
+      "pps": 14103.76014559458,
+      "passes": 70519,
+      "seconds": 5.000014129,
+      "tags": "algorithm=base,faithful=yes,bits=1",
+      "stdout": "MrJ-am-c-base;70519;5.000014129;1;algorithm=base,faithful=yes,bits=1\n",
+      "stderr": "Valid: Pass; primes: 78498\n"
+    },
+    {
+      "round": 2,
+      "name": "c-base-reference",
+      "pps": 4052.7886521917735,
+      "passes": 20264,
+      "seconds": 5.000014,
+      "tags": "algorithm=base,faithful=yes,bits=1",
+      "stdout": "rogiervandam_base;20264;5.000014;1;algorithm=base,faithful=yes,bits=1\n",
+      "stderr": ""
+    },
+    {
+      "round": 3,
+      "name": "c-base-candidate",
+      "pps": 14052.046217216606,
+      "passes": 70261,
+      "seconds": 5.000054719,
+      "tags": "algorithm=base,faithful=yes,bits=1",
+      "stdout": "MrJ-am-c-base;70261;5.000054719;1;algorithm=base,faithful=yes,bits=1\n",
+      "stderr": "Valid: Pass; primes: 78498\n"
+    },
+    {
+      "round": 3,
+      "name": "lisp-base-reference",
+      "pps": 3373.1028546377865,
+      "passes": 16866,
+      "seconds": 5.000144,
+      "tags": "algorithm=base,faithful=yes,bits=1",
+      "stdout": "mayerrobert-cl-dense;16866;5.000144;1;algorithm=base,faithful=yes,bits=1\n",
+      "stderr": "2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97, ...\nAlgorithm: base w/ dense bitops  Passes: 16866  Time: 5.000144 Avg: 0.29646295 ms Count: 78498  Valid: yes\n"
+    },
+    {
+      "round": 3,
+      "name": "lisp-base-candidate",
+      "pps": 10017.1135105536,
+      "passes": 50087,
+      "seconds": 5.000143,
+      "tags": "algorithm=base,faithful=yes,bits=1",
+      "stdout": "mrj-am-cl-base;50087;5.000143000;1;algorithm=base,faithful=yes,bits=1\n",
+      "stderr": "Valid: Pass; primes: 78498; Lisp heap bytes: 0; GC time: 0 us\n"
+    },
+    {
+      "round": 3,
+      "name": "rust-base-unrolled",
+      "pps": 14222.0,
+      "passes": 71110,
+      "seconds": 5.0,
+      "tags": "algorithm=base,faithful=yes,bits=1",
+      "stdout": "mike-barber_bit-unrolled-hybrid;71110;5.0000000000;1;algorithm=base,faithful=yes,bits=1\n",
+      "stderr": "\n-------------------------------------------------------\nComputing primes to 1000000 on 1 thread for 5 seconds.\n-------------------------------------------------------\n\nbit-unrolled-hybrid            Passes: 71110, Threads: 1, Time: 5.0000000000, Passes / sec: 14222.00, Limit: 1000000, Counts: 78498, Valid: Pass\n\n"
+    },
+    {
+      "round": 3,
+      "name": "rust-base-extreme",
+      "pps": 14137.74337211719,
+      "passes": 70689,
+      "seconds": 5.0000200272,
+      "tags": "algorithm=base,faithful=yes,bits=1",
+      "stdout": "mike-barber_bit-extreme-hybrid;70689;5.0000200272;1;algorithm=base,faithful=yes,bits=1\n",
+      "stderr": "\n-------------------------------------------------------\nComputing primes to 1000000 on 1 thread for 5 seconds.\n-------------------------------------------------------\n\nbit-extreme-hybrid             Passes: 70689, Threads: 1, Time: 5.0000200272, Passes / sec: 14137.74, Limit: 1000000, Counts: 78498, Valid: Pass\n\n"
+    },
+    {
+      "round": 3,
+      "name": "c-base-reference",
+      "pps": 4056.580528413464,
+      "passes": 20283,
+      "seconds": 5.000024,
+      "tags": "algorithm=base,faithful=yes,bits=1",
+      "stdout": "rogiervandam_base;20283;5.000024;1;algorithm=base,faithful=yes,bits=1\n",
+      "stderr": ""
+    },
+    {
+      "round": 4,
+      "name": "c-base-reference",
+      "pps": 4029.4138410805417,
+      "passes": 20148,
+      "seconds": 5.000231,
+      "tags": "algorithm=base,faithful=yes,bits=1",
+      "stdout": "rogiervandam_base;20148;5.000231;1;algorithm=base,faithful=yes,bits=1\n",
+      "stderr": ""
+    },
+    {
+      "round": 4,
+      "name": "rust-base-extreme",
+      "pps": 14157.195949626239,
+      "passes": 70786,
+      "seconds": 5.0000014305,
+      "tags": "algorithm=base,faithful=yes,bits=1",
+      "stdout": "mike-barber_bit-extreme-hybrid;70786;5.0000014305;1;algorithm=base,faithful=yes,bits=1\n",
+      "stderr": "\n-------------------------------------------------------\nComputing primes to 1000000 on 1 thread for 5 seconds.\n-------------------------------------------------------\n\nbit-extreme-hybrid             Passes: 70786, Threads: 1, Time: 5.0000014305, Passes / sec: 14157.20, Limit: 1000000, Counts: 78498, Valid: Pass\n\n"
+    },
+    {
+      "round": 4,
+      "name": "rust-base-unrolled",
+      "pps": 13462.053642168248,
+      "passes": 67311,
+      "seconds": 5.0000543594,
+      "tags": "algorithm=base,faithful=yes,bits=1",
+      "stdout": "mike-barber_bit-unrolled-hybrid;67311;5.0000543594;1;algorithm=base,faithful=yes,bits=1\n",
+      "stderr": "\n-------------------------------------------------------\nComputing primes to 1000000 on 1 thread for 5 seconds.\n-------------------------------------------------------\n\nbit-unrolled-hybrid            Passes: 67311, Threads: 1, Time: 5.0000543594, Passes / sec: 13462.05, Limit: 1000000, Counts: 78498, Valid: Pass\n\n"
+    },
+    {
+      "round": 4,
+      "name": "lisp-base-candidate",
+      "pps": 9405.327245509881,
+      "passes": 47028,
+      "seconds": 5.000145,
+      "tags": "algorithm=base,faithful=yes,bits=1",
+      "stdout": "mrj-am-cl-base;47028;5.000145000;1;algorithm=base,faithful=yes,bits=1\n",
+      "stderr": "Valid: Pass; primes: 78498; Lisp heap bytes: 0; GC time: 0 us\n"
+    },
+    {
+      "round": 4,
+      "name": "lisp-base-reference",
+      "pps": 3287.904650765128,
+      "passes": 16440,
+      "seconds": 5.000145,
+      "tags": "algorithm=base,faithful=yes,bits=1",
+      "stdout": "mayerrobert-cl-dense;16440;5.000145;1;algorithm=base,faithful=yes,bits=1\n",
+      "stderr": "2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97, ...\nAlgorithm: base w/ dense bitops  Passes: 16440  Time: 5.000145 Avg: 0.30414507 ms Count: 78498  Valid: yes\n"
+    },
+    {
+      "round": 4,
+      "name": "c-base-candidate",
+      "pps": 12893.700978955221,
+      "passes": 64469,
+      "seconds": 5.000038399,
+      "tags": "algorithm=base,faithful=yes,bits=1",
+      "stdout": "MrJ-am-c-base;64469;5.000038399;1;algorithm=base,faithful=yes,bits=1\n",
+      "stderr": "Valid: Pass; primes: 78498\n"
+    }
+  ],
+  "summary": {
+    "c-base-reference": {
+      "median": 4041.1012466361576,
+      "min": 4027.218775155118,
+      "max": 4056.580528413464
+    },
+    "c-base-candidate": {
+      "median": 13815.16574714215,
+      "min": 12893.700978955221,
+      "max": 14103.76014559458
+    },
+    "lisp-base-reference": {
+      "median": 3330.5037527014574,
+      "min": 3251.306362376764,
+      "max": 3421.502145038652
+    },
+    "lisp-base-candidate": {
+      "median": 10139.00797219151,
+      "min": 9405.327245509881,
+      "max": 10364.099441116208
+    },
+    "rust-base-unrolled": {
+      "median": 14219.219330809115,
+      "min": 13462.053642168248,
+      "max": 14508.946036586825
+    },
+    "rust-base-extreme": {
+      "median": 14147.469660871713,
+      "min": 13959.949409701738,
+      "max": 14464.772410760988
+    }
+  },
+  "additional_control": {
+    "entries": [],
+    "samples": [],
+    "summary": {}
+  },
+  "combined_campaign_order": [
+    {
+      "round": 1,
+      "name": "c-base-reference"
+    },
+    {
+      "round": 1,
+      "name": "c-base-candidate"
+    },
+    {
+      "round": 1,
+      "name": "lisp-base-reference"
+    },
+    {
+      "round": 1,
+      "name": "lisp-base-candidate"
+    },
+    {
+      "round": 1,
+      "name": "rust-base-unrolled"
+    },
+    {
+      "round": 1,
+      "name": "rust-base-extreme"
+    },
+    {
+      "round": 1,
+      "name": "c-wheel-reference"
+    },
+    {
+      "round": 1,
+      "name": "c-wheel-candidate"
+    },
+    {
+      "round": 1,
+      "name": "lisp-wheel-reference"
+    },
+    {
+      "round": 1,
+      "name": "lisp-wheel-candidate"
+    },
+    {
+      "round": 1,
+      "name": "rust-wheel-candidate"
+    },
+    {
+      "round": 1,
+      "name": "c-other-reference"
+    },
+    {
+      "round": 1,
+      "name": "c-other-candidate"
+    },
+    {
+      "round": 1,
+      "name": "lisp-other-reference"
+    },
+    {
+      "round": 1,
+      "name": "lisp-other-candidate"
+    },
+    {
+      "round": 1,
+      "name": "rust-other-candidate"
+    },
+    {
+      "round": 2,
+      "name": "rust-other-candidate"
+    },
+    {
+      "round": 2,
+      "name": "lisp-other-candidate"
+    },
+    {
+      "round": 2,
+      "name": "lisp-other-reference"
+    },
+    {
+      "round": 2,
+      "name": "c-other-candidate"
+    },
+    {
+      "round": 2,
+      "name": "c-other-reference"
+    },
+    {
+      "round": 2,
+      "name": "rust-wheel-candidate"
+    },
+    {
+      "round": 2,
+      "name": "lisp-wheel-candidate"
+    },
+    {
+      "round": 2,
+      "name": "lisp-wheel-reference"
+    },
+    {
+      "round": 2,
+      "name": "c-wheel-candidate"
+    },
+    {
+      "round": 2,
+      "name": "c-wheel-reference"
+    },
+    {
+      "round": 2,
+      "name": "rust-base-extreme"
+    },
+    {
+      "round": 2,
+      "name": "rust-base-unrolled"
+    },
+    {
+      "round": 2,
+      "name": "lisp-base-candidate"
+    },
+    {
+      "round": 2,
+      "name": "lisp-base-reference"
+    },
+    {
+      "round": 2,
+      "name": "c-base-candidate"
+    },
+    {
+      "round": 2,
+      "name": "c-base-reference"
+    },
+    {
+      "round": 3,
+      "name": "c-base-candidate"
+    },
+    {
+      "round": 3,
+      "name": "lisp-base-reference"
+    },
+    {
+      "round": 3,
+      "name": "lisp-base-candidate"
+    },
+    {
+      "round": 3,
+      "name": "rust-base-unrolled"
+    },
+    {
+      "round": 3,
+      "name": "rust-base-extreme"
+    },
+    {
+      "round": 3,
+      "name": "c-wheel-reference"
+    },
+    {
+      "round": 3,
+      "name": "c-wheel-candidate"
+    },
+    {
+      "round": 3,
+      "name": "lisp-wheel-reference"
+    },
+    {
+      "round": 3,
+      "name": "lisp-wheel-candidate"
+    },
+    {
+      "round": 3,
+      "name": "rust-wheel-candidate"
+    },
+    {
+      "round": 3,
+      "name": "c-other-reference"
+    },
+    {
+      "round": 3,
+      "name": "c-other-candidate"
+    },
+    {
+      "round": 3,
+      "name": "lisp-other-reference"
+    },
+    {
+      "round": 3,
+      "name": "lisp-other-candidate"
+    },
+    {
+      "round": 3,
+      "name": "rust-other-candidate"
+    },
+    {
+      "round": 3,
+      "name": "c-base-reference"
+    },
+    {
+      "round": 4,
+      "name": "c-base-reference"
+    },
+    {
+      "round": 4,
+      "name": "rust-other-candidate"
+    },
+    {
+      "round": 4,
+      "name": "lisp-other-candidate"
+    },
+    {
+      "round": 4,
+      "name": "lisp-other-reference"
+    },
+    {
+      "round": 4,
+      "name": "c-other-candidate"
+    },
+    {
+      "round": 4,
+      "name": "c-other-reference"
+    },
+    {
+      "round": 4,
+      "name": "rust-wheel-candidate"
+    },
+    {
+      "round": 4,
+      "name": "lisp-wheel-candidate"
+    },
+    {
+      "round": 4,
+      "name": "lisp-wheel-reference"
+    },
+    {
+      "round": 4,
+      "name": "c-wheel-candidate"
+    },
+    {
+      "round": 4,
+      "name": "c-wheel-reference"
+    },
+    {
+      "round": 4,
+      "name": "rust-base-extreme"
+    },
+    {
+      "round": 4,
+      "name": "rust-base-unrolled"
+    },
+    {
+      "round": 4,
+      "name": "lisp-base-candidate"
+    },
+    {
+      "round": 4,
+      "name": "lisp-base-reference"
+    },
+    {
+      "round": 4,
+      "name": "c-base-candidate"
+    }
+  ]
+}
