@@ -219,3 +219,17 @@ rogiervandam_extend_epar;311811;5.000044;6;algorithm=other,faithful=yes,bits=1;s
 rogiervandam_extend_epar;255389;5.000096;4;algorithm=other,faithful=yes,bits=1;s368-l124-b0262144-v256-a2 total 255389
 rogiervandam_extend_epar;154190;5.000031;2;algorithm=other,faithful=yes,bits=1;s060-l130-b0262144-v256-a1 total 154190
 ```
+
+## Sparse period kernel
+
+For factors above 129, `stripeSieveBlock` now applies eight individual byte
+marks per period. It separates the runtime stride from constant carries,
+following the native-memory Common Lisp kernel and Mike Barber/GordonBGood's
+Rust solution 1. The existing pattern-extension algorithm and `other` tag are
+preserved. A bounded overlap only marks composites; a partial byte at the end
+uses the existing padded storage contract.
+
+`./check_sparse.sh` checks every odd flag against an independent byte sieve,
+through ten million, for both extension algorithms and three block sizes.
+The [category comparison](../../benchmarks/other/README.md) includes the
+unmodified source as a reference with identical fixed parameters.

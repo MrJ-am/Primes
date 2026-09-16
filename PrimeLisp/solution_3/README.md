@@ -86,3 +86,10 @@ SBCL 2.6.8, Linux x86-64, Intel Xeon Platinum 8370C, one logical CPU:
 ```text
 mrj-am-cl;49704;5.003980000;1;algorithm=other,faithful=yes,bits=1
 ```
+
+## Comparison by algorithm category
+
+The `other` kernel is retained from the original submission. Smaller cache
+blocks and two/four-period sparse unrolling did not produce a stable gain.
+See the [C, Rust and Lisp comparison](../../benchmarks/other/README.md) for
+measurements in the same algorithm category and reproducing the experiment.

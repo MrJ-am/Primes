@@ -1,0 +1,684 @@
+{
+  "started": "2026-09-16T12:56:05.105247+00:00",
+  "cpu": "model name\t: AMD EPYC 9V74 80-Core Processor",
+  "logical_cpu": 0,
+  "platform": "Linux-6.18.44-x86_64-with-glibc2.39",
+  "finished": "2026-09-16T13:03:17.515764+00:00",
+  "category": "other",
+  "metadata": {
+    "baseline_ref": "58000dc01b4e572c490e0aaa59f4d6ba9955d73a",
+    "compiler_versions": {
+      "gcc": "gcc (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0",
+      "rustc": "rustc 1.98.1 (48a229cea 2026-09-01)",
+      "sbcl": "SBCL 2.6.8"
+    },
+    "source_sha256": {
+      "base": {
+        "PrimeC/solution_6/sieve.c": "1f71fafa5ce640f53fb31d153665d021ddefa83899b972f1e09795881da84bb2",
+        "PrimeLisp/solution_4/sieve.lisp": "ba5aafbf5da7402b27f056049f1134d7dc1e7b4dd8504f16a39456ca3de65cba"
+      },
+      "wheel": {
+        "PrimeC/solution_7/sieve.c": "179bdf6a16a3617656846bd0521799ff3de8d986ef38d396a4e8563e1883daec",
+        "PrimeLisp/solution_5/sieve.lisp": "c873a1a8a6174c0b661e6d1afbf6747e8542923610bf9d4d766f0d2d1ba92287",
+        "PrimeRust/solution_8/main.rs": "d4d613edefa5e295d7a2017a863ec4a4e8c36a4ccacda659e120e5ffbe2eed3c",
+        "PrimeRust/solution_8/unrolled.rs": "0608359ddf635337108d61ad27c2ac9d565b53de32c0d96255be89f07ea0675d"
+      },
+      "other": {
+        "PrimeC/solution_5/src/sieve/sieve_stripe.h": "426e241d719df6fac2470aebde0775037baa3bc6c244523c57f97f960d5d1d73",
+        "PrimeC/solution_5/src/sieve/sieve_sparse_periods.h": "a30fe5e08d430c1422718918cf7fded9ac07e57c459269ae7702ee9360b67367",
+        "PrimeLisp/solution_3/sieve.lisp": "33236a5378c8bba81fdb84677c0308ab818c48ece84fd88d32e8ce6b0a6bf0dd",
+        "PrimeRust/solution_9/main.rs": "d4d613edefa5e295d7a2017a863ec4a4e8c36a4ccacda659e120e5ffbe2eed3c",
+        "PrimeRust/solution_9/unrolled.rs": "d4cb9fcd6a4890f28b229d3ae76ea6f3f08de71d1e9f4fb3780367b7c56b9e91"
+      }
+    }
+  },
+  "entries": [
+    {
+      "name": "c-other-reference",
+      "category": "other",
+      "command": [
+        "/workspace/scratch/c1bf4e6f2af9/three-categories/baseline/c-other",
+        "--tune",
+        "0",
+        "--time",
+        "5",
+        "--set",
+        "s064-l128-b0262144-v256-a1"
+      ],
+      "source_base": "58000dc01b4e572c490e0aaa59f4d6ba9955d73a",
+      "executable_sha256": "1ca37ecd85f21fb941b27936343742b0ebe34aac06b7866bc72b6e7e970a2620"
+    },
+    {
+      "name": "c-other-candidate",
+      "category": "other",
+      "command": [
+        "/workspace/scratch/c1bf4e6f2af9/primes-other/PrimeC/solution_5/bin/sieve_extend",
+        "--tune",
+        "0",
+        "--time",
+        "5",
+        "--set",
+        "s064-l128-b0262144-v256-a1"
+      ],
+      "source_base": "58000dc01b4e572c490e0aaa59f4d6ba9955d73a",
+      "executable_sha256": "dc0e7473cb258b1153620601b3795b8af58429d941bf283a9422892f5ce2ea90"
+    },
+    {
+      "name": "lisp-other-reference",
+      "category": "other",
+      "command": [
+        "/workspace/scratch/c1bf4e6f2af9/runtime/sbcl/bin/sbcl",
+        "--script",
+        "PrimeSievewordops.lisp"
+      ],
+      "cwd": "/workspace/scratch/c1bf4e6f2af9/primes-other/PrimeLisp/solution_2",
+      "source_base": "58000dc01b4e572c490e0aaa59f4d6ba9955d73a",
+      "executable_sha256": "c118806fd8c00004c1cd8f7e066ccdbf75eedbb8ee3aea3318dd74f179f7e4ad"
+    },
+    {
+      "name": "lisp-other-candidate",
+      "category": "other",
+      "command": [
+        "/workspace/scratch/c1bf4e6f2af9/primes-other/PrimeLisp/solution_3/run.sh",
+        "batch",
+        "5"
+      ],
+      "source_base": "58000dc01b4e572c490e0aaa59f4d6ba9955d73a",
+      "executable_sha256": "7091598ff2f8c9e7e1b2405675ae72197d1a91485a15fbcf2c8133fab0ffe0b9"
+    },
+    {
+      "name": "rust-other-candidate",
+      "category": "other",
+      "command": [
+        "/workspace/scratch/c1bf4e6f2af9/primes-other/PrimeRust/solution_9/sieve"
+      ],
+      "source_base": "58000dc01b4e572c490e0aaa59f4d6ba9955d73a",
+      "executable_sha256": "3d184017f47a1acbcd7bfb3b7cae13ffefd7b588cc4112155b9948142939c0e1"
+    }
+  ],
+  "samples": [
+    {
+      "round": 1,
+      "name": "c-other-reference",
+      "pps": 16389.170603730185,
+      "passes": 81948,
+      "seconds": 5.000131,
+      "tags": "algorithm=other,faithful=yes,bits=1",
+      "stdout": "rogiervandam_extend;81948;5.000131;1;algorithm=other,faithful=yes,bits=1\n",
+      "stderr": ""
+    },
+    {
+      "round": 1,
+      "name": "c-other-candidate",
+      "pps": 18190.15998164804,
+      "passes": 90951,
+      "seconds": 5.000011,
+      "tags": "algorithm=other,faithful=yes,bits=1",
+      "stdout": "rogiervandam_extend;90951;5.000011;1;algorithm=other,faithful=yes,bits=1\n",
+      "stderr": ""
+    },
+    {
+      "round": 1,
+      "name": "lisp-other-reference",
+      "pps": 2965.5145931797165,
+      "passes": 14828,
+      "seconds": 5.000144,
+      "tags": "algorithm=other,faithful=yes,bits=1",
+      "stdout": "mayerrobert-cl-words;14828;5.000144;1;algorithm=other,faithful=yes,bits=1\n",
+      "stderr": "2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97, ...\nAlgorithm: base w/ wordops  Passes: 14828  Time: 5.000144 Avg: 0.3372096 ms Count: 78498  Valid: yes\n"
+    },
+    {
+      "round": 1,
+      "name": "lisp-other-candidate",
+      "pps": 16090.739804841583,
+      "passes": 80456,
+      "seconds": 5.000143,
+      "tags": "algorithm=other,faithful=yes,bits=1",
+      "stdout": "mrj-am-cl;80456;5.000143000;1;algorithm=other,faithful=yes,bits=1\n",
+      "stderr": "Valid: Pass; primes: 78498; Lisp heap bytes: 0; GC time: 0 us\n"
+    },
+    {
+      "round": 1,
+      "name": "rust-other-candidate",
+      "pps": 16403.859628892384,
+      "passes": 82020,
+      "seconds": 5.000042786,
+      "tags": "algorithm=other,faithful=yes,bits=1",
+      "stdout": "MrJ-am-rust-other;82020;5.000042786;1;algorithm=other,faithful=yes,bits=1\n",
+      "stderr": "Valid: Pass; primes: 78498\n"
+    },
+    {
+      "round": 2,
+      "name": "rust-other-candidate",
+      "pps": 16054.262610831429,
+      "passes": 80272,
+      "seconds": 5.000042789,
+      "tags": "algorithm=other,faithful=yes,bits=1",
+      "stdout": "MrJ-am-rust-other;80272;5.000042789;1;algorithm=other,faithful=yes,bits=1\n",
+      "stderr": "Valid: Pass; primes: 78498\n"
+    },
+    {
+      "round": 2,
+      "name": "lisp-other-candidate",
+      "pps": 16214.93625282317,
+      "passes": 81077,
+      "seconds": 5.000143,
+      "tags": "algorithm=other,faithful=yes,bits=1",
+      "stdout": "mrj-am-cl;81077;5.000143000;1;algorithm=other,faithful=yes,bits=1\n",
+      "stderr": "Valid: Pass; primes: 78498; Lisp heap bytes: 0; GC time: 0 us\n"
+    },
+    {
+      "round": 2,
+      "name": "lisp-other-reference",
+      "pps": 2967.915117627636,
+      "passes": 14840,
+      "seconds": 5.000143,
+      "tags": "algorithm=other,faithful=yes,bits=1",
+      "stdout": "mayerrobert-cl-words;14840;5.000143;1;algorithm=other,faithful=yes,bits=1\n",
+      "stderr": "2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97, ...\nAlgorithm: base w/ wordops  Passes: 14840  Time: 5.000143 Avg: 0.33693686 ms Count: 78498  Valid: yes\n"
+    },
+    {
+      "round": 2,
+      "name": "c-other-candidate",
+      "pps": 18758.72496510014,
+      "passes": 93794,
+      "seconds": 5.00002,
+      "tags": "algorithm=other,faithful=yes,bits=1",
+      "stdout": "rogiervandam_extend;93794;5.000020;1;algorithm=other,faithful=yes,bits=1\n",
+      "stderr": ""
+    },
+    {
+      "round": 2,
+      "name": "c-other-reference",
+      "pps": 16788.363065601257,
+      "passes": 83942,
+      "seconds": 5.000011,
+      "tags": "algorithm=other,faithful=yes,bits=1",
+      "stdout": "rogiervandam_extend;83942;5.000011;1;algorithm=other,faithful=yes,bits=1\n",
+      "stderr": ""
+    },
+    {
+      "round": 3,
+      "name": "c-other-reference",
+      "pps": 16726.029394500176,
+      "passes": 83631,
+      "seconds": 5.000051,
+      "tags": "algorithm=other,faithful=yes,bits=1",
+      "stdout": "rogiervandam_extend;83631;5.000051;1;algorithm=other,faithful=yes,bits=1\n",
+      "stderr": ""
+    },
+    {
+      "round": 3,
+      "name": "c-other-candidate",
+      "pps": 17883.628317168157,
+      "passes": 89419,
+      "seconds": 5.000048,
+      "tags": "algorithm=other,faithful=yes,bits=1",
+      "stdout": "rogiervandam_extend;89419;5.000048;1;algorithm=other,faithful=yes,bits=1\n",
+      "stderr": ""
+    },
+    {
+      "round": 3,
+      "name": "lisp-other-reference",
+      "pps": 2950.5144350813825,
+      "passes": 14753,
+      "seconds": 5.000145,
+      "tags": "algorithm=other,faithful=yes,bits=1",
+      "stdout": "mayerrobert-cl-words;14753;5.000145;1;algorithm=other,faithful=yes,bits=1\n",
+      "stderr": "2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97, ...\nAlgorithm: base w/ wordops  Passes: 14753  Time: 5.000145 Avg: 0.33892396 ms Count: 78498  Valid: yes\n"
+    },
+    {
+      "round": 3,
+      "name": "lisp-other-candidate",
+      "pps": 15719.1441448198,
+      "passes": 78598,
+      "seconds": 5.000145,
+      "tags": "algorithm=other,faithful=yes,bits=1",
+      "stdout": "mrj-am-cl;78598;5.000145000;1;algorithm=other,faithful=yes,bits=1\n",
+      "stderr": "Valid: Pass; primes: 78498; Lisp heap bytes: 0; GC time: 0 us\n"
+    },
+    {
+      "round": 3,
+      "name": "rust-other-candidate",
+      "pps": 16725.81519312277,
+      "passes": 83630,
+      "seconds": 5.000055246,
+      "tags": "algorithm=other,faithful=yes,bits=1",
+      "stdout": "MrJ-am-rust-other;83630;5.000055246;1;algorithm=other,faithful=yes,bits=1\n",
+      "stderr": "Valid: Pass; primes: 78498\n"
+    },
+    {
+      "round": 4,
+      "name": "rust-other-candidate",
+      "pps": 15931.368672556642,
+      "passes": 79657,
+      "seconds": 5.000009832,
+      "tags": "algorithm=other,faithful=yes,bits=1",
+      "stdout": "MrJ-am-rust-other;79657;5.000009832;1;algorithm=other,faithful=yes,bits=1\n",
+      "stderr": "Valid: Pass; primes: 78498\n"
+    },
+    {
+      "round": 4,
+      "name": "lisp-other-candidate",
+      "pps": 15206.359015588549,
+      "passes": 76034,
+      "seconds": 5.000145,
+      "tags": "algorithm=other,faithful=yes,bits=1",
+      "stdout": "mrj-am-cl;76034;5.000145000;1;algorithm=other,faithful=yes,bits=1\n",
+      "stderr": "Valid: Pass; primes: 78498; Lisp heap bytes: 0; GC time: 0 us\n"
+    },
+    {
+      "round": 4,
+      "name": "lisp-other-reference",
+      "pps": 2920.315894902227,
+      "passes": 14602,
+      "seconds": 5.000144,
+      "tags": "algorithm=other,faithful=yes,bits=1",
+      "stdout": "mayerrobert-cl-words;14602;5.000144;1;algorithm=other,faithful=yes,bits=1\n",
+      "stderr": "2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97, ...\nAlgorithm: base w/ wordops  Passes: 14602  Time: 5.000144 Avg: 0.3424287 ms Count: 78498  Valid: yes\n"
+    },
+    {
+      "round": 4,
+      "name": "c-other-candidate",
+      "pps": 18122.763754472493,
+      "passes": 90614,
+      "seconds": 5.00001,
+      "tags": "algorithm=other,faithful=yes,bits=1",
+      "stdout": "rogiervandam_extend;90614;5.000010;1;algorithm=other,faithful=yes,bits=1\n",
+      "stderr": ""
+    },
+    {
+      "round": 4,
+      "name": "c-other-reference",
+      "pps": 16856.888744534284,
+      "passes": 84285,
+      "seconds": 5.000033,
+      "tags": "algorithm=other,faithful=yes,bits=1",
+      "stdout": "rogiervandam_extend;84285;5.000033;1;algorithm=other,faithful=yes,bits=1\n",
+      "stderr": ""
+    }
+  ],
+  "summary": {
+    "c-other-reference": {
+      "median": 16757.196230050715,
+      "min": 16389.170603730185,
+      "max": 16856.888744534284
+    },
+    "c-other-candidate": {
+      "median": 18156.461868060265,
+      "min": 17883.628317168157,
+      "max": 18758.72496510014
+    },
+    "lisp-other-reference": {
+      "median": 2958.0145141305493,
+      "min": 2920.315894902227,
+      "max": 2967.915117627636
+    },
+    "lisp-other-candidate": {
+      "median": 15904.941974830692,
+      "min": 15206.359015588549,
+      "max": 16214.93625282317
+    },
+    "rust-other-candidate": {
+      "median": 16229.061119861906,
+      "min": 15931.368672556642,
+      "max": 16725.81519312277
+    }
+  },
+  "additional_control": {
+    "entries": [
+      {
+        "name": "c-other-default-reference",
+        "category": "other",
+        "command": [
+          "/workspace/scratch/c1bf4e6f2af9/three-categories/baseline/c-other",
+          "--time",
+          "5"
+        ],
+        "executable_sha256": "1ca37ecd85f21fb941b27936343742b0ebe34aac06b7866bc72b6e7e970a2620"
+      },
+      {
+        "name": "c-other-default-candidate",
+        "category": "other",
+        "command": [
+          "/workspace/scratch/c1bf4e6f2af9/primes-other/PrimeC/solution_5/bin/sieve_extend",
+          "--time",
+          "5"
+        ],
+        "executable_sha256": "dc0e7473cb258b1153620601b3795b8af58429d941bf283a9422892f5ce2ea90"
+      }
+    ],
+    "samples": [
+      {
+        "round": 1,
+        "name": "c-other-default-reference",
+        "pps": 17290.95389338955,
+        "passes": 86457,
+        "seconds": 5.000129,
+        "tags": "algorithm=other,faithful=yes,bits=1",
+        "stdout": "rogiervandam_extend;86457;5.000129;1;algorithm=other,faithful=yes,bits=1\n",
+        "stderr": ""
+      },
+      {
+        "round": 1,
+        "name": "c-other-default-candidate",
+        "pps": 16806.648740161338,
+        "passes": 84034,
+        "seconds": 5.000045,
+        "tags": "algorithm=other,faithful=yes,bits=1",
+        "stdout": "rogiervandam_extend;84034;5.000045;1;algorithm=other,faithful=yes,bits=1\n",
+        "stderr": ""
+      },
+      {
+        "round": 2,
+        "name": "c-other-default-candidate",
+        "pps": 18003.563992872016,
+        "passes": 90018,
+        "seconds": 5.00001,
+        "tags": "algorithm=other,faithful=yes,bits=1",
+        "stdout": "rogiervandam_extend;90018;5.000010;1;algorithm=other,faithful=yes,bits=1\n",
+        "stderr": ""
+      },
+      {
+        "round": 2,
+        "name": "c-other-default-reference",
+        "pps": 18051.935013033955,
+        "passes": 90260,
+        "seconds": 5.000018,
+        "tags": "algorithm=other,faithful=yes,bits=1",
+        "stdout": "rogiervandam_extend;90260;5.000018;1;algorithm=other,faithful=yes,bits=1\n",
+        "stderr": ""
+      },
+      {
+        "round": 3,
+        "name": "c-other-default-reference",
+        "pps": 17413.095521426872,
+        "passes": 87066,
+        "seconds": 5.00003,
+        "tags": "algorithm=other,faithful=yes,bits=1",
+        "stdout": "rogiervandam_extend;87066;5.000030;1;algorithm=other,faithful=yes,bits=1\n",
+        "stderr": ""
+      },
+      {
+        "round": 3,
+        "name": "c-other-default-candidate",
+        "pps": 18139.283908582984,
+        "passes": 90697,
+        "seconds": 5.000032,
+        "tags": "algorithm=other,faithful=yes,bits=1",
+        "stdout": "rogiervandam_extend;90697;5.000032;1;algorithm=other,faithful=yes,bits=1\n",
+        "stderr": ""
+      }
+    ],
+    "summary": {
+      "c-other-default-reference": {
+        "median": 17413.095521426872,
+        "min": 17290.95389338955,
+        "max": 18051.935013033955
+      },
+      "c-other-default-candidate": {
+        "median": 18003.563992872016,
+        "min": 16806.648740161338,
+        "max": 18139.283908582984
+      }
+    }
+  },
+  "combined_campaign_order": [
+    {
+      "round": 1,
+      "name": "c-base-reference"
+    },
+    {
+      "round": 1,
+      "name": "c-base-candidate"
+    },
+    {
+      "round": 1,
+      "name": "lisp-base-reference"
+    },
+    {
+      "round": 1,
+      "name": "lisp-base-candidate"
+    },
+    {
+      "round": 1,
+      "name": "rust-base-unrolled"
+    },
+    {
+      "round": 1,
+      "name": "rust-base-extreme"
+    },
+    {
+      "round": 1,
+      "name": "c-wheel-reference"
+    },
+    {
+      "round": 1,
+      "name": "c-wheel-candidate"
+    },
+    {
+      "round": 1,
+      "name": "lisp-wheel-reference"
+    },
+    {
+      "round": 1,
+      "name": "lisp-wheel-candidate"
+    },
+    {
+      "round": 1,
+      "name": "rust-wheel-candidate"
+    },
+    {
+      "round": 1,
+      "name": "c-other-reference"
+    },
+    {
+      "round": 1,
+      "name": "c-other-candidate"
+    },
+    {
+      "round": 1,
+      "name": "lisp-other-reference"
+    },
+    {
+      "round": 1,
+      "name": "lisp-other-candidate"
+    },
+    {
+      "round": 1,
+      "name": "rust-other-candidate"
+    },
+    {
+      "round": 2,
+      "name": "rust-other-candidate"
+    },
+    {
+      "round": 2,
+      "name": "lisp-other-candidate"
+    },
+    {
+      "round": 2,
+      "name": "lisp-other-reference"
+    },
+    {
+      "round": 2,
+      "name": "c-other-candidate"
+    },
+    {
+      "round": 2,
+      "name": "c-other-reference"
+    },
+    {
+      "round": 2,
+      "name": "rust-wheel-candidate"
+    },
+    {
+      "round": 2,
+      "name": "lisp-wheel-candidate"
+    },
+    {
+      "round": 2,
+      "name": "lisp-wheel-reference"
+    },
+    {
+      "round": 2,
+      "name": "c-wheel-candidate"
+    },
+    {
+      "round": 2,
+      "name": "c-wheel-reference"
+    },
+    {
+      "round": 2,
+      "name": "rust-base-extreme"
+    },
+    {
+      "round": 2,
+      "name": "rust-base-unrolled"
+    },
+    {
+      "round": 2,
+      "name": "lisp-base-candidate"
+    },
+    {
+      "round": 2,
+      "name": "lisp-base-reference"
+    },
+    {
+      "round": 2,
+      "name": "c-base-candidate"
+    },
+    {
+      "round": 2,
+      "name": "c-base-reference"
+    },
+    {
+      "round": 3,
+      "name": "c-base-candidate"
+    },
+    {
+      "round": 3,
+      "name": "lisp-base-reference"
+    },
+    {
+      "round": 3,
+      "name": "lisp-base-candidate"
+    },
+    {
+      "round": 3,
+      "name": "rust-base-unrolled"
+    },
+    {
+      "round": 3,
+      "name": "rust-base-extreme"
+    },
+    {
+      "round": 3,
+      "name": "c-wheel-reference"
+    },
+    {
+      "round": 3,
+      "name": "c-wheel-candidate"
+    },
+    {
+      "round": 3,
+      "name": "lisp-wheel-reference"
+    },
+    {
+      "round": 3,
+      "name": "lisp-wheel-candidate"
+    },
+    {
+      "round": 3,
+      "name": "rust-wheel-candidate"
+    },
+    {
+      "round": 3,
+      "name": "c-other-reference"
+    },
+    {
+      "round": 3,
+      "name": "c-other-candidate"
+    },
+    {
+      "round": 3,
+      "name": "lisp-other-reference"
+    },
+    {
+      "round": 3,
+      "name": "lisp-other-candidate"
+    },
+    {
+      "round": 3,
+      "name": "rust-other-candidate"
+    },
+    {
+      "round": 3,
+      "name": "c-base-reference"
+    },
+    {
+      "round": 4,
+      "name": "c-base-reference"
+    },
+    {
+      "round": 4,
+      "name": "rust-other-candidate"
+    },
+    {
+      "round": 4,
+      "name": "lisp-other-candidate"
+    },
+    {
+      "round": 4,
+      "name": "lisp-other-reference"
+    },
+    {
+      "round": 4,
+      "name": "c-other-candidate"
+    },
+    {
+      "round": 4,
+      "name": "c-other-reference"
+    },
+    {
+      "round": 4,
+      "name": "rust-wheel-candidate"
+    },
+    {
+      "round": 4,
+      "name": "lisp-wheel-candidate"
+    },
+    {
+      "round": 4,
+      "name": "lisp-wheel-reference"
+    },
+    {
+      "round": 4,
+      "name": "c-wheel-candidate"
+    },
+    {
+      "round": 4,
+      "name": "c-wheel-reference"
+    },
+    {
+      "round": 4,
+      "name": "rust-base-extreme"
+    },
+    {
+      "round": 4,
+      "name": "rust-base-unrolled"
+    },
+    {
+      "round": 4,
+      "name": "lisp-base-candidate"
+    },
+    {
+      "round": 4,
+      "name": "lisp-base-reference"
+    },
+    {
+      "round": 4,
+      "name": "c-base-candidate"
+    }
+  ]
+}

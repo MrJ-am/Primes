@@ -1,3 +1,5 @@
+#include "sieve_sparse_periods.h"
+
 static inline counter_t __attribute__((always_inline, nonnull, aligned(cache_line_bytes))) 
 stripeSieveBlock(void* restrict bitstorage, const counter_t block_start, const counter_t block_stop, const counter_t prime_start, const counter_t prime_max) {
     startAnalysis5(time_sieveStripeBlock, "\nBlock stripe (new) for block %ju - %ju\n",(uintmax_t)block_start,(uintmax_t)block_stop)
@@ -14,8 +16,7 @@ stripeSieveBlock(void* restrict bitstorage, const counter_t block_start, const c
 
     while (prime < prime_max) {
         register const counter_t step  = prime * 2 + 1;
-        register counter_t start = compute_start(prime, block_start);
-        setBitsTrue(bitstorage, start, step, block_stop);
+        markSparsePeriods(bitstorage, step, block_start, block_stop);
         prime = searchBitFalse_largestep_uint8(bitstorage, prime);
     }
 
